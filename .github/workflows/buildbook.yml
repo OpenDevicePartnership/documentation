@@ -3,8 +3,9 @@ permissions:
   contents: read
 on:
   push:
-    branches: [main]
+    branches: [main,bookshelf]
   pull_request:
+  workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
@@ -22,15 +23,19 @@ jobs:
         run: |
           curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.12/mdbook-v0.4.12-x86_64-unknown-linux-gnu.tar.gz | tar -xz -C /usr/local/bin
 
-      - name: Build all books
+      - name: Sync and build bookshelf
         run: |
-          for book in $(find . -name book.toml -exec dirname {} \;); do
-            mdbook build $book
-          done
+          git clone https://github.com/philgweber/mdbookshelf.git
+          cd mdbookshelf
+          cargo build --release
 
-      - name: Upload built books
+      - name: Build our ODP bookshelf
+        run: |
+          ./mdbookshelf/target/release/mdbookshelf build
+          cp ./media/* build
+
+      - name: Upload output folder
         uses: actions/upload-artifact@v4
         with:
-          name: built-books
-          path: '**/book'
-          if-no-files-found: error
+          name: Web Folder
+          path: build/

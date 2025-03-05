@@ -3,9 +3,8 @@ permissions:
   contents: read
 on:
   push:
-    branches: [main,bookshelf]
+    branches: [main]
   pull_request:
-  workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
@@ -25,11 +24,12 @@ jobs:
 
       - name: Sync and build bookshelf
         run: |
-          git clone https://github.com/philgweber/mdbookshelf.git
+          git clone https://github.com/DomtronVox/mdbookshelf.git
           cd mdbookshelf
+          cargo update
           cargo build --release
 
-      - name: Build our ODP bookshelf
+      - name: Build ODP bookshelf
         run: |
           ./mdbookshelf/target/release/mdbookshelf build
           cp ./media/* build

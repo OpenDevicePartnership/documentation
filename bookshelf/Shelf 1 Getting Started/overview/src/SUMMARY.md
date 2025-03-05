@@ -6,6 +6,6 @@
   - [Hardware](hardware.md)
     - [QEMU](QEMU.md)
   - [Software](software.md)
-- [Tutorials](tutorials.md)
-- [Standards/Specifications](specifications.md)
 - [Projects](projects.md)
+- [Standards/Specifications](specifications.md)
+- [Tutorials](tutorials.md)

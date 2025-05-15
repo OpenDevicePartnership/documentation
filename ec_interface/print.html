@@ -1,0 +1,3077 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>EC Interface Specification</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">EC Interface Specification</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="embedded-controller-interface-specification"><a class="header" href="#embedded-controller-interface-specification">Embedded Controller Interface Specification</a></h1>
+<p>Embedded Controller(EC) Interface Specification describes base set of requirements to interface to core windows features.
+It covers the following areas:</p>
+<ul>
+<li>Firmware Management</li>
+<li>Battery</li>
+<li>Time and Alarm</li>
+<li>UCSI</li>
+<li>Thermal and Power</li>
+<li>Input Devices</li>
+<li>Customization</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ec-soc-interface"><a class="header" href="#ec-soc-interface">EC SOC Interface</a></h1>
+<h2 id="ec-physical-interface"><a class="header" href="#ec-physical-interface">EC Physical Interface</a></h2>
+<p>The interface by which the EC is physically wired to the SOC may vary
+depending on what interfaces are supported by the Silicon Vendor, EC
+manufacturer and OEM. It is recommended that a simple and low latency
+protocol is chosen such as eSPI, I3C, UART, memory.</p>
+<h2 id="ec-software-interface"><a class="header" href="#ec-software-interface">EC Software Interface</a></h2>
+<p>There are several existing OS interfaces that exist today via ACPI and
+HID to manage thermal, battery, keyboard, touch etc. These existing
+structures need to keep working and any new interface must be created in
+such a way that it does not break existing interfaces. This document
+covers details on how to implement EC services in secure world and keep
+compatibility with non-secure EC OperationRegions. It is important to
+work towards a more robust solution that will handle routing, larger
+packets and security in a common way across OS’s and across SV
+architectures.</p>
+<p><img src="media/odp_arch.png" alt="EC connections to apps" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="legacy-ec-interface"><a class="header" href="#legacy-ec-interface">Legacy EC Interface</a></h1>
+<p>ACPI specification has a definition for an embedded controller, however
+this implementation is tied very closely to the eSPI bus and x86
+architecture.</p>
+<p>The following is an example of legacy EC interface definition from ACPI</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/11_Thermal_Management/thermal-zone-examples.html">11.7. Thermal Zone Examples — ACPI Specification 6.4
+documentation</a></p>
+<pre><code>Scope(\\_SB.PCI0.ISA0) {
+  Device(EC0) {
+    Name(_HID, EISAID("PNP0C09")) // ID for this EC
+
+    // current resource description for this EC
+    Name(_CRS, ResourceTemplate() {
+      IO(Decode16,0x62,0x62,0,1)
+      IO(Decode16,0x66,0x66,0,1)
+    })
+
+    Name(_GPE, 0) // GPE index for this EC
+    
+    // create EC's region and field for thermal support
+    OperationRegion(EC0, EmbeddedControl, 0, 0xFF)
+    Field(EC0, ByteAcc, Lock, Preserve) {
+      MODE, 1, // thermal policy (quiet/perform)
+      FAN, 1, // fan power (on/off)
+      , 6, // reserved
+      TMP, 16, // current temp
+      AC0, 16, // active cooling temp (fan high)
+      , 16, // reserved
+      PSV, 16, // passive cooling temp
+      HOT 16, // critical S4 temp
+      CRT, 16 // critical temp
+    }
+
+    // following is a method that OSPM will schedule after
+    // it receives an SCI and queries the EC to receive value 7
+    Method(_Q07) {
+      Notify (\\_SB.PCI0.ISA0.EC0.TZ0, 0x80)
+    } // end of Notify method
+
+    // fan cooling on/off - engaged at AC0 temp
+    PowerResource(PFAN, 0, 0) {
+      Method(_STA) { Return (\\_SB.PCI0.ISA0.EC0.FAN) } // check power state
+      Method(_ON) { Store (One, \\\\_SB.PCI0.ISA0.EC0.FAN) } // turn on fan
+      Method(_OFF) { Store ( Zero, \\\\_SB.PCI0.ISA0.EC0.FAN) }// turn off
+fan
+    }
+
+    // Create FAN device object
+    Device (FAN) {
+    // Device ID for the FAN
+    Name(_HID, EISAID("PNP0C0B"))
+    // list power resource for the fan
+    Name(_PR0, Package(){PFAN})
+    }
+
+    // create a thermal zone
+    ThermalZone (TZ0) {
+      Method(_TMP) { Return (\\_SB.PCI0.ISA0.EC0.TMP )} // get current temp
+      Method(_AC0) { Return (\\_SB.PCI0.ISA0.EC0.AC0) } // fan high temp
+      Name(_AL0, Package(){\\_SB.PCI0.ISA0.EC0.FAN}) // fan is act cool dev
+      Method(_PSV) { Return (\\_SB.PCI0.ISA0.EC0.PSV) } // passive cooling
+temp
+      Name(_PSL, Package (){\\_SB.CPU0}) // passive cooling devices
+      Method(_HOT) { Return (\\_SB.PCI0.ISA0.EC0.HOT) } // get critical S4
+temp
+      Method(_CRT) { Return (\\_SB.PCI0.ISA0.EC0.CRT) } // get critical temp
+      Method(_SCP, 1) { Store (Arg1, \\\\_SB.PCI0.ISA0.EC0.MODE) } // set
+cooling mode
+
+      Name(_TSP, 150) // passive sampling = 15 sec
+      Name(_TZP, 0) // polling not required
+      Name (_STR, Unicode ("System thermal zone"))
+    } // end of TZ0
+  } // end of ECO
+} // end of \\\\_SB.PCI0.ISA0 scope-
+</code></pre>
+<p>On platforms that do not support IO port access there is an option to
+define MMIO regions to simulate the IO port transactions.</p>
+<p>In the above example you can see that the operation region directly maps
+to features on the EC and you can change the EC behavior by writing to a
+byte in the region or reading the latest data from the EC.</p>
+<p>For a system with the EC connected via eSPI and that needs a simple
+non-secure interface to the EC the above mapping works very well and
+keeps the code simple. The eSPI protocol itself has details on port
+accesses and uses the peripheral channel to easily read/write memory
+mapped regions.</p>
+<p>As the EC features evolve there are several requirements that do no work
+well with this interface:</p>
+<ul>
+<li>
+<p>Different buses such as I3C, SPI, UART target a packet
+request/response rather than a memory mapped interface</p>
+</li>
+<li>
+<p>Protected or restricted access and validation of request/response</p>
+</li>
+<li>
+<p>Firmware update, large data driven requests that require larger data
+response the 256-byte region is limited</p>
+</li>
+<li>
+<p>Discoverability of features available and OEM customizations</p>
+</li>
+<li>
+<p>Out of order completion of requests, concurrency, routing and
+priority handling</p>
+</li>
+</ul>
+<p>As we try to address these limitations and move to a more packet based
+protocol described in this document. The following section covers
+details on how to adopt existing operation region to new ACPI
+functionality.</p>
+<h2 id="adopting-ec-operation-region"><a class="header" href="#adopting-ec-operation-region">Adopting EC Operation Region</a></h2>
+<p>The new OS frameworks such as MPTF still use ACPI methods as primary
+interface. Instead of defining devices such as FAN or ThermalZone in the
+EC region you can simply define the EC region itself and then map all
+the other ACPI functions to operate on this region. This will allow you
+to maintain backwards compatibility with existing EC definitions.</p>
+<pre><code>Device(EC0) {
+  Name(_HID, EISAID("PNP0C09")) // ID for this EC
+  // current resource description for this EC
+  Name(_CRS, ResourceTemplate() {
+    IO(Decode16,0x62,0x62,0,1)
+    IO(Decode16,0x66,0x66,0,1)
+  })
+
+  // create EC's region and field for thermal support
+  OperationRegion(EC0, EmbeddedControl, 0, 0xFF)
+  Field(EC0, ByteAcc, Lock, Preserve) {
+    MODE, 1, // thermal policy (quiet/perform)
+    FAN, 1, // fan power (on/off)
+    , 6, // reserved
+    TMP, 16, // current temp
+    AC0, 16, // active cooling temp (fan high)
+    , 16, // reserved
+    PSV, 16, // passive cooling temp
+    HOT 16, // critical S4 temp
+    CRT, 16 // critical temp
+  }
+}
+
+Device(SKIN) {
+  Name(_HID, "MSFT000A") // New MPTF HID Temperature Device
+  Method(_TMP, 0x0, Serialized) {
+      Return( \\_SB.PCI0.ISA0.EC0.TMP)
+  }
+}
+</code></pre>
+<p>For more complicated functions that take a package some of the data may
+be constructed within ACPI and some of the data pulled from the
+OperationRegion. For example BIX for battery information may have a
+combination of static and dynamic data like this:</p>
+<pre><code>Method (_BIX) {
+  Name (BAT0, Package (0x12)
+  {
+    0x01, // Revision
+    0x02, // Power Unit
+    0x03, // Design Capacity
+    \\_SB.PCI0.ISA0.EC0.BFCC, // Last Full Charge Capacity
+    0x05, // Battery Technology
+    0x06, // Design Voltage
+    0x07, // Design capacity of Warning
+    0x08, // Design Capacity of Low
+    \\_SB.PCI0.ISA0.EC0.BCYL, // Cycle Count
+    0x0A, // Measurement Accuracy
+    0x0B, // Max Sampling Time
+    0x0C, // Min Sampling Time
+    0x0D, // Max Averaging Interval
+    0x0E, // Min Averaging Interval
+    0x0F, // Battery Capacity Granularity 1
+    0x10, // Battery Capacity Granularity 2
+    "Model123", // Model Number
+    "Serial456", // Serial Number
+    "Li-Ion", // Battery Type
+    "OEMName" // OEM Information
+  })
+  Return(BAT0)
+}
+</code></pre>
+<h2 id="limitations-for-using-legacy-ec"><a class="header" href="#limitations-for-using-legacy-ec">Limitations for using Legacy EC</a></h2>
+<p>Before using the Legacy EC definition OEM’s should be aware of several
+use cases that may limit you ability to use it.</p>
+<h3 id="acpi-support-for-espi-master"><a class="header" href="#acpi-support-for-espi-master">ACPI support for eSPI master</a></h3>
+<p>In the case of Legacy EC the communication to the EC is accomplished
+directly by the ACPI driver using PORT IO and eSPI Peripheral Bus
+commands. On ARM platforms there is no PORT IO and these must be
+substituted with MMIO regions. The ACPI driver needs changes to support
+MMIO which is being evaluated and support is not yet available. Some
+Silicon Vendors also do not implement the full eSPI specification and as
+such the ACPI driver cannot handle all the communication needs. On these
+platforms using Legacy EC interface is not an option.</p>
+<h3 id="security-of-espi-bus"><a class="header" href="#security-of-espi-bus">Security of eSPI bus</a></h3>
+<p>When non-secure world is given access to the eSPI bus it can send
+commands to device on that bus. Some HW designs have the TPM or SPINOR
+on the same physical bus as the EC. On these designs allowing non-secure
+world to directly sends commands to EC can break the security
+requirements of other devices on the bus. In these cases the eSPI
+communication must be done in the secure world over FF-A as covered in
+this document and not use the Legacy EC channel. Since non-secure world
+has complete access to the EC operation region there is no chance for
+encryption of data. All data in the operation region is considered
+non-secure.</p>
+<h3 id="functional-limitations-of-legacy-ec"><a class="header" href="#functional-limitations-of-legacy-ec">Functional limitations of Legacy EC</a></h3>
+<p>The peripheral region that is mapped in the Legacy EC in ACPI is limited
+to 256 bytes and notification events to the ones that are defined and
+handled in ACPI driver. To create custom solutions, send large packets
+or support encryption of data the Legacy EC interface has limitations in
+this area.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="secure-ec-services-overview"><a class="header" href="#secure-ec-services-overview">Secure EC Services Overview</a></h1>
+<p>In this section we review a system design where the EC communication is
+in the secure world running in a dedicated SP. In a system without
+secure world or where communication to EC is not desired to be secure
+all the ACPI functions can be mapped directly to data from the EC
+operation region.</p>
+<p>The following github projects provide sample implementations of this interface:</p>
+<p><a href="https://github.com/opendevicepartnership/ec-test-app">ACPI EC samples, Kernel mode test driver, User mode test driver</a><br>
+<a href="https://github.com/opendevicepartnership/haf-ec-service">Sample Secure Partition Service for EC services in RUST</a><br>
+<a href="https://github.com/opendevicepartnership/ffa">RUST crate for FFA implementation in secure partition</a><br></p>
+<p>The following GUID’s have been designed to represent each service
+operating in the secure partition for EC.</p>
+<table>
+<thead>
+<tr class="header">
+<th>EC Service Name</th>
+<th>Service GUID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<td>EC_SVC_MANAGEMENT</td>
+<td>330c1273-fde5-4757-9819-5b6539037502</td>
+<td>Used to query EC functionality, Board info, version, security state, FW update</td>
+</tr>
+<td>EC_SVC_POWER</td>
+<td>7157addf-2fbe-4c63-ae95-efac16e3b01c</td>
+<td>Handles general power related requests and OS Sx state transition state notification</td>
+</tr>
+<td>EC_SVC_BATTERY</td>
+<td>25cb5207-ac36-427d-aaef-3aa78877d27e</td>
+<td>Handles battery info, status, charging</td>
+</tr>
+<td>EC_SVC_THERMAL</td>
+<td>31f56da7-593c-4d72-a4b3-8fc7171ac073</td>
+<td>Handles thermal requests for skin and other thermal events</td>
+</tr>
+<td>EC_SVC_UCSI</td>
+<td>65467f50-827f-4e4f-8770-dbf4c3f77f45</td>
+<td>Handles PD notifications and calls to UCSI interface</td>
+</tr>
+<td>EC_SVC_INPUT</td>
+<td>e3168a99-4a57-4a2b-8c5e-11bcfec73406</td>
+<td>Handles wake events, power key, lid, input devices (HID separate instance)</td>
+</tr>
+<td>EC_SVC_TIME_ALARM</td>
+<td>23ea63ed-b593-46ea-b027-8924df88e92f</td>
+<td>Handles RTC and wake timers.</td>
+</tr>
+<td>EC_SVC_DEBUG</td>
+<td>0bd66c7c-a288-48a6-afc8-e2200c03eb62</td>
+<td>Used for telemetry, debug control, recovery modes, logs, etc</td>
+</tr>
+<td>EC_SVC_TEST</td>
+<td>6c44c879-d0bc-41d3-bef6-60432182dfe6</td>
+<td>Used to send commands for manufacturing/factory test</td>
+</tr>
+<td>EC_SVC_OEM1</td>
+<td>9a8a1e88-a880-447c-830d-6d764e9172bb</td>
+<td>Sample OEM custom service and example piping of events</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ffa-overview"><a class="header" href="#ffa-overview">FFA Overview</a></h2>
+<p>This section covers the components involved in sending a command to EC
+through the FFA flow in windows. This path is specific to ARM devices
+and a common solution with x64 is still being worked out. Those will
+continue through the non-secure OperationRegion in the near term.</p>
+<p><img src="media/image1.png" alt="A diagram of a computer security system Description automatically generated" /></p>
+<p>ARM has a standard for calling into the secure world through SMC’s and
+targeting a particular service running in secure world via a UUID. The
+full specification and details can be found here: <a href="https://developer.arm.com/Architectures/Firmware%20Framework%20for%20A-Profile">Firmware Framework
+for A-Profile</a></p>
+<p>The windows kernel provides native ability for ACPI to directly send and
+receive FFA commands. It also provides a driver ffadrv.sys to expose a
+DDI that allows other drivers to directly send/receive FFA commands
+without needing to go through ACPI.</p>
+<p>Hyper-V forwards the SMC’s through to EL3 to Hafnium which then uses the
+UUID to route the request to the correct SP and service. From the
+corresponding EC service it then calls into the eSPI or underlying
+transport layer to send and receive the request to the physical EC.</p>
+<h3 id="ffa-device-definition"><a class="header" href="#ffa-device-definition">FFA Device Definition</a></h3>
+<p>The FFA device is loaded from ACPI during boot and as such requires a
+Device entry in ACPI</p>
+<pre><code>  Name(_HID, "MSFT000C")
+
+  OperationRegion(AFFH, FFixedHw, 4, 144) 
+  Field(AFFH, BufferAcc, NoLock, Preserve) { AccessAs(BufferAcc, 0x1), FFAC, 1152 }     
+    
+
+  Name(_DSD, Package() {
+      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"), //Device Prop UUID
+      Package() {
+        Package(2) {
+          "arm-arml0002-ffa-ntf-bind",
+          Package() {
+              1, // Revision
+              2, // Count of following packages
+              Package () {
+                     ToUUID("330c1273-fde5-4757-9819-5b6539037502"), // Service1 UUID
+                     Package () {
+                          0x01,     //Cookie1 (UINT32)
+                          0x07,     //Cookie2
+                      }
+              },
+              Package () {
+                     ToUUID("b510b3a3-59f6-4054-ba7a-ff2eb1eac765"), // Service2 UUID
+                     Package () {
+                          0x01,     //Cookie1
+                          0x03,     //Cookie2
+                      }
+             }
+         }
+      }
+    }
+  }) // _DSD()
+
+  Method(_DSM, 0x4, NotSerialized)
+  {
+    // Arg0 - UUID
+    // Arg1 - Revision
+    // Arg2: Function Index
+    //         0 - Query
+    //         1 - Notify
+    //         2 - binding failure
+    //         3 - infra failure    
+    // Arg3 - Data
+  
+    //
+    // Device specific method used to query
+    // configuration data. See ACPI 5.0 specification
+    // for further details.
+    //
+    If(LEqual(Arg0, Buffer(0x10) {
+        //
+        // UUID: {7681541E-8827-4239-8D9D-36BE7FE12542}
+        //
+        0x1e, 0x54, 0x81, 0x76, 0x27, 0x88, 0x39, 0x42, 0x8d, 0x9d, 0x36, 0xbe, 0x7f, 0xe1, 0x25, 0x42
+      }))
+    {
+      // Query Function
+      If(LEqual(Arg2, Zero)) 
+      {
+        Return(Buffer(One) { 0x03 }) // Bitmask Query + Notify
+      }
+      
+      // Notify Function
+      If(LEqual(Arg2, One))
+      {
+        // Arg3 - Package {UUID, Cookie}
+        Store(Index(Arg3,1), \_SB.ECT0.NEVT )
+        Return(Zero) 
+      }
+    } Else {
+      Return(Buffer(One) { 0x00 })
+    }
+  }
+
+  Method(AVAL,0x0, Serialized)
+  {
+    Return(One)
+  }
+}
+</code></pre>
+<h4 id="hid-definition"><a class="header" href="#hid-definition">HID definition</a></h4>
+<p>The _HID “MSFT000C” is reserved for FFA devices. Defining this HID for
+your device will cause the FFA interface for the OS to be loaded on this
+device.</p>
+<h4 id="operation-region-definition"><a class="header" href="#operation-region-definition">Operation Region Definition</a></h4>
+<p>The operation region is marked as FFixedHw type 4 which lets the ACPI
+interpreter know that any read/write to this region requires special
+handling. The length is 144 bytes because this region operates on
+registers X0-X17 each of which are 8 bytes 18*8 = 144 bytes. This is
+mapped to FFAC is 1152 bits (144*8) and this field is where we act
+upon.</p>
+<pre><code>OperationRegion(AFFH, FFixedHw, 4, 144)
+Field(AFFH, BufferAcc, NoLock, Preserve) { AccessAs(BufferAcc, 0x1),FFAC, 1152 }
+</code></pre>
+<p>When reading and writing from this operation region the FFA driver does
+some underlying mapping for X0-X3</p>
+<pre><code>X0 = 0xc400008d // FFA_DIRECT_REQ2
+X1 = (Receiver Endpoint ID) | (Sender Endpoint ID \&lt;\&lt; 16)
+X2/X3 = UUID
+</code></pre>
+<p>The following is the format of the request and response packets that are
+sent via ACPI</p>
+<pre><code>FFA_REQ_PACKET
+{
+  uint8 status; // Not used just populated so commands are symmetric
+  uint8 length; // Number of bytes in rawdata
+  uint128 UUID;
+  uint8 reqdata[];
+}
+
+FFA_RSP_PACKET
+{
+  uint8 status; // Status from ACPI if FFA command was sent successfully
+  uint8 length;
+  uint128 UUID;
+  uint64 ffa_status; // Status returned from the service of the FFA command
+  uint8 rspdata[];
+}
+
+CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+CreateField(BUFF,16,128,UUID) // In/Out - UUID of service
+CreateDwordField(BUFF,18,FFST)// Out - FFA command status
+</code></pre>
+<h4 id="register-notification"><a class="header" href="#register-notification">Register Notification</a></h4>
+<p>During FFA driver initialization it calls into secure world to get a
+list of all available services for each secure partition. After this we
+send a NOTIFICATION_REGISTRATION request to each SP that has a service
+which registers for notification events</p>
+<pre><code>  Name(_DSD, Package() {
+      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"), //Device Prop UUID
+      Package() {
+        Package(2) {
+          "arm-arml0002-ffa-ntf-bind",
+          Package() {
+              1, // Revision
+              1, // Count of following packages
+              Package () {
+                     ToUUID("330c1273-fde5-4757-9819-5b6539037502"), // Service1 UUID
+                     Package () {
+                          0x01,     //Cookie1 (UINT32)
+                          0x07,     //Cookie2
+                      }
+              },
+         }
+      }
+    }
+  }) // _DSD()
+</code></pre>
+<p><img src="media/image2.png" alt="A diagram of a application Description automatically generated" /></p>
+<p>In the above example we indicate that the OS will handle 2 different
+notification events for UUID 330c1273-fde5-4757-9819-5b6539037502 which
+is our EC management UUID. FFA knows which secure partition this maps to
+based on the list of services for each SP it has retrieved. Rather than
+having to keep track of all the physical bits in the bitmask that are
+used the FFA driver keeps track of this and allows each service to
+create a list of virtual ID’s they need to handle. The FFA driver then
+maps this to one of the available bits in the hardware bitmask and
+passes this mapping down to the notification service running in a given
+SP.</p>
+<h3 id="input"><a class="header" href="#input">Input</a></h3>
+<table>
+<thead>
+<tr class="header">
+<th><strong>Parameter </strong></th>
+<th><strong>Register </strong></th>
+<th><strong>Value </strong></th>
+</tr>
+</thead>
+<tbody>
+<td>Function<strong> </strong></td>
+<td>X4 </td>
+<td>0x1 </td>
+</tr>
+<td>UUID Lo<strong> </strong></td>
+<td>X5 </td>
+<td>Bytes [0..7] for the service UUID. </td>
+</tr>
+<td>UUID Hi<strong> </strong></td>
+<td>X6 </td>
+<td>Bytes [8..16] for the service UUID. </td>
+</tr>
+<td>Mappings Count<strong> </strong></td>
+<td>X7 </td>
+<td>The number of notification mappings </td>
+</tr>
+<td>Notification Mapping1<strong> </strong></td>
+<td>X8 </td>
+<td><p>Bits [0..16] – Notification ID. --&gt; 0,1,2,3,... </p>
+<p> </p>
+<p>Bits [16..32] – Notification Bitmap bit number (0-383).  </p></td>
+</tr>
+<td>Notification Mapping2<strong> </strong></td>
+<td>X9 </td>
+<td><p>Bits [0..16] – Notification ID. --&gt; 0,1,2,3,... </p>
+<p> </p>
+<p>Bits [16..32] – Notification Bitmap bit number (0-383). </p>
+<p> </p></td>
+</tr>
+<td>...<strong> </strong></td>
+<td>... </td>
+<td>... </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<h3 id="output"><a class="header" href="#output">Output</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Parameter </th><th>Register </th><th>Value </th></tr></thead><tbody>
+<tr><td>Result</td><td>X4</td><td>0 on success. Otherwise, Failure</td></tr>
+</tbody></table>
+</div>
+<p> </p>
+<p>Note this NOTIFICATION_REGISTER request is sent to the
+Notification Service UUID in the SP. The UUID of the service that the
+notifications are for are stored in X5/X6 registers shown above.</p>
+<p>The UUID for notification service is
+{B510B3A3-59F6-4054-BA7A-FF2EB1EAC765} which is stored in X2/X3.</p>
+<h4 id="notification-events"><a class="header" href="#notification-events">Notification Events</a></h4>
+<p>All notification events sent from all secure partitions are passed back
+through the FFA driver. The notification calls the _DSM method. Function 0
+is always a bitmap of all the other functions supported. We must support at
+least a minium of the Query and Notify.
+The UUID is stored in Arg0 and the notification cookie is stored in Arg3 when Arg2 is 11.</p>
+<pre><code>  Method(_DSM, 0x4, NotSerialized)
+  {
+    // Arg0 - UUID
+    // Arg1 - Revision
+    // Arg2: Function Index
+    //         0 - Query
+    //         1 - Notify
+    //         2 - binding failure
+    //         3 - infra failure    
+    // Arg3 - Data
+  
+    //
+    // Device specific method used to query
+    // configuration data. See ACPI 5.0 specification
+    // for further details.
+    //
+    If(LEqual(Arg0, Buffer(0x10) {
+        //
+        // UUID: {7681541E-8827-4239-8D9D-36BE7FE12542}
+        //
+        0x1e, 0x54, 0x81, 0x76, 0x27, 0x88, 0x39, 0x42, 0x8d, 0x9d, 0x36, 0xbe, 0x7f, 0xe1, 0x25, 0x42
+      }))
+    {
+      // Query Function
+      If(LEqual(Arg2, Zero)) 
+      {
+        Return(Buffer(One) { 0x03 }) // Bitmask Query + Notify
+      }
+      
+      // Notify Function
+      If(LEqual(Arg2, One))
+      {
+        // Arg3 - Package {UUID, Cookie}
+        Store(Index(Arg3,1), \_SB.ECT0.NEVT )
+        Return(Zero) 
+      }
+    } Else {
+      Return(Buffer(One) { 0x00 })
+    }
+  }
+</code></pre>
+<p>The following is the call flow showing a secure interrupt arriving to
+the EC service which results in a notification back to ACPI. The
+notification payload can optionally be written to a shared buffer or
+ACPI can make another call back into EC service to retrieve the
+notification details.</p>
+<p>The _NFY only contains the ID of the notification and no other payload,
+so both ACPI and the EC service must be designed either with shared
+memory buffer or a further notify data packet.</p>
+<p><img src="media/image3.png" alt="A diagram of a service Description automatically generated" /></p>
+<h2 id="runtime-requests"><a class="header" href="#runtime-requests">Runtime Requests</a></h2>
+<p>During runtime the non-secure side uses FFA_MSG_SEND_DIRECT_REQ2
+requests to send requests to a given service within an SP. Any request
+that is expected to take longer than 500 uSec should yield control back
+to the OS by calling FFA_YIELD within the service. When FFA_YIELD is
+called it will return control back to the OS to continue executing but
+the corresponding ACPI thread will be blocked until the original FFA
+request completes with DIRECT_RSP2. Note this creates a polling type
+interface where the OS will resume the SP thread after the timeout
+specified. The following is sample call sequence.</p>
+<p><img src="media/image4.png" alt="A diagram of a company&#39;s process Description automatically generated" /></p>
+<h3 id="ffa-example-data-flow"><a class="header" href="#ffa-example-data-flow">FFA Example Data Flow</a></h3>
+<p>For an example let’s take the battery status request _BST and follow
+data through.</p>
+<p><img src="media/image5.png" alt="A screenshot of a computer Description automatically generated" /></p>
+<pre><code>FFA_REQ_PACKET req = {
+  0x0, // Initialize to no error
+  0x1, // Only 1 byte of data is sent after the header
+  {0x25,0xcb,0x52,0x07,0xac,0x36,0x42,0x7d,0xaa,0xef,0x3a,0xa7,0x88,0x77,0xd2,0x7e},
+  0x2 // EC_BAT_GET_BST
+}
+</code></pre>
+<p>The equivalent to write this data into a BUFF in ACPI is as follows</p>
+<pre><code>Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+CreateField(BUFF,16,128,UUID) // UUID of service
+CreateByteField(BUFF,18, CMDD) // In – First byte of command
+CreateField(BUFF,144,128,BSTD) // Out – Raw data response 4 DWords
+Store(20,LENG)
+Store(0x2, CMDD)
+Store(ToUUID ("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID)
+Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+</code></pre>
+<p>The ACPI interpreter when walking through this code creates a buffer and
+populates the data into buffer. The last line indicates to send this
+buffer over FFA interface.</p>
+<p>ACPI calls into the FFA interface to send the data over to the secure
+world EC Service</p>
+<pre><code>typedef struct _FFA_INTERFACE {
+    ULONG Version;
+    PFFA_MSG_SEND_DIRECT_REQ2 SendDirectReq2;
+} FFA_INTERFACE, \*PFFA_INTERFACE;
+</code></pre>
+<h3 id="ffa-parsing"><a class="header" href="#ffa-parsing">FFA Parsing</a></h3>
+<p>FFA is in charge of sending the SMC over to the secure world and routing
+to the correct service based on UUID.</p>
+<p><img src="media/image6.png" alt="A diagram of a computer Description automatically generated" /></p>
+<pre><code>X0 = SEND_DIRECT_REQ2 SMC command ID
+X1 = Source ID and Destination ID
+X2 = UUID Low
+X3 = UUID High
+X4-X17 = rawdata
+</code></pre>
+<p><strong>Note:</strong> The status and length are not passed through to the secure
+world they are consumed only be ACPI.</p>
+<p>HyperV and Monitor have a chance to filter or deny the request, but in
+general just pass the SMC request through to Hafnium</p>
+<p>Hafnium extracts the data from the registers into an sp_msg structure
+which is directly mapping contents from x0-x17 into these fields.</p>
+<pre><code>pub struct FfaParams {
+    pub x0: u64,
+    pub x1: u64,
+    pub x2: u64,
+    pub x3: u64,
+    pub x4: u64,
+    pub x5: u64,
+    pub x6: u64,
+    pub x7: u64,
+    pub x8: u64,
+    pub x9: u64,
+    pub x10: u64,
+    pub x11: u64,
+    pub x12: u64,
+    pub x13: u64,
+    pub x14: u64,
+    pub x15: u64,
+    pub x16: u64,
+    pub x17: u64,
+}
+</code></pre>
+<p>In our SP we receive the raw FfaParams structure and we convert this to
+an FfaMsg using our translator. This pulls out the function_id,
+source_id, destination_id and uuid.</p>
+<pre><code>fn from(params: FfaParams) -&gt; FfaMsg {
+  FfaMsg {
+    function_id: params.x0,              // Function id is in lower 32 bits of x0
+    source_id: (params.x1 &gt;&gt; 16) as u16, // Source in upper 16 bits
+    destination_id: params.x1 as u16,    // Destination in lower 16 bits
+    uuid: u64_to_uuid(params.x2, params.x3),
+    args64: [
+      params.x4, params.x5, params.x6, params.x7, params.x8, params.x9, params.x10,
+      params.x11, params.x12, params.x13, params.x14, params.x15, params.x16, params.x17,
+            ],
+  }
+}
+</code></pre>
+<p>The destination_id is used to route the message to the correct SP, this
+is based on the ID field in the DTS description file. Eg: id =
+&lt;0x8001&gt;;</p>
+<h3 id="ec-service-parsing"><a class="header" href="#ec-service-parsing">EC Service Parsing</a></h3>
+<p>Within the EC partition there are several services that run, the routing
+of the FF-A request to the correct services is done by the main message
+handling loop for the secure partition. After receiving a message we
+call into ffa_msg_handler and based on the UUID send it to the
+corresponding service to handle the message.</p>
+<pre><code>let mut next_msg = ffa.msg_wait();
+loop {
+  match next_msg {
+    Ok(ffamsg) =&gt; match ffa_msg_handler(&amp;ffamsg) {
+      Ok(msg) =&gt; next_msg = ffa.msg_resp(\&amp;msg),
+      Err(_e) =&gt; panic!("Failed to handle FFA msg"),
+    },
+    Err(_e) =&gt; {
+      panic!("Error executing msg_wait");
+    }
+   }
+}
+</code></pre>
+<p>The main message loop gets the response back from ffa_msg_handler and
+returns to non-secure world so the next incoming message after the
+response is a new message to handle.</p>
+<pre><code>fn ffa_msg_handler(msg: &amp;FfaMsg) -&gt; Result&lt;FfaMsg&gt; {
+    println!(
+        "Successfully received ffa msg:
+        function_id = {:08x}
+               uuid = {}",
+        msg.function_id, msg.uuid
+    );
+
+    match msg.uuid {
+        UUID_EC_SVC_MANAGEMENT =&gt; {
+            let fwmgmt = fw_mgmt::FwMgmt::new();
+            fwmgmt.exec(msg)
+        }
+
+        UUID_EC_SVC_NOTIFY =&gt; {
+            let ntfy = notify::Notify::new();
+            ntfy.exec(msg)
+        }
+
+        UUID_EC_SVC_POWER =&gt; {
+            let pwr = power::Power::new();
+            pwr.exec(msg)
+        }
+
+        UUID_EC_SVC_BATTERY =&gt; {
+            let batt = battery::Battery::new();
+            batt.exec(msg)
+        }
+
+        UUID_EC_SVC_THERMAL =&gt; {
+            let thm = thermal::ThmMgmt::new();
+            thm.exec(msg)
+        }
+
+        UUID_EC_SVC_UCSI =&gt; {
+            let ucsi = ucsi::UCSI::new();
+            ucsi.exec(msg)
+        }
+
+        UUID_EC_SVC_TIME_ALARM =&gt; {
+            let alrm = alarm::Alarm::new();
+            alrm.exec(msg)
+        }
+
+        UUID_EC_SVC_DEBUG =&gt; {
+            let dbg = debug::Debug::new();
+            dbg.exec(msg)
+        }
+
+        UUID_EC_SVC_OEM =&gt; {
+            let oem = oem::OEM::new();
+            oem.exec(msg)
+        }
+
+        _ =&gt; panic!("Unknown UUID"),
+    }
+}
+</code></pre>
+<h3 id="large-data-transfers"><a class="header" href="#large-data-transfers">Large Data Transfers</a></h3>
+<p>When making an FFA_MSG_SEND_DIRECT_REQ2 call the data is stored in
+registers X0-X17. X0-X3 are reserved to store the Function Id, Source
+Id, Destination Id and UUID. This leaves X4-X17 or 112 bytes. For larger
+messages they either need to be broken into multiple pieces or make use
+of a shared buffer between the OS and Secure Partition.</p>
+<h4 id="shared-buffer-definitions"><a class="header" href="#shared-buffer-definitions">Shared Buffer Definitions</a></h4>
+<p>To create a shared buffer you need to modify the dts file for the secure
+partition to include mapping to your buffer.</p>
+<pre><code>ns_comm_buffer {
+  description = "ns-comm";
+  base-address = &lt;0x00000100 0x60000000&gt;;
+  pages-count = &lt;0x8&gt;;
+  attributes = &lt;NON_SECURE_RW&gt;;
+};
+</code></pre>
+<p>During UEFI Platform initialization you will need to do the following
+steps, see the FFA specification for more details on these commands</p>
+<ul>
+<li>FFA_MAP_RXTX_BUFFER</li>
+<li>FFA_MEM_SHARE</li>
+<li>FFA_MSG_SEND_DIRECT_REQ2 (EC_CAP_MEM_SHARE)</li>
+<li>FFA_UNMAP_RXTX_BUFFER</li>
+</ul>
+<p>The RXTX buffer is used during larger packet transfers but can be
+overridden and updated by the framework. The MEM_SHARE command uses the
+RXTX buffer so we first map that buffer then populate our memory
+descriptor requests to the TX_BUFFER and send to Hafnium. After sending
+the MEM_SHARE request we need to instruct our SP to retrieve this
+memory mapping request. This is done through our customer
+EC_CAP_MEM_SHARE request where we describe the shared memory region
+that UEFI has donated. From there we call FFA_MEM_RETRIEVE_REQ to map
+the shared memory that was described to Hafnium. After we are done with
+the RXTX buffers we must unmap them as the OS will re-map new RXTX
+buffers. From this point on both Non-secure and Secure side will have
+access to this shared memory buffer that was allocated.</p>
+<h3 id="async-transfers"><a class="header" href="#async-transfers">Async Transfers</a></h3>
+<p>All services are single threaded by default. Even when doing FFA_YIELD
+it does not allow any new content to be executed within the service. If
+you need your service to be truly asynchronous you must have commands
+with delayed responses.</p>
+<p>There is no packet identifier by default and tracking of requests and
+completion by FFA, so the sample solution given here is based on shared
+buffers defined in previous section and existing ACPI and FFA
+functionality.</p>
+<p><img src="media/image7.png" alt="A diagram of a service Description automatically generated" /></p>
+<p>Inside of our FFA functions rather than copying our data payload into
+the direct registers we define a queue in shared memory and populate the
+actual data into this queue entry. In the FFA_MSG_SEND_DIRECT_REQ2
+we populate an ASYNC command ID (0x0) along with the seq #. The seq #
+is then used by the service to locate the request in the TX queue. We
+define a separate queue for RX and TX so we don’t need to synchronize
+between OS and secure partition.</p>
+<p><img src="media/image8.png" alt="" /></p>
+<h3 id="acpi-structures-and-methods-for-asynchronous"><a class="header" href="#acpi-structures-and-methods-for-asynchronous">ACPI Structures and Methods for Asynchronous</a></h3>
+<p>The SMTX is shared memory TX region definition</p>
+<pre><code>// Shared memory regions and ASYNC implementation
+OperationRegion (SMTX, SystemMemory, 0x10060000000, 0x1000)
+
+// Store our actual request to shared memory TX buffer
+Field (SMTX, AnyAcc, NoLock, Preserve)
+{
+  TVER, 16,
+  TCNT, 16,
+  TRS0, 32,
+  TB0, 64,
+  TB1, 64,
+  TB2, 64,
+  TB3, 64,
+  TB4, 64,
+  TB5, 64,
+  TB6, 64,
+  TB7, 64,
+  Offset(0x100), // First Entry starts at 256 byte offset each entry is 256 bytes
+  TE0, 2048,
+  TE1, 2048,
+  TE2, 2048,
+  TE3, 2048,
+  TE4, 2048,
+  TE5, 2048,
+  TE6, 2048,
+  TE7, 2048,
+}
+</code></pre>
+<p>The QTXB method copies data into first available entry in the TX queue
+and returns sequence number used.</p>
+<pre><code>// Arg0 is buffer pointer
+// Arg1 is length of Data
+// Return Seq \#
+Method(QTXB, 0x2, Serialized) {
+  Name(TBX, 0x0)
+  Store(Add(ShiftLeft(1,32),Add(ShiftLeft(Arg1,16),SEQN)),TBX)
+  Increment(SEQN)
+  // Loop until we find a free entry to populate
+  While(One) {
+    If(LEqual(And(TB0,0xFFFF),0x0)) {
+      Store(TBX,TB0); Store(Arg0,TE0); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB1,0xFFFF),0x0)) {
+      Store(TBX,TB1); Store(Arg0,TE1); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB2,0xFFFF),0x0)) {
+      Store(TBX,TB2); Store(Arg0,TE2); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB3,0xFFFF),0x0)) {
+      Store(TBX,TB3); Store(Arg0,TE3); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB4,0xFFFF),0x0)) {
+      Store(TBX,TB4); Store(Arg0,TE4); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB5,0xFFFF),0x0)) {
+      Store(TBX,TB5); Store(Arg0,TE5); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB6,0xFFFF),0x0)) {
+      Store(TBX,TB6); Store(Arg0,TE6); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB7,0xFFFF),0x0)) {
+      Store(TBX,TB7); Store(Arg0,TE7); Return( And(TBX,0xFFFF) )
+    }
+
+    Sleep(5)
+  }
+}
+</code></pre>
+<p>The SMRX is shared memory region for RX queues</p>
+<pre><code>// Shared memory region
+OperationRegion (SMRX, SystemMemory, 0x10060001000, 0x1000)
+
+// Store our actual request to shared memory TX buffer
+Field (SMRX, AnyAcc, NoLock, Preserve)
+{
+  RVER, 16,
+  RCNT, 16,
+  RRS0, 32,
+  RB0, 64,
+  RB1, 64,
+  RB2, 64,
+  RB3, 64,
+  RB4, 64,
+  RB5, 64,
+  RB6, 64,
+  RB7, 64,
+  Offset(0x100), // First Entry starts at 256 byte offset each entry is 256 bytes
+  RE0, 2048,
+  RE1, 2048,
+  RE2, 2048,
+  RE3, 2048,
+  RE4, 2048,
+  RE5, 2048,
+  RE6, 2048,
+  RE7, 2048,
+}
+</code></pre>
+<p>The RXDB function takes sequence number as input and will keep looping
+through all the entries until we see packet has completed. Sleeps for
+5ms between each iteration to allow the OS to do other things and other
+ACPI threads can run.</p>
+<pre><code>// Allow multiple threads to wait for their SEQ packet at once
+// If supporting packet \&gt; 256 bytes need to modify to stitch together packet
+Method(RXDB, 0x1, Serialized) {
+  Name(BUFF, Buffer(256){})
+  // Loop forever until we find our seq
+  While (One) {
+    If(LEqual(And(RB0,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB0,16),0xFFFF),8), XB0)
+      Store(RE0,BUFF); Store(0,RB0); Return( XB0 )
+    }
+
+    If(LEqual(And(RB1,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB1,16),0xFFFF),8), XB1)
+      Store(RE1,BUFF); Store(0,RB1); Return( XB1 )
+    }
+
+    If(LEqual(And(RB2,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB2,16),0xFFFF),8), XB2)
+      Store(RE2,BUFF); Store(0,RB2); Return( XB2 )
+    }
+
+    If(LEqual(And(RB3,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB3,16),0xFFFF),8), XB3)
+      Store(RE3,BUFF); Store(0,RB3); Return( XB3 )
+    }
+
+    If(LEqual(And(RB4,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB4,16),0xFFFF),8), XB4)
+      Store(RE4,BUFF); Store(0,RB4); Return( XB4 )
+    }
+
+    If(LEqual(And(RB5,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB5,16),0xFFFF),8), XB5)
+      Store(RE5,BUFF); Store(0,RB5); Return( XB5 )
+    }
+
+    If(LEqual(And(RB6,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB6,16),0xFFFF),8), XB6)
+      Store(RE6,BUFF); Store(0,RB6); Return( XB6 )
+    }
+
+    If(LEqual(And(RB7,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB7,16),0xFFFF),8), XB7)
+      Store(RE7,BUFF); Store(0,RB7); Return( XB7 )
+    }
+
+    Sleep(5)
+  }
+
+  // If we get here didn't find a matching sequence number
+  Return (Ones)
+}
+</code></pre>
+<p>The following is sample code to transmit a ASYNC request and wait for
+the data in the RX buffer.</p>
+<pre><code>Method(ASYC, 0x0, Serialized) {
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+  Name(BUFF, Buffer(30){})
+  CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+  CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+  CreateField(BUFF,16,128,UUID) // UUID of service
+  CreateByteField(BUFF,18,CMDD) // Command register
+  CreateWordField(BUFF,19,BSQN) // Sequence Number
+
+  // x0 -\&gt; STAT
+  Store(20, LENG)
+  Store(0x0, CMDD) // EC_ASYNC command
+  Local0 = QTXB(BUFF,20) // Copy data to our queue entry and get back SEQN
+  Store(Local0,BSQN) // Sequence packet to read from shared memory
+  Store(ToUUID("330c1273-fde5-4757-9819-5b6539037502"), UUID)
+  Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+  If(LEqual(STAT,0x0) ) // Check FF-A successful?
+  {
+    Return (RXDB(Local0)) // Loop through our RX queue till packet completes
+  }
+}
+</code></pre>
+<h2 id="recovery-and-errors"><a class="header" href="#recovery-and-errors">Recovery and Errors</a></h2>
+<p>The eSPI or bus driver is expected to detect if the EC is not responding
+and retry. The FFA driver will report back in the status byte if it
+cannot successfully talk to the secure world. If there are other
+failures generally they should be returned back up through ACPI with a
+value of (Ones) to indicate failure condition. This may cause some
+features to work incorrectly.</p>
+<p>It is also expected that the EC has a watchdog if something on the EC is
+hung it should reset and reload on its own. The EC is also responsible
+for monitoring that the system is running within safe parameters. The
+thermal requests and queries are meant to be advisory in nature and EC
+should be able to run independently and safely without any intervention
+from the OS.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ec-firmware-management"><a class="header" href="#ec-firmware-management">EC Firmware Management</a></h1>
+<p>This service is to provide details about the security state, supported
+features, debug, firmware version and firmware update functionality.</p>
+<p>NIST SP 800-193 compliance requires failsafe update of primary and
+backup EC FW images. EC should run from primary partition while writing
+backup partitions and then change flag to indicate backup becomes
+primary and primary becomes backup.</p>
+<div class="table-wrapper"><table><thead><tr><th>Capability Command</th><th>Description</th></tr></thead><tbody>
+<tr><td>EC_CAP_GET_FW_STATE = 0x1</td><td>Return details of FW in EC, DICE, Secure Boot, Version, etc</td></tr>
+<tr><td>EC_CAP_GET_SVC_LIST = 0x2</td><td>Get list of services/features that this EC supports</td></tr>
+<tr><td>EC_CAP_GET_BID = 0x3</td><td>Read Board ID that is used customized behavior</td></tr>
+<tr><td>EC_CAP_TEST_NFY = 0x4</td><td>Create test notification event</td></tr>
+</tbody></table>
+</div>
+<h2 id="get-firmware-state"><a class="header" href="#get-firmware-state">Get Firmware State</a></h2>
+<p>Returns start of the overall EC if DICE and secure boot was enabled,
+currently running firmware version, EC status like boot failures.</p>
+<h3 id="secure-boot-and-dice"><a class="header" href="#secure-boot-and-dice">Secure Boot and DICE</a></h3>
+<p>DICE is a specification from the Trusted Computing Group that allows the
+MCU to verify the signature of the code that it is executing, thereby
+establishing trust in the code. To do this, it has a primary bootloader
+program that reads the firmware on flash and using a key that is only
+accessible by the ROM bootloader, can verify the authenticity of the
+firmware. </p>
+<p><a href="https://trustedcomputinggroup.org/wp-content/uploads/Hardware-Requirements-for-Device-Identifier-Composition-Engine-r78_For-Publication.pdf"><span class="underline">Trusted Platform Architecture - Device Identity
+Composition Engine
+(trustedcomputinggroup.org)</span></a> </p>
+<h3 id="input-parameters"><a class="header" href="#input-parameters">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters"><a class="header" href="#output-parameters">Output Parameters</a></h3>
+<table>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Bits</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FWVersion</td>
+<td>16</td>
+<td>Version of FW running on EC</td>
+</tr>
+<tr class="even">
+<td>SecureState</td>
+<td>8</td>
+<td><p>Bit mask representing the secure state of the device</p>
+<p>0 – DICE is enabled</p>
+<p>1 – Firmware is signed</p></td>
+</tr>
+<tr class="odd">
+<td>BootStatus</td>
+<td>8</td>
+<td><p>Boot status and error codes</p>
+<p>0 = SUCCESS</p></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ffa-acpi-example"><a class="header" href="#ffa-acpi-example">FFA ACPI Example</a></h3>
+<pre><code>Method (TFWS) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,32,FWSD) // Out – Raw data response (overlaps with CMDD)
+
+    Store(ToUUID("330c1273-fde5-4757-9819-5b6539037502"), UUID) // Management
+    Store(20, LENG)
+    Store(0x1, CMDD) // EC_CAP_GET_FW_STATE
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (FWSD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="get-features-supported"><a class="header" href="#get-features-supported">Get Features Supported</a></h2>
+<p>Get a list of services/features supported by this EC. Several features
+like HID devices are optional and may not be present. OEM services may
+also be added to this list as additional features supported.</p>
+<h3 id="input-parameters-1"><a class="header" href="#input-parameters-1">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-1"><a class="header" href="#output-parameters-1">Output Parameters</a></h3>
+<table>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Bits</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DebugMask</td>
+<td>16</td>
+<td><p>0 – Supports reset reason</p>
+<p>1 – Supports debug tracing</p></td>
+</tr>
+<tr class="even">
+<td>BatteryMask</td>
+<td>8</td>
+<td><p>0 – Battery 0 present</p>
+<p>1 – Battery 1 present</p>
+<p>…</p></td>
+</tr>
+<tr class="odd">
+<td>FanMask</td>
+<td>8</td>
+<td><p>0 – FAN 0 present</p>
+<p>1 – FAN 1 present</p>
+<p>…</p></td>
+</tr>
+<tr class="even">
+<td>ThermalMask</td>
+<td>8</td>
+<td>0 – Skin TZ present</td>
+</tr>
+<tr class="odd">
+<td>HIDMask</td>
+<td>8</td>
+<td><p>0 – HID0 present</p>
+<p>1 – HID1 present</p>
+<p>…</p></td>
+</tr>
+<tr class="even">
+<td>KeyMask</td>
+<td>16</td>
+<td><p>0 – Power key present</p>
+<p>1 – LID switch present</p>
+<p>2 – VolUp Key Present</p>
+<p>3 – VolDown Key Present</p>
+<p>4 – Camera Key Present</p></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ffa-acpi-example-1"><a class="header" href="#ffa-acpi-example-1">FFA ACPI Example</a></h3>
+<pre><code>Method(TFET, 0x0, Serialized) {
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(24){})
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18,CMDD) // Command register
+    CreateField(BUFF,144,48,FETD) // Output Data
+
+    Store(20, LENG)
+    Store(0x2, CMDD) // EC_CAP_GET_SVC_LIST
+    Store(ToUUID("330c1273-fde5-4757-9819-5b6539037502"), UUID)
+    Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) {
+      Return (FETD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="get-board-id"><a class="header" href="#get-board-id">Get Board ID</a></h2>
+<p>EC is often used to read pins or details to determine the HW
+configuration based on GPIO’s or ADC values. This ID allows SW to change
+behavior depending on this HW version information.</p>
+<h3 id="input-parameters-2"><a class="header" href="#input-parameters-2">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-2"><a class="header" href="#output-parameters-2">Output Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Field</th><th>Bits</th><th>Description</th></tr></thead><tbody>
+<tr><td>BoardID</td><td>64</td><td>Vendor defined</td></tr>
+</tbody></table>
+</div>
+<h3 id="ffa-acpi-example-2"><a class="header" href="#ffa-acpi-example-2">FFA ACPI Example</a></h3>
+<pre><code>Method(TBID, 0x0, Serialized) {
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){})
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18,CMDD) // Command register
+    CreateDwordField(BUFF,18,BIDD) // Output Data
+    Store(20, LENG)
+    Store(0x3, CMDD) // EC_CAP_GET_BID
+    Store(ToUUID("330c1273-fde5-4757-9819-5b6539037502"), UUID)
+    Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) {
+      Return (BIDD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="firmware-update"><a class="header" href="#firmware-update">Firmware Update</a></h2>
+<p>This should initiate update of a particular firmware in the backup
+partition to provide NIST SP 800-193 failsafe compliance. EC firmware
+update is planned to be handled through CFU. Further details are
+available in CFU specification.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ec-power-service"><a class="header" href="#ec-power-service">EC Power Service</a></h1>
+<h2 id="system-power-state"><a class="header" href="#system-power-state">System Power State</a></h2>
+<p>OS calls in to notify EC or a change in system power state.</p>
+<p>Perform appropriate power sequencing for the SoC from low power states
+(S3, S4, S5) to S0, and from S0 to low power states</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="battery-service"><a class="header" href="#battery-service">Battery Service</a></h1>
+<p>Battery control is monitored through the Modern Power Thermal Framework
+(MPTF). See this specification for further details on implementing
+firmware for these features. This section outlines the interface
+required in ACPI for this framework to function.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td>EC_BAT_GET_BIX = 0x1</td><td>Returns information about battery, model, serial number voltage. Note this is a superset of BIF. (MPTF)</td></tr>
+<tr><td>EC_BAT_GET_BST = 0x2</td><td>Get Battery Status, must also have notify event on state change. (MPTF)</td></tr>
+<tr><td>EC_BAT_GET_PSR = 0x3</td><td>Returns whether this power source device is currently online. (MPTF)</td></tr>
+<tr><td>EC_BAT_GET_PIF = 0x4</td><td>Returns static information about a power source. (MPTF)</td></tr>
+<tr><td>EC_BAT_GET_BPS = 0x5</td><td>Power delivery capabilities of battery at present time. (MPTF)</td></tr>
+<tr><td>EC_BAT_SET_BTP = 0x6</td><td>Set battery trip point to generate SCI event (MPTF)</td></tr>
+<tr><td>EC_BAT_SET_BPT = 0x7</td><td>Set Battery Power Threshold (MPTF)</td></tr>
+<tr><td>EC_BAT_GET_BPC = 0x8</td><td>Returns static variables that are associated with system power characteristics on the battery path and power threshold support settings. (MPTF)</td></tr>
+<tr><td>EC_BAT_SET_BMC= 0x9</td><td>Battery Maintenance Control</td></tr>
+<tr><td>EC_BAT_GET_BMD = 0xA</td><td>Returns battery information regarding charging and calibration</td></tr>
+<tr><td>EC_BAT_GET_BCT = 0xB</td><td>Returns battery charge time.</td></tr>
+<tr><td>EC_BAT_GET_BTM = 0xC</td><td>Get estimated runtime of battery while discharging</td></tr>
+<tr><td>EC_BAT_SET_BMS = 0xD</td><td>Sets battery capacity sampling time in ms</td></tr>
+<tr><td>EC_BAT_SET_BMA = 0xE</td><td>Battery Measurement Average Interval</td></tr>
+<tr><td>EC_BAT_GET_STA = 0xF</td><td>Get battery availability</td></tr>
+</tbody></table>
+</div>
+<h2 id="ec_bat_get_bix"><a class="header" href="#ec_bat_get_bix">EC_BAT_GET_BIX</a></h2>
+<p>Returns information about battery, model, serial number voltage etc</p>
+<h3 id="input-parameters-3"><a class="header" href="#input-parameters-3">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-3"><a class="header" href="#output-parameters-3">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bix-battery-information-extended">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="ffa-acpi-example-3"><a class="header" href="#ffa-acpi-example-3">FFA ACPI Example</a></h3>
+<pre><code>Method (_BIX) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(144){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,1088,BIXD) // Out – Raw data response max length
+
+    Store(20, LENG)
+    Store(0x1, CMDD) // EC_BAT_GET_BIX
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (BIXD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_get_bst"><a class="header" href="#ec_bat_get_bst">EC_BAT_GET_BST</a></h2>
+<p>This object returns the present battery status. Whenever the Battery
+State value changes, the system will generate an SCI to notify the OS.</p>
+<h3 id="input-parameters-4"><a class="header" href="#input-parameters-4">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-4"><a class="header" href="#output-parameters-4">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bst-battery-status">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="ffa-acpi-example-4"><a class="header" href="#ffa-acpi-example-4">FFA ACPI Example</a></h3>
+<pre><code>Method (_BST) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(34){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,128,BSTD) // Out – Raw data response 4 DWords
+
+    Store(20, LENG)
+    Store(0x2, CMDD) // EC_BAT_GET_BST
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (BSTD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_get_psr"><a class="header" href="#ec_bat_get_psr">EC_BAT_GET_PSR</a></h2>
+<p>Returns whether the power source device is currently in use. This can be
+used to determine if system is running off this power supply or adapter.
+On mobile systes this will report that the system is not running on the
+AC adapter if any of the batteries in the system is being forced to
+discharge. In systems that contains multiple power sources, this object
+reports the power source’s online or offline status.</p>
+<h3 id="input-parameters-5"><a class="header" href="#input-parameters-5">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-5"><a class="header" href="#output-parameters-5">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#battery-control-methods">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="ffa-acpi-example-5"><a class="header" href="#ffa-acpi-example-5">FFA ACPI Example</a></h3>
+<pre><code>Method (_PSR) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(22){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,32,PSRD) // Out – Raw data response (overlaps with CMDD)
+    
+    Store(20, LENG)
+    Store(0x3, CMDD) // EC_BAT_GET_PSR
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (PSRD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_get_pif"><a class="header" href="#ec_bat_get_pif">EC_BAT_GET_PIF</a></h2>
+<p>This object returns information about the Power Source, which remains
+constant until the Power Source is changed. When the power source
+changes, the platform issues a Notify(0x0) (Bus Check) to the Power
+Source device to indicate that OSPM must re-evaluate the _PIF object.</p>
+<h3 id="input-parameters-6"><a class="header" href="#input-parameters-6">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-6"><a class="header" href="#output-parameters-6">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#pif-power-source-information">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="ffa-acpi-example-6"><a class="header" href="#ffa-acpi-example-6">FFA ACPI Example</a></h3>
+<pre><code>Method (_PIF) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(22){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,1088,PIFD) // Out – Raw data response (overlaps with CMDD)
+    Store(20, LENG)
+    Store(0x4, CMDD) // EC_BAT_GET_PIF
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (PIFD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_get_bps"><a class="header" href="#ec_bat_get_bps">EC_BAT_GET_BPS</a></h2>
+<p>This optional object returns the power delivery capabilities of the
+battery at the present time. If multiple batteries are present within
+the system, the sum of peak power levels from each battery can be used
+to determine the total available power.</p>
+<h3 id="input-parameters-7"><a class="header" href="#input-parameters-7">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-7"><a class="header" href="#output-parameters-7">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-7"><a class="header" href="#ffa-acpi-example-7">FFA ACPI Example</a></h3>
+<pre><code>Method (_BPS) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(22){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,136,BPSD) // Out – BSP structure 5 integers
+
+    Store(20, LENG)
+    Store(0x5, CMDD) // EC_BAT_GET_BPS
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (BPSD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_set_btp"><a class="header" href="#ec_bat_set_btp">EC_BAT_SET_BTP</a></h2>
+<p>This object is used to set a trip point to generate an SCI whenever the
+Battery Remaining Capacity reaches or crosses the value specified in the
+_BTP object. Required on systems supporting Modern Standby</p>
+<p><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby">Platform design for modern standby | Microsoft
+Learn</a></p>
+<h3 id="input-parameters-8"><a class="header" href="#input-parameters-8">Input Parameters</a></h3>
+<p>See ACPI documentation for details</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#btp-battery-trip-point">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="output-parameters-8"><a class="header" href="#output-parameters-8">Output Parameters</a></h3>
+<p>None</p>
+<h3 id="ffa-acpi-example-8"><a class="header" href="#ffa-acpi-example-8">FFA ACPI Example</a></h3>
+<pre><code>Method (_BTP) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(24){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDWordField(BUFF,19, BTP1) // In – Battery Trip Point
+
+    Store(20, LENG)
+    Store(0x6, CMDD) // EC_BAT_SET_BTP
+    Store(Arg0, BTP1)
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (One)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_get_bpc"><a class="header" href="#ec_bat_get_bpc">EC_BAT_GET_BPC</a></h2>
+<p>This optional object returns static values that are used to configure
+power threshold support in the platform firmware. OSPM can use the
+information to determine the capabilities of power delivery and
+threshold support for each battery in the system.</p>
+<h3 id="input-parameters-9"><a class="header" href="#input-parameters-9">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-9"><a class="header" href="#output-parameters-9">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bpc-battery-power-characteristics">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="ffa-acpi-example-9"><a class="header" href="#ffa-acpi-example-9">FFA ACPI Example</a></h3>
+<pre><code>Method (_BPC) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(24){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,19,128, BPCD) // Out – BPC output Data
+
+    Store(20, LENG)
+    Store(0x8, CMDD) // EC_BAT_GET_BPC
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (BPCD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_set_bpt"><a class="header" href="#ec_bat_set_bpt">EC_BAT_SET_BPT</a></h2>
+<p>his optional object may be present under a battery device. OSPM must
+read _BPC first to determine the power delivery capability threshold
+support in the platform firmware and invoke this Method in order to
+program the threshold accordingly. If the platform does not support
+battery peak power thresholds, this Method should not be included in the
+namespace.</p>
+<h3 id="input-parameters-10"><a class="header" href="#input-parameters-10">Input Parameters</a></h3>
+<p>See ACPI specification for input parameters</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bpt-battery-power-threshold">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="output-parameters-10"><a class="header" href="#output-parameters-10">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bpt-battery-power-threshold">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="ffa-acpi-example-10"><a class="header" href="#ffa-acpi-example-10">FFA ACPI Example</a></h3>
+<pre><code>Method (_BPT) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDwordField(BUFF,19, BPT1) // In – Averaging Interval
+    CreateDwordField(BUFF,23, BPT2) // In – Threshold ID
+    CreateDwordField(BUFF,27, BPT3) // In – Threshold Value
+    CreateField(BUFF,144,32,BPTD) // Out – BPT integer output
+
+    Store(0x30, LENG)
+    Store(0x7, CMDD) // EC_BAT_SET_BPT
+    Store(Arg0,BPT1)
+    Store(Arg1,BPT2)
+    Store(Arg2,BPT3)
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (BPTD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_set_bmc"><a class="header" href="#ec_bat_set_bmc">EC_BAT_SET_BMC</a></h2>
+<p>This object is used to initiate calibration cycles or to control the
+charger and whether or not a battery is powering the system. This object
+is only present under a battery device if the _BMD Capabilities Flags
+field has bit 0, 1, 2, or 5 set.</p>
+<h3 id="input-parameters-11"><a class="header" href="#input-parameters-11">Input Parameters</a></h3>
+<p>See ACPI specification for input parameter definition</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bmc-battery-maintenance-control">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="output-parameters-11"><a class="header" href="#output-parameters-11">Output Parameters</a></h3>
+<p>None</p>
+<h3 id="ffa-acpi-example-11"><a class="header" href="#ffa-acpi-example-11">FFA ACPI Example</a></h3>
+<pre><code>Method (_BMC) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(22){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDWordField(BUFF,19, BMCF) // In – Feature Control Flags
+
+    Store(20, LENG)
+    Store(0x9, CMDD) // EC_BAT_SET_BMC
+    Store(Arg0,BMCF)
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (One)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_get_bmd"><a class="header" href="#ec_bat_get_bmd">EC_BAT_GET_BMD</a></h2>
+<p>This optional object returns information about the battery’s
+capabilities and current state in relation to battery calibration and
+charger control features. If the _BMC object (defined below) is present
+under a battery device, this object must also be present. Whenever the
+Status Flags value changes, AML code will issue a
+Notify(battery_device, 0x82). In addition, AML will issue a
+Notify(battery_device, 0x82) if evaluating _BMC did not result in
+causing the Status Flags to be set as indicated in that argument to
+_BMC. AML is not required to issue Notify(battery_device, 0x82) if the
+Status Flags change while evaluating _BMC unless the change does not
+correspond to the argument passed to _BMC.</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bmd-battery-maintenance-data">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="input-parameters-12"><a class="header" href="#input-parameters-12">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-12"><a class="header" href="#output-parameters-12">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-12"><a class="header" href="#ffa-acpi-example-12">FFA ACPI Example</a></h3>
+<pre><code>Method (_BMD) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(40){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,160,BMDD) // Out – BMD structure 5 DWords
+
+    Store(20, LENG)
+    Store(0xA, CMDD) // EC_BAT_GET_BMD
+    Store(Arg0,BMCF)
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (BMDD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_get_bct"><a class="header" href="#ec_bat_get_bct">EC_BAT_GET_BCT</a></h2>
+<p>When the battery is charging, this optional object returns the estimated
+time from present to when it is charged to a given percentage of Last
+Full Charge Capacity.</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bct-battery-charge-time">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="input-parameters-13"><a class="header" href="#input-parameters-13">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-13"><a class="header" href="#output-parameters-13">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-13"><a class="header" href="#ffa-acpi-example-13">FFA ACPI Example</a></h3>
+<pre><code>Method (_BCT) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(22){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDWordField(BUFF,19, CHLV) // In – ChargeLevel
+    CreateField(BUFF,144,32,BCTD) // Out – Raw data response (overlaps with CMDD)
+
+    Store(20, LENG)
+    Store(0xB, CMDD) // EC_BAT_GET_BCT
+    Store(Arg0,CHLV)
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (BCTD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_get_btm"><a class="header" href="#ec_bat_get_btm">EC_BAT_GET_BTM</a></h2>
+<p>This optional object returns the estimated runtime of the battery while
+it is discharging.</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#btm-battery-time">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="input-parameters-14"><a class="header" href="#input-parameters-14">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-14"><a class="header" href="#output-parameters-14">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h2 id="ec_bat_set_bms"><a class="header" href="#ec_bat_set_bms">EC_BAT_SET_BMS</a></h2>
+<p>This object is used to set the sampling time of the battery capacity
+measurement, in milliseconds.</p>
+<p>The Sampling Time is the duration between two consecutive measurements
+of the battery’s capacities specified in _BST, such as present rate and
+remaining capacity. If the OSPM makes two succeeding readings through
+_BST beyond the duration, two different results will be returned.</p>
+<p>The OSPM may read the Max Sampling Time and Min Sampling Time with _BIX
+during boot time, and set a specific sampling time within the range with
+_BMS.</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bms-battery-measurement-sampling-time">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="input-parameters-15"><a class="header" href="#input-parameters-15">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-15"><a class="header" href="#output-parameters-15">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-14"><a class="header" href="#ffa-acpi-example-14">FFA ACPI Example</a></h3>
+<pre><code>Method (_BMS) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDwordField(BUFF,19, BMS1) // In – Sampling Time
+    CreateField(BUFF,144,32,BMSD) // Out – BPT integer output
+
+    Store(20, LENG)
+    Store(0xD, CMDD) // EC_BAT_SET_BMS
+    Store(Arg0,BMS1)
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (BMSD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_set_bma"><a class="header" href="#ec_bat_set_bma">EC_BAT_SET_BMA</a></h2>
+<p>This object is used to set the averaging interval of the battery
+capacity measurement, in milliseconds. The Battery Measurement Averaging
+Interval is the length of time within which the battery averages the
+capacity measurements specified in _BST, such as remaining capacity and
+present rate.</p>
+<p>The OSPM may read the Max Average Interval and Min Average Interval with
+_BIX during boot time, and set a specific average interval within the
+range with _BMA.</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/10_Power_Source_and_Power_Meter_Devices/Power_Source_and_Power_Meter_Devices.html#bma-battery-measurement-averaging-interval">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="input-parameters-16"><a class="header" href="#input-parameters-16">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-16"><a class="header" href="#output-parameters-16">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-15"><a class="header" href="#ffa-acpi-example-15">FFA ACPI Example</a></h3>
+<pre><code>Method (_BMA) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDwordField(BUFF,19, BMA1) // In – Averaging Interval
+    CreateField(BUFF,144,32,BMAD) // Out – BMA integer output
+    
+    Store(20, LENG)
+    Store(0xE, CMDD) // EC_BAT_SET_BMA
+    Store(Arg0,BMS1)
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (BMAD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_bat_get_sta"><a class="header" href="#ec_bat_get_sta">EC_BAT_GET_STA</a></h2>
+<p>Returns battery status to the OS along with any error conditions as defined by ACPI specification.</p>
+<h3 id="input-parameters-17"><a class="header" href="#input-parameters-17">Input Parameters</a></h3>
+<p>None</p>
+<h3 id="output-parameters-17"><a class="header" href="#output-parameters-17">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<p><a href="https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#sta-device-status">10. Power Source and Power Meter Devices — ACPI Specification 6.4
+documentation</a></p>
+<h3 id="ffa-acpi-example-16"><a class="header" href="#ffa-acpi-example-16">FFA ACPI Example</a></h3>
+<pre><code>Method (_STA) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(144){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,32,STAD) // Out – Raw data with status
+
+    Store(20, LENG)
+    Store(0xF, CMDD) // EC_BAT_GET_STA
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (STAD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="thermal-zone-service"><a class="header" href="#thermal-zone-service">Thermal Zone Service</a></h1>
+<p>Battery temperature and other temperatures are read through a modified
+thermal interface called Microsoft Temperature Sensor that implements
+the _TMP and _DSM functionality. There is also still a generic thermal
+zone interface which has a few more entries for system outside of MPTF.</p>
+<div class="table-wrapper"><table><thead><tr><th><strong>Command</strong></th><th><strong>Description</strong></th></tr></thead><tbody>
+<tr><td>EC_THM_GET_TMP = 0x1</td><td>Returns the thermal zone’s current temperature in tenths of degrees.</td></tr>
+<tr><td>EC_THM_SET_THRS = 0x2</td><td>Sets the thresholds for high, low and timeout.</td></tr>
+<tr><td>EC_THM_GET_THRS = 0x3</td><td>Get thresholds for low and high points</td></tr>
+<tr><td>EC_THM_SET_SCP = 0x4</td><td>Set cooling Policy for thermal zone</td></tr>
+<tr><td>EC_THM_GET_VAR = 0x5</td><td>Read DWORD variable related to thermal</td></tr>
+<tr><td>EC_THM_SET_VAR = 0x6</td><td>Write DWORD variable related to thermal</td></tr>
+</tbody></table>
+</div>
+<h2 id="ec_thm_get_tmp"><a class="header" href="#ec_thm_get_tmp">EC_THM_GET_TMP</a></h2>
+<p>The Microsoft Thermal Sensor is a simplified <a href="https://uefi.org/specs/ACPI/6.5/11_Thermal_Management.html?highlight=_tmp">ACPI Thermal Zone
+object</a>,
+it only keeps the temperature input part of the thermal zone. It is used
+as the interface to send temperatures from the hardware to the OS. Like
+the thermal zone, Thermal Sensor also supports getting temperatures
+through _TMP method.</p>
+<h3 id="input-parameters-18"><a class="header" href="#input-parameters-18">Input Parameters</a></h3>
+<p>Arg0 – Byte Thermal Zone Identifier</p>
+<h3 id="output-parameters-18"><a class="header" href="#output-parameters-18">Output Parameters</a></h3>
+<p>An Integer containing the current temperature of the thermal zone (in
+tenths of degrees Kelvin)</p>
+<p>The return value is the current temperature of the thermal zone in
+tenths of degrees Kelvin. For example, 300.0K is represented by the
+integer 3000.</p>
+<h3 id="ffa-acpi-example-17"><a class="header" href="#ffa-acpi-example-17">FFA ACPI Example</a></h3>
+<pre><code>Method (_TMP) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(24){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateByteField(BUFF,19, TMP1) // In – Thermal Zone Identifier
+    CreateField(BUFF,144,32,TMPD) // Out – temperature for TZ
+
+    Store(20, LENG)
+    Store(0x1, CMDD) // EC_THM_GET_TMP
+    Store(1,TMP1)
+    Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID) // Thermal
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (TMPD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_thm_set_thrs"><a class="header" href="#ec_thm_set_thrs">EC_THM_SET_THRS</a></h2>
+<p>Update thresholds for thermal zone</p>
+<p>The platform should inform the OSPM to read _TMP method through
+Notify(device, 0x80) when <strong><span class="underline">any</span></strong> of
+below conditions is met: </p>
+<ul>
+<li>The <strong>Timeout</strong> has been met. </li>
+</ul>
+<!-- end list -->
+<ul>
+<li>The current temperature crosses the zone specified by
+<strong>LowTemperature</strong> or <strong>HighTemperature</strong>. </li>
+</ul>
+<h3 id="input-parameters-19"><a class="header" href="#input-parameters-19">Input Parameters</a></h3>
+<p>Arg0 – Byte Thermal Zone Identifier</p>
+<p>Arg1 – Timeout // Integer (DWORD) in mS</p>
+<p>Arg2 – LowTemperature // Integer (DWORD) in tenth deg Kelvin</p>
+<p>Arg3 - HighTemperature // Integer (DWORD) in tenth deg Kelvin</p>
+<h3 id="output-parameters-19"><a class="header" href="#output-parameters-19">Output Parameters</a></h3>
+<p>Integer with status</p>
+<ul>
+<li>
+<p>0x00000000: Succeed </p>
+</li>
+<li>
+<p>0x00000001: Failure, invalid parameter </p>
+</li>
+<li>
+<p>0x00000002: Failure, unsupported revision </p>
+</li>
+<li>
+<p>0x00000003: Failure, hardware error </p>
+</li>
+<li>
+<p>Others: Reserved </p>
+</li>
+</ul>
+<h3 id="ffa-acpi-example-18"><a class="header" href="#ffa-acpi-example-18">FFA ACPI Example</a></h3>
+<pre><code>Method(_DSM,4,Serialized,0,UnknownObj, {BuffObj, IntObj,IntObj,PkgObj}) {
+  // Compare passed in UUID to Supported UUID
+  If(LEqual(Arg0,ToUUID(“1f0849fc-a845-4fcf-865c-4101bf8e8d79 ”)))
+  {
+
+  // Implement function 1 which is update threshold
+  If(LEqual(Arg2,One)) {
+    // Check to make sure FFA is available and not unloaded
+    If(LEqual(\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateByteField(BUFF,19, TID1) // In – Thermal Zone Identifier
+    CreateDwordField(BUFF,20,THS1) // In – Timeout in ms
+    CreateDwordField(BUFF,24,THS2) // In – Low threshold tenth Kelvin
+    CreateDwordField(BUFF,28,THS3) // In – High threshold tenth Kelvin
+    CreateField(BUFF,144,32,THSD) // Out – Status from EC
+
+    Store(0x30, LENG)
+    Store(0x2, CMDD) // EC_THM_SET_THRS
+    Store(1,TID1)
+    Store(Arg0,THS1)
+    Store(Arg1,THS2)
+    Store(Arg2,THS3)
+    Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID) // Thermal
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (THSD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_thm_get_thrs"><a class="header" href="#ec_thm_get_thrs">EC_THM_GET_THRS</a></h2>
+<p>Read back thresholds that have been set or default thresholds that exist
+on the EC.</p>
+<h3 id="input-parameters-20"><a class="header" href="#input-parameters-20">Input Parameters</a></h3>
+<p>Arg0 - Thermal ID – Identifier to determine which TZ to read the
+thresholds for</p>
+<h3 id="output-parameters-20"><a class="header" href="#output-parameters-20">Output Parameters</a></h3>
+<p>Arg0 – Status // 0 on success or neagtive error code</p>
+<p>Arg1 – Timeout // Integer (DWORD) in mS</p>
+<p>Arg2 – LowTemperature // Integer (DWORD) in tenth deg Kelvin</p>
+<p>Arg3 - HighTemperature // Integer (DWORD) in tenth deg Kelvin</p>
+<h3 id="ffa-acpi-example-19"><a class="header" href="#ffa-acpi-example-19">FFA ACPI Example</a></h3>
+<pre><code>Method(_DSM,4,Serialized,0,UnknownObj, {BuffObj, IntObj,IntObj,PkgObj}) {
+  // Compare passed in UUID to Supported UUID
+  If(LEqual(Arg0,ToUUID(“1f0849fc-a845-4fcf-865c-4101bf8e8d79 ”)))
+  {
+    // Implement function 2 which is update threshold
+    If(LEqual(Arg2,Two)) {
+      // Check to make sure FFA is available and not unloaded
+      If(LEqual(\_SB.FFA0.AVAL,One)) {
+        Name(BUFF, Buffer(34){}) // Create buffer for send/recv data
+        CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+        CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+        CreateField(BUFF,16,128,UUID) // UUID of service
+        CreateByteField(BUFF,18, CMDD) // In – First byte of command
+        CreateByteField(BUFF,19, TID1) // In – Thermal Zone Identifier
+        CreateField(BUFF,144,128,THSD) // Out – Includes status, timeout, low/high
+        
+        Store(20, LENG)
+        Store(0x3, CMDD) // EC_THM_GET_THRS
+        Store(1,TID1)
+        Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID) // Thermal
+        Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+        If(LEqual(STAT,0x0) ) // Check FF-A successful?
+        {
+          Return (THSD)
+        } else {
+          Return(Zero)
+        }
+    } else {
+      Return(Zero)
+    }
+  }
+}
+</code></pre>
+<h2 id="ec_thm_set_scp"><a class="header" href="#ec_thm_set_scp">EC_THM_SET_SCP</a></h2>
+<p>This optional object is a control method that OSPM invokes to set the
+platform’s cooling mode policy setting. </p>
+<h3 id="input-parameters-21"><a class="header" href="#input-parameters-21">Input Parameters</a></h3>
+<p>Arg0 - Identifier to determine which TZ to read the thresholds for</p>
+<p>Arg1 - Mode An Integer containing the cooling mode policy code</p>
+<p>Arg2 - AcousticLimit An Integer containing the acoustic limit</p>
+<p>Arg3 - PowerLimit An Integer containing the power limit</p>
+<h3 id="output-parameters-21"><a class="header" href="#output-parameters-21">Output Parameters</a></h3>
+<p>Arg0 – Status from EC</p>
+<ul>
+<li>
+<p>0x00000000: Succeed </p>
+</li>
+<li>
+<p>0x00000001: Failure, invalid parameter </p>
+</li>
+<li>
+<p>0x00000002: Failure, unsupported revision </p>
+</li>
+<li>
+<p>0x00000003: Failure, hardware error </p>
+</li>
+<li>
+<p>Others: Reserved </p>
+</li>
+</ul>
+<h3 id="ffa-acpi-example-20"><a class="header" href="#ffa-acpi-example-20">FFA ACPI Example</a></h3>
+<pre><code>Method (_SCP) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateByteField(BUFF,19, SCP0) // In – Thermal Zone Identifier
+    CreateDwordField(BUFF,20, SCP1) // In – Cooling mode policy
+    CreateDwordField(BUFF,24, SCP2) // In – Acoustic Limit
+    CreateDwordField(BUFF,28, SCP3) // In – Power Limit
+    CreateField(BUFF,144,32, SCPD) // Out – temperature for TZ
+
+    Store(0x30, LENG)
+    Store(0x4, CMDD) // EC_THM_SET_SCP
+    Store(1,SCP0)
+    Store(Arg0,SCP1)
+    Store(Arg1,SCP2)
+    Store(Arg2,SCP3)
+    Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID) // Thermal
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (SCPD)
+    } else {
+      Return(Zero)
+    }
+  } else {
+    Return(Zero)
+  }
+}
+</code></pre>
+<h2 id="ec_thm_get_var"><a class="header" href="#ec_thm_get_var">EC_THM_GET_VAR</a></h2>
+<p>This API is to read a variable from the EC related to thermal. Variables
+are defined as GUID’s and include length of variable to read. In the
+case of default MPTF interface it is expecting a 32-bit variable.</p>
+<h3 id="input-parameters-22"><a class="header" href="#input-parameters-22">Input Parameters</a></h3>
+<p>Arg0 – 128-bit UUID the defines the variable</p>
+<p>Arg1 – 16-bit Length field specifies the length of variable in bytes</p>
+<h3 id="output-parameters-22"><a class="header" href="#output-parameters-22">Output Parameters</a></h3>
+<p>Arg0 – 32-bit status field</p>
+<ul>
+<li>
+<p>0x00000000: Succeed </p>
+</li>
+<li>
+<p>0x00000001: Failure, invalid parameter </p>
+</li>
+<li>
+<p>0x00000002: Failure, unsupported revision </p>
+</li>
+<li>
+<p>0x00000003: Failure, hardware error </p>
+</li>
+<li>
+<p>Others: Reserved </p>
+</li>
+</ul>
+<p>Var – Variable length data must match requested length otherwise should
+return error code</p>
+<h3 id="ffa-acpi-example-21"><a class="header" href="#ffa-acpi-example-21">FFA ACPI Example</a></h3>
+<pre><code>Method(GVAR,2,Serialized) {
+  If(LEqual(\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(38){})
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18,CMDD) // Command register
+    CreateByteField(BUFF,19,INST) // Instance ID
+    CreateWordField(BUFF,20,VLEN) // 16-bit variable length
+    CreateField(BUFF,176,128,VUID) // UUID of variable to read
+    CreateField(BUFF,208,64,RVAL) // Output Data
+  
+    Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID)
+    Store(38, LENG)
+    Store(0x5, CMDD) // EC_THM_GET_VAR
+    Store(Arg0,INST) // Save instance ID
+    Store(4,VLEN) // Variable is always DWORD here
+    Store(Arg1, VUID)
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+  
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+     Return (RVAL)
+    }
+  }
+  Return (Ones)
+}
+</code></pre>
+<h2 id="ec_thm_set_var"><a class="header" href="#ec_thm_set_var">EC_THM_SET_VAR</a></h2>
+<p>This API is to write a variable to the EC related to thermal. Variables
+are defined as GUID’s and include length of variable to write. In the
+case of default MPTF interface it is expecting a 32-bit variable.</p>
+<h3 id="input-parameters-23"><a class="header" href="#input-parameters-23">Input Parameters</a></h3>
+<p>Arg0 – 128-bit UUID the defines the variable</p>
+<p>Arg1 – 16-bit Length field specifies the length of variable in bytes</p>
+<p>Var - Variable length field of variable data</p>
+<h3 id="output-parameters-23"><a class="header" href="#output-parameters-23">Output Parameters</a></h3>
+<p>Arg0 – 32-bit status field</p>
+<ul>
+<li>
+<p>0x00000000: Succeed </p>
+</li>
+<li>
+<p>0x00000001: Failure, invalid parameter </p>
+</li>
+<li>
+<p>0x00000002: Failure, unsupported revision </p>
+</li>
+<li>
+<p>0x00000003: Failure, hardware error </p>
+</li>
+<li>
+<p>Others: Reserved </p>
+</li>
+</ul>
+<h3 id="ffa-acpi-example-22"><a class="header" href="#ffa-acpi-example-22">FFA ACPI Example</a></h3>
+<pre><code>Method(SVAR,3,Serialized) {
+  If(LEqual(\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(42){})
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18,CMDD) // Command register
+    CreateByteField(BUFF,19,INST) // Instance ID
+    CreateWordField(BUFF,20,VLEN) // 16-bit variable length
+    CreateField(BUFF,176,128,VUID) // UUID of variable to read
+    CreateDwordField(BUFF,38,DVAL) // Data value
+    CreateField(BUFF,208,32,RVAL) // Ouput Data
+
+    Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID)
+    Store(42, LENG)
+    Store(0x6, CMDD) // EC_THM_SET_VAR
+    Store(Arg0,INST) // Save instance ID
+    Store(4,VLEN) // Variable is always DWORD here
+    Store(Arg1, VUID)
+    Store(Arg2,DVAL)
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (RVAL)
+    }
+  }
+  Return (Ones)
+}
+</code></pre>
+<h1 id="fan-service"><a class="header" href="#fan-service">Fan Service</a></h1>
+<p>The new MBTF framework depends on reading and writing variables on the
+EC to allow the EC to make the best decisions on cooling. The
+recommendations from the OS are aggregated on the EC side and decisions
+are made on setting FAN speed based on these.</p>
+<p>All the control of fan and thermal parameters is done through variable
+interface using EC_THM_GET_VAR and EC_THM_SET_VAR.</p>
+<h2 id="fan-and-thermal-variables"><a class="header" href="#fan-and-thermal-variables">Fan and Thermal variables</a></h2>
+<p>It is optional to implement Dba and Sones.</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>Variable</strong></th>
+<th><strong>GUID</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<td>OnTemp</td>
+<td>ba17b567-c368-48d5-bc6f-a312a41583c1</td>
+<td>Lowest temperature at which the fan is turned on.</td>
+</tr>
+<td>RampTemp</td>
+<td>3a62688c-d95b-4d2d-bacc-90d7a5816bcd</td>
+<td>Temperature at which the fan starts ramping from min speed.</td>
+</tr>
+<td>MaxTemp</td>
+<td>dcb758b1-f0fd-4ec7-b2c0-ef1e2a547b76</td>
+<td>Temperature at top of fan ramp where fan is at maximum speed.</td>
+</tr>
+<td>CrtTemp</td>
+<td>218246e7-baf6-45f1-aa13-07e4845256b8</td>
+<td>Critical temperature at which we need to shut down the system.</td>
+</tr>
+<td>ProcHotTemp</td>
+<td>22dc52d2-fd0b-47ab-95b8-26552f9831a5</td>
+<td>Temperature at which the EC will assert the PROCHOT notification.</td>
+</tr>
+<td>MinRpm</td>
+<td>db261c77-934b-45e2-9742-256c62badb7a</td>
+<td>Minimum RPM FAN speed</td>
+</tr>
+<td>MinDba (Optional)</td>
+<td>0457a722-58f4-41ca-b053-c7088fcfb89d</td>
+<td>Minimum Dba from FAN</td>
+</tr>
+<td><p>MinSones (Optional)</td>
+<td>311668e2-09aa-416e-a7ce-7b978e7f88be</td>
+<td>Minimum Sones from FAN</td>
+</tr>
+<td>MaxRpm</td>
+<td>5cf839df-8be7-42b9-9ac5-3403ca2c8a6a</td>
+<td>Maximum RPM for FAN</td>
+</tr>
+<td>MaxDba (Optional)</td>
+<td>372ae76b-eb64-466d-ae6b-1228397cf374</td>
+<td>Maximum DBA for FAN</td>
+</tr>
+<td>MaxSones (Optional)</td>
+<td>6deb7eb1-839a-4482-8757-502ac31b20b7</td>
+<td>Maximum Sones for FAN</td>
+</tr>
+<td>ProfileType</td>
+<td>23b4a025-cdfd-4af9-a411-37a24c574615</td>
+<td>Set profile for EC, gaming, quiet, lap, etc</td>
+</tr>
+<td>CurrentRpm</td>
+<td>adf95492-0776-4ffc-84f3-b6c8b5269683</td>
+<td>The current RPM of FAN</td>
+</tr>
+<td>CurrentDba (Optional)</td>
+<td>4bb2ccd9-c7d7-4629-9fd6-1bc46300ee77</td>
+<td>The current Dba from FAN</td>
+</tr>
+<td>CurrentSones (Optional)</td>
+<td>7719d686-02af-48a5-8283-20ba6ca2e940</td>
+<td>The current Sones from FAN</td>
+</tr>
+</tbody>
+</table>
+<h2 id="acpi-example-of-inputoutput-_dsm"><a class="header" href="#acpi-example-of-inputoutput-_dsm">ACPI example of Input/Output _DSM</a></h2>
+<pre><code>// Arg0 GUID
+// 07ff6382-e29a-47c9-ac87-e79dad71dd82 - Input
+// d9b9b7f3-2a3e-4064-8841-cb13d317669e - Output
+// Arg1 Revision
+// Arg2 Function Index
+// Arg3 Function dependent
+
+Method(_DSM, 0x4, Serialized) {
+  // Input Variable
+  If(LEqual(ToUuid("07ff6382-e29a-47c9-ac87-e79dad71dd82"),Arg0)) {
+    Switch(Arg2) {
+      Case(0) {
+        // We support function 0-3
+        Return(0xf)
+      }
+      Case(1) {
+        Return(GVAR(1,ToUuid("ba17b567-c368-48d5-bc6f-a312a41583c1"))) // OnTemp
+      }
+      Case(2) {
+        Return(GVAR(1,ToUuid("3a62688c-d95b-4d2d-bacc-90d7a5816bcd"))) // RampTemp
+      }
+      Case(3) {
+        Return(GVAR(1,ToUuid("dcb758b1-f0fd-4ec7-b2c0-ef1e2a547b76"))) // MaxTemp
+      }
+    }
+    Return(Ones)
+  }
+
+  // Output Variable
+  If(LEqual(ToUuid("d9b9b7f3-2a3e-4064-8841-cb13d317669e"),Arg0)) {
+    Switch(Arg2) {
+      Case(0) {
+        // We support function 0-3
+        Return(0xf)
+      }
+      Case(1) {
+        Return(SVAR(1,ToUuid("ba17b567-c368-48d5-bc6f-a312a41583c1"),Arg3)) // OnTemp
+      }
+
+      Case(2) {
+        Return(SVAR(1,ToUuid("3a62688c-d95b-4d2d-bacc-90d7a5816bcd"),Arg3)) // RampTemp
+      }
+
+      Case(3) {
+        Return(SVAR(1,ToUuid("dcb758b1-f0fd-4ec7-b2c0-ef1e2a547b76"),Arg3)) // MaxTemp
+      }
+    }
+    Return(Ones)
+  }
+  Return (Ones)
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ucsi-interface"><a class="header" href="#ucsi-interface">UCSI Interface</a></h1>
+<p>EC must have the ability to interface with a discrete PD controller to
+negotiate power contracts/alt-modes with port partner</p>
+<p>See the UCSI specification for commands that are required in all UCSI
+implementations.</p>
+<p><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/usbcon/ucsi">USB-C Connector System Software Interface (UCSI) Driver - Windows
+drivers | Microsoft
+Learn</a></p>
+<p>In addition to the commands marked as <strong>Required</strong>, Windows requires
+these commands:</p>
+<ul>
+<li>
+<p>GET_ALTERNATE_MODES</p>
+</li>
+<li>
+<p>GET_CAM_SUPPORTED</p>
+</li>
+<li>
+<p>GET_PDOS</p>
+</li>
+<li>
+<p>SET_NOTIFICATION_ENABLE: The system or controller must support the
+following notifications within SET_NOTIFICATION_ENABLE:</p>
+<ul>
+<li>
+<p>Supported Provider Capabilities Change</p>
+</li>
+<li>
+<p>Negotiated Power Level Change</p>
+</li>
+</ul>
+</li>
+<li>
+<p>GET_CONNECTOR_STATUS: The system or controller must support these
+connector status changes within GET_CONNECTOR_STATUS:</p>
+<ul>
+<li>
+<p>Supported Provider Capabilities Change</p>
+</li>
+<li>
+<p>Negotiated Power Level Change</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="media/image10.png" alt="Diagram of USB Type-C software components." /></p>
+<h2 id="ucsi-acpi-interface"><a class="header" href="#ucsi-acpi-interface">UCSI ACPI Interface</a></h2>
+<p><img src="media/image11.png" alt="A diagram of a memory Description automatically generated" /></p>
+<h3 id="shared-mailbox-interface"><a class="header" href="#shared-mailbox-interface">Shared Mailbox Interface</a></h3>
+<p>The following table is the reserved memory structure that must be
+reserved and shared with the EC for communication. When using FF-A this
+memory region must be statically carved out and 4K aligned and directly
+accessible by secure world.</p>
+<div class="table-wrapper"><table><thead><tr><th><strong>Offset (Bytes)</strong></th><th><strong>Mnemonic</strong></th><th><strong>Description</strong></th><th><strong>Direction</strong></th><th><strong>Size (bits)</strong></th></tr></thead><tbody>
+<tr><td>0</td><td>VERSION</td><td>UCSI Version Number</td><td>PPM-&gt;OPM</td><td>16</td></tr>
+<tr><td>2</td><td>RESERVED</td><td>Reserved</td><td>N/A</td><td>16</td></tr>
+<tr><td>4</td><td>CCI</td><td>USB Type-C Command Status and Connector Change Indication</td><td>PPM-&gt;OPM</td><td>32</td></tr>
+<tr><td>8</td><td>CONTROL</td><td>USB Type-C Control</td><td>OPM-&gt;PPM</td><td>64</td></tr>
+<tr><td>16</td><td>MESSAGE IN</td><td>USB Type-C Message In</td><td>PPM-&gt;OPM</td><td>128</td></tr>
+<tr><td>32</td><td>MESSAGE OUT</td><td>USB Type-C Message Out</td><td>OPM-&gt;PPM</td><td>128</td></tr>
+</tbody></table>
+</div>
+<h3 id="acpi-definitions"><a class="header" href="#acpi-definitions">ACPI Definitions</a></h3>
+<pre><code>Device(USBC) {
+  Name(_HID,EISAID(“USBC000”))
+  Name(_CID,EISAID(“PNP0CA0”))
+  Name(_UID,1)
+  Name(_DDN, “USB Type-C”)
+  Name(_ADR,0x0)
+
+  OperationRegion(USBC, SystemMemory, 0xFFFF0000, 0x30)
+  Field(USBC,AnyAcc,Lock,Preserve)
+  {
+    // USB C Mailbox Interface
+    VERS,16, // PPM-\&gt;OPM Version
+    RES, 16, // Reservied
+    CCI, 32, // PPM-\&gt;OPM CCI Indicator
+    CTRL,64, // OPM-\&gt;PPM Control Messages
+    MSGI,128, // OPM-\&gt;PPM Message In
+    MSGO,128, // PPM-\&gt;OPM Message Out
+  }
+
+  Method(_DSM,4,Serialized,0,UnknownObj, {BuffObj, IntObj,IntObj,PkgObj})
+  {
+    // Compare passed in UUID to Supported UUID
+    If(LEqual(Arg0,ToUUID(“6f8398c2-7ca4-11e4-ad36-631042b5008f”)))
+    {
+      // Use FFA to send Notification event down to copy data to EC
+      If(LEqual(\\_SB.FFA0.AVAL,One)) {
+        Name(BUFF, Buffer(144){}) // Create buffer for send/recv data
+        CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+        CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+        CreateField(BUFF,16,128,UUID) // UUID of service
+        CreateByteField(BUFF,18, CMDD) // In – First byte of command
+        CreateField(BUFF,144,1024,FIFD) // Out – Msg data
+
+        CreateField(BUFF,0x0,128,UUID)
+        // Create USCI Doorbell Event
+
+        Store(20, LENG)
+        Store(0x0, CMDD) // UCSI set doorbell
+        Store(ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"), UUID) // UCSI
+        Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+        If(LEqual(STAT,0x0) ) // Check FF-A successful?
+        {
+          Return (FIFD)
+        } else {
+          Return(error)?
+        }
+      } // End AVAL
+    } // End UUID
+  } // End DSM
+}
+
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ec-input-management"><a class="header" href="#ec-input-management">EC Input Management</a></h1>
+<p>An EC may have several input devices including LID, Power key, touch and
+keyboard. HID based devices requiring low latency input, are recommended
+to be connected directly through a non-secure BUS interface such as I2C
+or I3C for performance reasons.</p>
+<h2 id="lid-state"><a class="header" href="#lid-state">LID State</a></h2>
+<p>Monitor sensors that indicate lid state. If lid is opened, potentially
+boot the system. If lid is closed, potentially shut down or hibernate
+the system.</p>
+<div class="table-wrapper"><table><thead><tr><th><strong>ACPI</strong></th><th><strong>Description</strong></th></tr></thead><tbody>
+<tr><td>_LID</td><td>Get state of LID device for clamshell designs</td></tr>
+</tbody></table>
+</div>
+<h3 id="acpi-example-for-lid-notificiation"><a class="header" href="#acpi-example-for-lid-notificiation">ACPI Example for LID notificiation</a></h3>
+<p>Assuming that LID is managed by the EC during registration we register
+for Input Management service for a Virtual ID = 1</p>
+<pre><code>Method(_RNY, 0, Serialized) {
+  Return( Package() {
+    Package(0x2) {
+      ToUUID("e3168a99-4a57-4a2b-8c5e-11bcfec73406"),
+      Buffer() {0x1,0x0} // Register event 0x1 for LID
+    }
+    } )
+  }
+
+  Method(_NFY, 2, Serialized) {
+    // Arg0 == UUID
+    // Arg1 == Notify ID
+    If(LEqual(ToUUID("e3168a99-4a57-4a2b-8c5e-11bcfec73406"),Arg0)) {
+      Switch(Arg1) {
+      Case(1) {
+        Notify(\\_SB._LID,0x80)
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="system-wake-event"><a class="header" href="#system-wake-event">System Wake Event</a></h2>
+<p>Ability to wake the system from various external events. This is for
+more complicated events that aren’t a simple GPIO for LID/Power button
+that require EC monitoring.</p>
+<h2 id="hid-descriptor-interface"><a class="header" href="#hid-descriptor-interface">HID descriptor Interface</a></h2>
+<p>Communication with EC must have packet sent/received in HID format so
+the OS HIDClass driver can properly understand requests. At this time
+HID packets will go over HIDI2C but in future these HID packets could be
+included over a single interface.</p>
+<div class="table-wrapper"><table><thead><tr><th><strong>HID IOCTL</strong></th><th><strong>Description</strong></th></tr></thead><tbody>
+<tr><td>IOCTL_HID_GET_DEVICE_DESCRIPTOR</td><td>Retrieves the device's HID descriptor</td></tr>
+<tr><td>IOCTL_HID_GET_DEVICE_ATTRIBUTES</td><td>Retrieves a device's attributes in a HID_DEVICE_ATTRIBUTES structure</td></tr>
+<tr><td>IOCTL_HID_GET_REPORT_DESCRIPTOR</td><td>Obtains the report descriptor for the HID device</td></tr>
+<tr><td>IOCTL_HID_READ_REPORT</td><td>Returns a report from the device into a class driver-supplied buffer</td></tr>
+<tr><td>IOCTL_HID_WRITE_REPORT</td><td>Transmits a class driver-supplied report to the device</td></tr>
+<tr><td>IOCTL_HID_GET_FEATURE</td><td>Get capabilities of a feature from the device</td></tr>
+<tr><td>IOCTL_HID_SET_FEATURE</td><td>Set/Enable a specific feature on device</td></tr>
+<tr><td>IOCTL_HID_GET_INPUT_REPORT</td><td>Get input report from HID device if input device</td></tr>
+<tr><td>IOCTL_HID_SET_OUTPUT_REPORT</td><td>Send output HID report to device</td></tr>
+<tr><td>IOCTL_HID_GET_STRING</td><td>Get a specific string from device</td></tr>
+<tr><td>IOCTL_HID_GET_INDEXED_STRING</td><td>Get a string from device based on index</td></tr>
+<tr><td>IOCTL_HID_SEND_IDLE_NOTIFICATION</td><td>Notification to idle device into idle/sleep state</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="ec-time-alarm-service"><a class="header" href="#ec-time-alarm-service">EC Time Alarm Service</a></h1>
+<p>The following sections define the operation and definition of the
+optional control method-based Time and Alarm device, which provides a
+hardware independent abstraction and a more robust alternative to the
+Real Time Clock (RTC)</p>
+<p>ACPI specification details are in version 6.5 Chapter 9.</p>
+<p><a href="https://uefi.org/specs/ACPI/6.5/09_ACPI_Defined_Devices_and_Device_Specific_Objects.html#time-and-alarm-device">9. ACPI-Defined Devices and Device-Specific Objects — ACPI
+Specification 6.5 documentation
+(uefi.org)</a></p>
+<div class="table-wrapper"><table><thead><tr><th><strong>Command</strong></th><th><strong>Description</strong></th></tr></thead><tbody>
+<tr><td>EC_TAS_GET_GCP = 0x1</td><td>Get the capabilities of the time and alarm device</td></tr>
+<tr><td>EC_TAS_GET_GRT = 0x2</td><td>Get the Real Time</td></tr>
+<tr><td>EC_TAS_SET_SRT = 0x3</td><td>Set the Real Time</td></tr>
+<tr><td>EC_TAS_GET_GWS = 0x4</td><td>Get Wake Status</td></tr>
+<tr><td>EC_TAS_SET_CWS = 0x5</td><td>Clear Wake Status</td></tr>
+<tr><td>EC_TAS_SET_STV = 0x6</td><td>Set Timer value for given timer</td></tr>
+<tr><td>EC_TAS_GET_TIV = 0x7</td><td>Get Timer value remaining for given timer</td></tr>
+</tbody></table>
+</div>
+<h2 id="ec_tas_get_gcp"><a class="header" href="#ec_tas_get_gcp">EC_TAS_GET_GCP</a></h2>
+<p>This object is required and provides the OSPM with a bit mask of the
+device capabilities.</p>
+<p><a href="https://uefi.org/specs/ACPI/6.5/09_ACPI_Defined_Devices_and_Device_Specific_Objects.html#gcp-get-capability">9. ACPI-Defined Devices and Device-Specific Objects — ACPI
+Specification 6.5
+documentation</a></p>
+<h3 id="input-parameters-24"><a class="header" href="#input-parameters-24">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-24"><a class="header" href="#output-parameters-24">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi"><a class="header" href="#ffa-acpi">FFA ACPI</a></h3>
+<pre><code>Method (_GCP) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,32,GCPD) // Out – 32-bit integer described above
+  
+    Store(20, LENG)
+    Store(0x1, CMDD) // EC_TAS_GET_GCP
+    Store(ToUUID("23ea63ed-b593-46ea-b027-8924df88e92f"), UUID) // RTC
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (GCDD)
+    }
+  }
+  Return(Zero)
+}
+</code></pre>
+<h2 id="ec_tas_get_grt"><a class="header" href="#ec_tas_get_grt">EC_TAS_GET_GRT</a></h2>
+<p>This object is required if the capabilities bit 2 is set to 1. The OSPM
+can use this object to get time. The return value is a buffer containing
+the time information as described below.</p>
+<p><a href="https://uefi.org/specs/ACPI/6.5/09_ACPI_Defined_Devices_and_Device_Specific_Objects.html#grt-get-real-time">9. ACPI-Defined Devices and Device-Specific Objects — ACPI
+Specification 6.5
+documentation</a></p>
+<h3 id="input-parameters-25"><a class="header" href="#input-parameters-25">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-25"><a class="header" href="#output-parameters-25">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-23"><a class="header" href="#ffa-acpi-example-23">FFA ACPI Example</a></h3>
+<pre><code>Method (_GRT) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,144,128,GRTD) // Out – 128-bit output structure above
+
+    Store(20, LENG)
+    Store(0x2, CMDD) // EC_TAS_GET_GRT
+    Store(ToUUID("23ea63ed-b593-46ea-b027-8924df88e92f"), UUID) // RTC
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (GRTD)
+    }
+  }
+  Return(Zero)
+}
+</code></pre>
+<h2 id="ec_tas_set_srt"><a class="header" href="#ec_tas_set_srt">EC_TAS_SET_SRT</a></h2>
+<p>This object is required if the capabilities bit 2 is set to 1. The OSPM
+can use this object to set the time.</p>
+<p><a href="https://uefi.org/specs/ACPI/6.5/09_ACPI_Defined_Devices_and_Device_Specific_Objects.html#srt-set-real-time">9. ACPI-Defined Devices and Device-Specific Objects — ACPI
+Specification 6.5
+documentation</a></p>
+<h3 id="input-parameters-26"><a class="header" href="#input-parameters-26">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-26"><a class="header" href="#output-parameters-26">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-24"><a class="header" href="#ffa-acpi-example-24">FFA ACPI Example</a></h3>
+<pre><code>Method (_SRT) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(30){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateField(BUFF,152,128,GRTD) // In – 128-bit output structure above
+
+    Store(20, LENG)
+    Store(0x3, CMDD) // EC_TAS_SET_SRT
+    Store(ToUUID("23ea63ed-b593-46ea-b027-8924df88e92f"), UUID) // RTC
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (One)
+    }
+  }
+  Return(Zero)}
+}
+</code></pre>
+<h2 id="ec_tas_get_gws"><a class="header" href="#ec_tas_get_gws">EC_TAS_GET_GWS</a></h2>
+<p>This object is required if the capabilities bit 0 is set to 1. It
+enables the OSPM to read the status of wake alarms</p>
+<p><a href="https://uefi.org/specs/ACPI/6.5/09_ACPI_Defined_Devices_and_Device_Specific_Objects.html#gws-get-wake-alarm-status">9. ACPI-Defined Devices and Device-Specific Objects — ACPI
+Specification 6.5
+documentation</a></p>
+<h3 id="input-parameters-27"><a class="header" href="#input-parameters-27">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-27"><a class="header" href="#output-parameters-27">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-25"><a class="header" href="#ffa-acpi-example-25">FFA ACPI Example</a></h3>
+<pre><code>Method (_GWS) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(30){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDwordField(BUFF,19, GWS1) // In – Dword for timer type AC/DC
+    CreateField(BUFF,144,32,GWSD) // Out – Dword timer state
+
+    Store(20, LENG)
+    Store(0x4, CMDD) // EC_TAS_GET_GWS
+    Store(ToUUID("23ea63ed-b593-46ea-b027-8924df88e92f"), UUID) // RTC
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (GWSD)
+    } 
+  } 
+  Return(Zero)
+}
+</code></pre>
+<h2 id="ec_tas_set_cws"><a class="header" href="#ec_tas_set_cws">EC_TAS_SET_CWS</a></h2>
+<p>This object is required if the capabilities bit 0 is set to 1. It
+enables the OSPM to clear the status of wake alarms</p>
+<p><a href="https://uefi.org/specs/ACPI/6.5/09_ACPI_Defined_Devices_and_Device_Specific_Objects.html#cws-clear-wake-alarm-status">9. ACPI-Defined Devices and Device-Specific Objects — ACPI
+Specification 6.5
+documentation</a></p>
+<h3 id="input-parameters-28"><a class="header" href="#input-parameters-28">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-28"><a class="header" href="#output-parameters-28">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-26"><a class="header" href="#ffa-acpi-example-26">FFA ACPI Example</a></h3>
+<pre><code>Method (_CWS) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(30){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDwordField(BUFF,19, GWS1) // In – Dword for timer type AC/DC
+    CreateField(BUFF,144,32,CWSD) // Out – Dword timer state
+ 
+    Store(20, LENG)
+    Store(0x5, CMDD) // EC_TAS_SET_CWS
+    Store(Arg0,GWS1)
+    Store(ToUUID("23ea63ed-b593-46ea-b027-8924df88e92f"), UUID) // RTC
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (CWSD)
+    }
+  } 
+  Return(Zero)
+}
+</code></pre>
+<h2 id="ec_tas_set_stv"><a class="header" href="#ec_tas_set_stv">EC_TAS_SET_STV</a></h2>
+<p>This object is required if the capabilities bit 0 is set to 1. It sets
+the timer to the specified value. </p>
+<p><a href="https://uefi.org/specs/ACPI/6.5/09_ACPI_Defined_Devices_and_Device_Specific_Objects.html#stv-set-timer-value">9. ACPI-Defined Devices and Device-Specific Objects — ACPI
+Specification 6.5
+documentation</a></p>
+<h3 id="input-parameters-29"><a class="header" href="#input-parameters-29">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-29"><a class="header" href="#output-parameters-29">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-27"><a class="header" href="#ffa-acpi-example-27">FFA ACPI Example</a></h3>
+<pre><code>Method (_STV) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(30){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDwordField(BUFF,19, GWS1) // In – Dword for timer type AC/DC
+    CreateDwordField(BUFF,23, GWS2) // In – Dword Timer Value
+    CreateField(BUFF,144,32,STVD) // Out – Dword timer state
+
+    Store(20, LENG)
+    Store(0x6, CMDD) // EC_TAS_SET_STV
+    Store(Arg0,GWS1)
+    Store(Arg1,GWS2)
+    Store(ToUUID("23ea63ed-b593-46ea-b027-8924df88e92f"), UUID) // RTC
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+  
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (STVD)
+    }
+  }
+  Return(Zero)
+}
+</code></pre>
+<h2 id="ec_tas_get_tiv"><a class="header" href="#ec_tas_get_tiv">EC_TAS_GET_TIV</a></h2>
+<p>This object is required if the capabilities bit 0 is set to 1. It
+returns the remaining time of the specified timer before that expires.</p>
+<p><a href="https://uefi.org/specs/ACPI/6.5/09_ACPI_Defined_Devices_and_Device_Specific_Objects.html#tiv-timer-values">9. ACPI-Defined Devices and Device-Specific Objects — ACPI
+Specification 6.5
+documentation</a></p>
+<h3 id="input-parameters-30"><a class="header" href="#input-parameters-30">Input Parameters</a></h3>
+<p>Input parameters as described in ACPI specification.</p>
+<h3 id="output-parameters-30"><a class="header" href="#output-parameters-30">Output Parameters</a></h3>
+<p>Should return structure as defined by ACPI specification</p>
+<h3 id="ffa-acpi-example-28"><a class="header" href="#ffa-acpi-example-28">FFA ACPI Example</a></h3>
+<pre><code>Method (_TIV) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(30){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDwordField(BUFF,19, GWS1) // In – Dword for timer type AC/DC
+    CreateField(BUFF,144,32,TIVD) // Out – Dword timer state
+
+    Store(20, LENG)
+    Store(0x7, CMDD) // EC_TAS_GET_TIV
+    Store(Arg0,GWS1)
+    Store(ToUUID("23ea63ed-b593-46ea-b027-8924df88e92f"), UUID) // RTC
+    Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+      Return (TIVD)
+    }
+  }
+  Return(Zero)
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ec-debug-service"><a class="header" href="#ec-debug-service">EC Debug Service</a></h1>
+<p>The debug service is used for telemetry, debug logs, system reset
+information etc.</p>
+<h2 id="recovery-mode"><a class="header" href="#recovery-mode">Recovery Mode</a></h2>
+<p>Put EC into recovery mode for development flashing and debugging.</p>
+<h2 id="dump-debug-state"><a class="header" href="#dump-debug-state">Dump Debug State</a></h2>
+<p>EC should be able to support typical engineering requests, such as
+getting detailed subsystem information, setting/getting GPIOs, etc, for
+design verification and benchtop testing.</p>
+<h2 id="telemetry"><a class="header" href="#telemetry">Telemetry</a></h2>
+<p>Ability to communicate with the HLOS event logging system, and record EC
+critical events for later analysis.</p>
+<h2 id="system-boot-state"><a class="header" href="#system-boot-state">System Boot State</a></h2>
+<p>In many designs, OEMs will desire indication that the system is
+responding to a power on request. This could be a logo display on the
+screen or a bezel LED. EC should be able to control these devices during
+the boot sequence.</p>
+<p>During first boot sequence EC may also be initialized and setup its
+services. Needs to know when OS is up to send notification for events
+that are only used by OS.</p>
+<h2 id="memory-mapped-transactions"><a class="header" href="#memory-mapped-transactions">Memory Mapped Transactions</a></h2>
+<p>There are two cases where you may want to use the memory mapped
+transactions. The first is if you have a large buffer you need to
+transfer data between EC and HLOS like a debug buffer. The second use
+case is if you want to emulate an eSPI memory mapped interface for
+compatibility with legacy devices.</p>
+<p>For this mode to work you will need memory carved out which is dedicated
+and shared between HLOS and secure world. In your UEFI memory map this
+memory should be marked as EfiMemoryReservedType so that the OS will not
+use or allocate the memory. In your SP manifest file you will also need
+to add access to this physical memory range. It needs to be aligned on a
+4K boundary and a multiple of 4K. This memory region is carved out and
+must never be used for any other purpose. Since the memory is shared
+with HLOS there is also no security surrounding accesses to the memory.</p>
+<h3 id="example-memory-mapped-interface"><a class="header" href="#example-memory-mapped-interface">Example Memory Mapped Interface</a></h3>
+<pre><code>// Map 4K memory region
+OperationRegion(ABCD, SystemMemory, 0xFFFF0000, 0x1000)
+
+// Map fields in region if you want to access or set via ACPI
+Field(ABCD,AnyAcc,Lock,Preserve) {
+  VER,16, // Version
+  RES, 16, // Reserved
+  VAR1,32, // 32-bit variable1
+  VAR2,64, // 64-bit variable1
+  VAR3,128, // 128-bit variable1
+}
+
+// DSM Method to send sync event
+Method(_DSM,4,Serialized,0,UnknownObj, {BuffObj, IntObj,IntObj,PkgObj})
+{
+  // Compare passed in UUID to Supported UUID
+  If(LEqual(Arg0,ToUUID(“6f8398c2-7ca4-11e4-ad36-631042b5008f”)))
+  {
+    // Use FFA to send Notification event down to copy data to EC
+    If(LEqual(\\_SB.FFA0.AVAL,One)) {
+
+      Name(BUFF, Buffer(144){}) // Create buffer for send/recv data
+      CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+      CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+      CreateField(BUFF,16,128,UUID) // UUID of service
+      CreateByteField(BUFF,18, CMDD) // In – First byte of command
+      CreateField(BUFF,144,1024,FIFD) // Out – Msg data
+
+      // Create Doorbell Event
+      Store(20, LENG)
+      Store(0x0, CMDD) // UCSI set doorbell
+      Store(ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"), UUID)
+      Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+      If(LEqual(STAT,0x0) ) // Check FF-A successful?
+      {
+        Return (Zero)
+      } else {
+        Return(One)
+      }
+    } // End AVAL
+  } // End UUID
+} // End DSM
+
+</code></pre>
+<p>Any updates from the EC come back through a notification event
+registered in the FFA for this particular service.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ec-manufacturing-service"><a class="header" href="#ec-manufacturing-service">EC Manufacturing Service</a></h1>
+<p>This service should contain all the functionality that is need to
+perform self test, validation of the EC and special manufacturing modes.
+This service should be disabled on retail devices or at least protected
+to prevent unwanted modes.</p>
+<h2 id="self-test"><a class="header" href="#self-test">Self Test</a></h2>
+<p>EC should perform self test and return results/details of test
+validation</p>
+<h2 id="set-calibration-data"><a class="header" href="#set-calibration-data">Set Calibration Data</a></h2>
+<p>Have ability to store factory calibrations and setup information into EC
+non-volatile memory. For instance keyboard language information, or
+thermistor calibration values.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ec-oem-service"><a class="header" href="#ec-oem-service">EC OEM Service</a></h1>
+<p>Any OEM special custom features should be put in their own service
+sandbox to support OEM specific features. This will prevent definitions
+from colliding with other services.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

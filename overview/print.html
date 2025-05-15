@@ -1,0 +1,963 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Introduction to ODP</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Introduction to ODP</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
+<p>Welcome! If you're new to the Open Device Partnership, this is the right place to begin.</p>
+<p>If you're also new to the world of Embedded Controllers and the software that drives them, don't worry—you're still in the right place.</p>
+<div class="table-wrapper"><table><thead><tr><th> </th><th> </th></tr></thead><tbody>
+<tr><td><img src="./media/odp.png" alt="ODP Logo" /></td><td>The Open Device Partnership introduces concepts that are game-changing when it comes to enabling <strong>reuse</strong> and <strong>interchangeability</strong> of Embedded Controller components—especially those found in modern laptops. Just as importantly, it brings a <em>revolutionary focus on security and code safety from the ground up</em>.</td></tr>
+</tbody></table>
+</div>
+<p>                                                            <img src="./media/rust_logo.png" alt="ODP Logo" /></p>
+<p>To support this, ODP is designed to use <strong>Rust</strong> as the implementation language.</p>
+<p>If you're coming from a C or assembly background, you may feel some initial resistance to learning a new language and unfamiliar patterns. That’s understandable.</p>
+<p>But let’s face it: while it's <em>certainly possible</em> to write memory-safe and secure code in C, it's also very easy to make mistakes. With Rust, you'd have to work pretty hard to write unsafe code that even compiles.</p>
+<p>As new standards—and potentially even government regulations—begin to push for memory-safe languages in critical systems, the Open Device Partnership aims to be ahead of the curve by bringing that future into the present.</p>
+<p>Let's start by familiarizing ourselves with Rust (if you are not already),
+then we will get a high-level understanding of ODP Concepts in the <a href="./Concepts.html">Concepts</a> section, which explains how the various pieces fit together.</p>
+<p>One you've familiarized yourself with the fundamentals of Rust and the concepts and scope of ODP, you are ready to <a href="tbd">Build Your own modern Laptop</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="a-quick-look-at-rust"><a class="header" href="#a-quick-look-at-rust">A quick look at Rust</a></h1>
+<p>If you are new to Rust, the venerable "Rust Book" is probably your best bet:
+<a href="https://doc.rust-lang.org/stable/book/">The Rust Programming Language</a></p>
+<p>and a great sandbox to play in while learning can be found at <a href="https://play.rust-lang.org/">The Rust Playground</a></p>
+<h3 id="but-before--you-run-off-to-do-that"><a class="header" href="#but-before--you-run-off-to-do-that">But before  you run off to do that...</a></h3>
+<p>Let's look a little at what Rust has to offer first.</p>
+<p><em><strong>The basics are very important to learn because Rust builds on itself and the advanced features are made possible by
+leveraging the advantages of the basic ones.  Most of these have to do with the type and memory safety models that are fundamental to the Rust proposition.</strong></em></p>
+<p>There are several parts to the rust toolchain that you should be aware of to start.</p>
+<h3 id="cargo"><a class="header" href="#cargo">cargo</a></h3>
+<p>Cargo is an all-around utility player for the rust environment.  It is many things:</p>
+<ul>
+<li>a build manager</li>
+<li>a package manager</li>
+<li>a linter / static analyzer</li>
+<li>a documentation engine</li>
+<li>a test runner</li>
+<li>an extensible system driven by installed modules</li>
+</ul>
+<h3 id="rustup"><a class="header" href="#rustup">rustup</a></h3>
+<p>While Cargo is your go-to player for building with a toolchain, <code>rustup</code> is used to setup and modify the toolchain for different needs.</p>
+<p>Among its other uses, you may want to familiarize yourself with <code>rustup doc</code> which will open a locally-sourced web book for Rust documentation that can be used offline.</p>
+<h3 id="rustc"><a class="header" href="#rustc">rustc</a></h3>
+<p>Rust is a highly optimized compiled language. It's compiler is called <code>rustc</code>.</p>
+<p>Typically <code>rustc</code> is not invoked directly; it is usually invoked with <code>cargo build</code></p>
+<p>The compiler is thorough and strict by design.  Clean code is required on your part. Unused variables or mis-assigned variable types will result in compile errors.</p>
+<ul>
+<li>The compiler controls and understands memory allocation and deallocation</li>
+<li>It tracks borrows/references (borrow checking)</li>
+<li>Expands macros</li>
+</ul>
+<p>Although some might accuse the Rust compiler of being deliberately unforgiving and opinionated, it is not heartless.  It will tell you when you've done something wrong, and it will ask for additional information if it can't figure it out on its own (type, lifetime of borrowed values, etc)</p>
+<h4 id="statements-and-expressions"><a class="header" href="#statements-and-expressions">Statements and Expressions</a></h4>
+<pre><code>- Like many languages, Rust is primarily an expression-based language, where an expression produces a result or an effect.
+- Multiple expression types:
+    - Literal
+    - Path
+    - Block
+    - Operator
+    - Struct
+    - Tuple
+    - Method
+    - Closure
+    - etc
+- Expressions may be nested and obey an evaluation ordering
+
+```
+let y = 5;
+let y = { let x = 5; x + 6; };
+```
+</code></pre>
+<h4 id="variable-binding-and-ownership"><a class="header" href="#variable-binding-and-ownership">Variable binding and ownership</a></h4>
+<p>In other languages, a "let" statement specifies an assignment.
+In Rust, a "let" statement creates a variable binding. At first glance, this may seem the same, but there are important differences. A variable binding includes:</p>
+<ul>
+<li>Name of the binding</li>
+<li>Whether or not the value is mutable (default is false)</li>
+<li>The type of the value (based on type annotations, inferred by the compiler
+or default associated with literal expression)​</li>
+<li>A value or backing resource (memory allocated on stack or heap)​</li>
+<li>Whether or not this binding "owns" the value.</li>
+</ul>
+<h4 id="binding-examples-primitive-types"><a class="header" href="#binding-examples-primitive-types">Binding examples (Primitive types)</a></h4>
+<pre><code>fn main() {​
+   // name: x, mutable: false, type: i32, value: 5 (stack), owner: true​
+   let _x = 5;​
+​
+   // same result except with explicit type annotation of i32​
+   let _x: i32 = 5; ​
+​
+   // now with unsigned integer​
+   let _x: u32 = 5; ​
+​
+   //now mutable​
+   let mut _x: u32 = 5; ​
+
+   // creates 2 immutable variable bindings for x and y ​
+   // using a tuple expression with integer literal expressions 1 and 2​
+   let (_x, _y) = (1, 2); ​
+​
+   // now x &amp; y are mutable​
+   let (mut _x, mut _y) = (1, 2); ​
+}
+</code></pre>
+<h4 id="copy-semantics-and-move-semantics"><a class="header" href="#copy-semantics-and-move-semantics">Copy semantics and Move semantics</a></h4>
+<p>Consider this code:</p>
+<pre><code>fn copy_semantics() {​
+    let x = 5;​
+    let y = x;​
+}
+</code></pre>
+<p>This binds the value 5 to 'x' and then binds the value of 'x' to 'y'.  So, in the end x == 5 and y == 5.
+No surprise there, but it should be understood that this is true because the primitive types for this implement the "Copy" trait that allows this.</p>
+<p>Now let's look at another bit of code</p>
+<pre><code>fn move_semantics() {
+    // String does not implement the copy trait... ​
+
+    let message = String::from("hello Rustaceans");
+    let mut _hello = message;
+
+
+    println!("{}", message);
+}
+</code></pre>
+<p>If your run this code in the Rust Playground you will see the following output:</p>
+<pre><code>Exited with status 101
+
+error[E0382]: borrow of moved value: `message`
+ --&gt; src/main.rs:8:20
+  |
+4 |     let message = String::from("hello Rustaceans");
+  |         ------- move occurs because `message` has type `String`, which does not implement the `Copy` trait
+5 |     let mut _hello = message;
+  |                      ------- value moved here
+...
+8 |     println!("{}", message);
+  |                    ^^^^^^^ value borrowed here after move
+  |
+  = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider cloning the value if the performance cost is acceptable
+  |
+5 |     let mut _hello = message.clone();
+  |                             ++++++++
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `playground` (bin "playground") due to 1 previous error
+
+</code></pre>
+<p>Types that implement the Copy trait (like integers and booleans) are duplicated on assignment. For other types, ownership is transferred.</p>
+<p>Simple primitive types implement the Copy trait — a marker trait indicating that values of a type can be duplicated with a simple bitwise copy</p>
+<p>So you can see, the rust compiler, despite being picky, is very helpful.  It explains exactly what is happening here:</p>
+<p>String does not implement the "Copy" trait, so an assignent 'moves' the value from 'message' to '_hello' so that when we try to
+reference 'message' later in the print macro, we see the value is no longer there.  It even suggests some possible alternatives we might try.</p>
+<h4 id="allocating-deallocating-and-scope"><a class="header" href="#allocating-deallocating-and-scope">Allocating, Deallocating, and scope</a></h4>
+<ul>
+<li>Memory is allocated when the result of an expression is assigned to a variable binding</li>
+<li>Memory is deallocated when the variable binding that is the owner of the value goes out of scope</li>
+<li>For non-primitive types (on the heap), you may call the <code>drop</code> function (trait) for resources that <em>you</em> control the lifetime scope for.</li>
+<li>The drop trait should be custom implemented for resource types that have specific destructor needs.</li>
+<li>Rust calls drop() automatically when a value goes out of scope, but you can override it via the Drop trait if your type needs custom cleanup logic (e.g. closing a file or freeing a resource).</li>
+</ul>
+<h4 id="rust-ownership-rules"><a class="header" href="#rust-ownership-rules">Rust ownership rules</a></h4>
+<ul>
+<li>Each value in rust has an owner (from a variable binding)</li>
+<li>There can only be <strong>one</strong> owner at a time</li>
+<li>When an owner goes out of scope, the value will be dropped.</li>
+</ul>
+<h4 id="borrowing"><a class="header" href="#borrowing">Borrowing</a></h4>
+<p>Borrowing is the term used for a copy-by-reference. For example:</p>
+<pre><code>fn borrowing() {​
+    let mut x: String = String::from("asdf");​
+​
+    // Borrow is a verb… Borrowing a value from the owner​
+    // The result of a borrow is a reference; below an immutable reference​
+    let _y: &amp;String = &amp;x; ​
+    // name: y, mutable: false, type: String, value: -&gt; x, owner: false; an immutable reference​
+
+    // Mutable borrow... the variable binding you are borrowing must be mutable​
+    let _z: &amp;mut String = &amp;mut x;​
+    // name: z, mutable: true, type: String, value: -&gt; x, owner: false; a mutable reference​
+
+    // You can borrow values stored on the heap or on the stack​
+    let n: i32 = 5;​
+    let _z: &amp;i32 = &amp;n; //is valid… same rules apply as for complex types​
+}
+</code></pre>
+<h5 id="borrowing-rules"><a class="header" href="#borrowing-rules">Borrowing rules</a></h5>
+<ul>
+<li>Only 1 <em>mutable</em> borrow/reference at a time</li>
+<li>As many <em>immutable</em> borrows as you like</li>
+<li>If you have 1 or more immutable borrows and 1 mutable borrow, attempting to use any of the immutable borrows <em>after the value
+has changed</em> will result in a compile error</li>
+</ul>
+<p>Rust uses lifetimes to ensure that borrowed references don’t outlive the data they point to. While often inferred by the compiler, they become important in more advanced usage.</p>
+<h4 id="functions"><a class="header" href="#functions">Functions</a></h4>
+<p>Rust functions look much like function definitions from other languages.  Here's some examples:</p>
+<pre><code>// A function that takes no parameters returns no useable result (unit type)​
+fn do_something() -&gt; () {}​
+
+// equivalent to above… more typical​
+fn do_something() {} ​
+
+// this returns an i32 with value 3… ​
+// remember return statement is not needed… just leave off the semi-colon​
+fn get_three()-&gt; i32 {​
+    3​
+}​
+</code></pre>
+<ul>
+<li>The function starts with <code>fn</code>.</li>
+<li>Rust style conventions prefer "snake case" (underscore separated lowercase words) style for the function name.</li>
+<li>Functions take parameters which are listed within parenthesis following the function name.</li>
+<li>Functions that return a type denote their return type with -&gt; <code>&lt;type&gt;</code> after the parameter list.</li>
+<li>The function body is within { } brackets.</li>
+<li>The result of the last expression executed becomes the return value if no 'return' keyword is encountered.</li>
+<li>The return type () is called the unit type — it’s like void in C/C++, representing ‘no meaningful value’.</li>
+</ul>
+<h4 id="function-parameters"><a class="header" href="#function-parameters">Function parameters</a></h4>
+<ul>
+<li>parameters must have a type annotation</li>
+<li>all parameters will be copied, moved, or borrowed from their origins and delivered into the scope of the function (the parameter definition should indicate if they expect a borrow/reference, or an actual value).</li>
+</ul>
+<pre><code>fn do_some_things(x: i32, y: String, z: &amp;String, a: &amp;mut String) {}​
+</code></pre>
+<ul>
+<li>x will be a copied value (from i32 primitive)</li>
+<li>y will be a moved value (from the string)</li>
+<li>z will be an immutable borrowed reference</li>
+<li>a will be a mutable borrowed reference</li>
+</ul>
+<h4 id="tuples"><a class="header" href="#tuples">Tuples</a></h4>
+<ul>
+<li>Tuples are primitive types that contain a finite sequence ​</li>
+<li>Tuples are heterogenous, the sequence does not need to be of the same type​</li>
+<li>Tuples are a convenient way of returning multiple results from a function​</li>
+<li>Tuples are often used with enums to associate one or more values with an enum variant​</li>
+</ul>
+<p><em>example:</em></p>
+<pre><code>let x: (&amp;str,i32, char) = ("hello", 42, 'c')
+</code></pre>
+<p>In the example we define a tuple consisting of three element types: A string reference, a 32-bit integer, and a character. Then we assign literal values for this tuple definition to the binding variable 'x'.</p>
+<h4 id="struct"><a class="header" href="#struct">Struct</a></h4>
+<p>A Struct (structure) in Rust is much like a structure definition in several other languages.</p>
+<p>For example:</p>
+<pre><code>struct Example
+{
+    foo: String,
+    bar: i32,
+    baz: bool
+}
+</code></pre>
+<p>There is also the concept of a 'tuple struct' which is a convenient way to give a name to a tuple that can be treated like a structure, such as the Tuple example we visited above:</p>
+<pre><code>struct MyTupleStruct(&amp;String, i32, char)
+</code></pre>
+<p>Remember, tuples can have any number of elements in the sequence.</p>
+<h4 id="enum-option-and-result"><a class="header" href="#enum-option-and-result">Enum, Option, and Result</a></h4>
+<p>An enum is a way of saying that a value is one from a set of possible values.  Most languages have some form of enum, but Rust
+has an particularly robust level of support around this construct.</p>
+<p>Consider this example from the "Rust Book":</p>
+<pre><code>enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+</code></pre>
+<p>One can imagine "Message" being used to direct some operation to do one of the four listed things.  But note that each of these "directives" has annotations to describe the associated data type that accompany it.  "Quit" needs no parameters, "Move" comes with structured data for x and y, "Write" is passed a String, and "ChangeColor" gets a Tuple.</p>
+<h5 id="option"><a class="header" href="#option">Option</a></h5>
+<p>Option is a way to handle Null values in a way a little different from some other languages.  An Option is basically a way to say that something has a value or it has no value (Some or None). Option is an enum that is part of the standard Rust library.
+Since <code>Option&lt;T&gt;</code> is not the same type as <code>T</code>, the compiler will not allow an evaluation of a possible Null value.
+You can also use the <code>is_some()</code> and <code>is_none()</code> functions of an option to determine if it has a value.</p>
+<h5 id="result"><a class="header" href="#result">Result</a></h5>
+<p>Where Option is the state of "Some or None" Result is the state of "Ok or Err".</p>
+<p><code>Option&lt;T&gt;</code> is used when a value may or may not be present. <code>Result&lt;T, E&gt;</code> is used when a function may succeed (Ok) or fail (Err). Both are enums and must be handled explicitly.</p>
+<p>Any operation or function that is executed
+may potentially fail, and Rust does not employ any sort of try/catch or "on_error" redirections found in other languages.
+Error conditions are a fact of life and as such are part of the result of doing something. Getting used to evaluating the return value of a function operation may seem annoying at first, but it is actually pretty liberating because it generally simplifies error handling.</p>
+<p>Let's consider this function:</p>
+<pre><code>fn do_something() -&gt; Result&lt;String, std::io::Error&gt; {
+    let x:String = "hooray".to_string();
+    return Ok(x);
+}
+</code></pre>
+<p>We can see this function returns the "Ok" result (we don't create an error case in this example).
+Of course, unless we explicitly documented it, the caller has no idea there will not be an error, so it handles it like so:</p>
+<pre><code>fn main() {
+    
+    let x = do_something();
+    let y = match x {
+        Ok(s) =&gt; s,
+        Err(_e) =&gt; panic!("Oh noes!")
+    };
+    println!("{}", y);
+}
+</code></pre>
+<p>The error case never occurs, but if it did, it would probably be inadvisable to simply call panic! as a result. Of course, sometimes
+there are no good choices, but especially in firmware driver code, casually throwing panic! exceptions is not a good idea.</p>
+<p>On that note, you will encounter a lot of sample code from the web and elsewhere that simply advise calling <code>.unwrap()</code> on an option or a result. While often used in examples or quick scripts, relying on .unwrap() in production firmware is discouraged. Define errors explicitly and handle them deliberately.</p>
+<h4 id="functions-and-methods-for-user-defined-types"><a class="header" href="#functions-and-methods-for-user-defined-types">Functions and methods for user defined types</a></h4>
+<p>User define types include enums, structs, and  union</p>
+<pre><code>impl Student {​
+
+    fn new_with_username_email(username: String, email: String) -&gt; Self {​
+        Student {​
+            active_enrollment: true,​
+            username,​
+            email​
+        }​
+    }​
+    //method – with methods you add special parameter…  ​
+    //a variable binding to “self”.  This binding can be mutable or //immutable​\
+    fn get_username(&amp;self) -&gt; String { self.username }​
+    fn get_student(email: &amp;str) -&gt; Student { //query db, return student }​
+}
+</code></pre>
+<p><code>impl</code> blocks let you associate methods with a type. Methods that take &amp;self or &amp;mut self operate on an instance, while functions without self are typically constructors or associated functions.</p>
+<h4 id="common-construction--initialization-patterns"><a class="header" href="#common-construction--initialization-patterns">Common construction / initialization patterns</a></h4>
+<ul>
+<li>"new" function</li>
+<li>Default trait</li>
+</ul>
+<pre><code>impl Default for Student {​
+    fn default() -&gt; Self {​
+        Student {​
+            active_enrollment: true, ​
+            username: String::default(), ​
+            email: String::new()​
+        }​
+    }​
+}
+</code></pre>
+<h3 id="summary"><a class="header" href="#summary">Summary</a></h3>
+<p>This introduction to key concepts of Rust just touches the surface of the Rust language itself, not to mention the extended ecosystem and community that surrounds it.</p>
+<p>The goal of this introduction has been to introduce the <em>fundamental safety and ownership guarantees</em> Rust builds into its core design to alleviate some of the shortcomings that other languages often suffer from.  These fundamentals are keystones to understanding the logic behind the rest of the language.</p>
+<p><strong>Don't stop here</strong>:</p>
+<ul>
+<li>visit <a href="rust-lang.org">Learn Rust - Rust Programming Language</a> and learn the language!</li>
+<li>check out <a href="https://crates.io/">crates.io</a> for a taste of the many thousand 3rd-party packages (crates) that you can import for your project</li>
+<li>Use the <a href="https://play.rust-lang.org">playground</a> to experiment as you learn.</li>
+<li>for fun extended learning, visit <a href="https://github.com/rust-lang/rustlings">Rustlings</a>, where you get hands-on exercises to break in your muscle memory for writing solid Rust code.</li>
+<li>Since you are here, you undoubtedly have an interest in using Rust to write firmware, so you should visit <a href="https://docs.rust-embedded.org/book/">Rust Embedded Book</a> for a relevant introduction to using Rust in an Embedded Development Environment.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="concepts"><a class="header" href="#concepts">Concepts</a></h1>
+<p>The core firmware of a modern computing device is much more sophisticated than it was a couple of decades ago.
+What started out on early computers as the Basic Input-Output System (BIOS) firmware that allowed keyboard input, clock support, and maybe serial terminal output designed to give the most rudimentary of control to a system before it has the opportunity to load the operating system, as well as the initial bootstrap loader to bring that onboard, has grown into an orchestration of individual microcontroller-driven subsystems that manage a variety of input devices, cryptography subsystems,
+basic networking, power management, and even proprietary AI models.</p>
+<p>Beyond handling the boot-time tasks, some of this lower-level firmware is meant to run autonomously in the background to monitor and adjust to operating conditions.  For example, a thermal control subsystem will take measures to cool the computer if the CPU temperature exceeds optimal levels, or a battery charging subsystem must correctly detect when the power cord has been plugged in or removed and execute the steps necessary to charge the system.  Such tasks are generally controlled by one or more Embedded Controllers, oftentimes found as a single System-on-Chip (SOC) construction.</p>
+<p>Embedded Controllers are the unsung heroes of the modern laptop, quietly handling power management, thermal control,
+battery charging, lid sensors, keyboard scan matrices, and sometimes even security functions.
+There's a surprising amount of complexity tucked away in that little chip.</p>
+<p>The drivers and handlers responsible for managing these subsystems must be secure, reliable, and easy to adopt with confidence.
+This calls for a standardized, community-moderated approach—one that still leaves room for innovation and platform-specific
+differentiation.</p>
+<p>There are many proven standards that define and govern the development of this firmware.
+For example, <strong>UEFI</strong> (<em>Unified Extensible Firmware Interface</em>) defines a standard for boot-level firmware in a series of layers, and <strong>DICE</strong> (Device Identity Composition Engine) defines a standard for cryptographic verification of firmware components for a security layer.</p>
+<p>Hardware components issue events or respond to signals transmitted over data buses such as eSPI,UART, I2C/I3C. These signals
+are monitored or driven by firmware, forming the basis for orchestrating and governing hardware behavior</p>
+<p>Historically, much of this firmware has been vendor-supplied and tightly coupled to specific EC or boot hardware. It's often written in C or even assembly, and may be vulnerable to memory-unsafe operations or unintended behavior introduced by seemingly harmless changes.</p>
+<p>The Open Device Partnership doesn't replace the former standards, but it defines a pattern for implementing this architecture in Rust.</p>
+<p>As computing devices grow more complex and user data becomes increasingly sensitive, the need for provable safety
+and security becomes critical.</p>
+<p>Rust offers a compelling alternative. As a systems programming language with memory safety at its core, Rust enables secure,
+low-level code without the tradeoffs typically associated with manual memory management.
+It’s a natural fit for Embedded Controller development—today and into the future.</p>
+<p>Abstraction and normalization are key goals. OEMs often integrate components from multiple vendors and must adapt quickly
+when supply chains change. Rewriting integration logic for each vendor’s firmware is costly and error-prone.</p>
+<p>By adopting ODP’s patterns, only the HAL layer typically needs to be updated when switching hardware components.
+The higher-level logic—what the system does with the component—remains unchanged</p>
+<p>Instead, if the ODP patterns have been adopted, all that really needs to change is the HAL mapping layers that describe how the hardware action and data signals are defined
+and the higher-level business logic of handling that component can remain the same.</p>
+<p>ODP is independent of any runtime or RTOS dependency.  Asynchronous support is provided by packages such as
+the <a href="https://embassy.dev/">Embassy</a> framework for embedded systems.
+Embassy provides key building blocks like Hardware Abstraction Layers (HALs), consistent timing models, and support for both asynchronous and blocking execution modes.</p>
+<h3 id="so-how-does-this-work"><a class="header" href="#so-how-does-this-work">So how does this work?</a></h3>
+<p>A Rust crate defines the component behavior by implementing hardware pin traits provided by the target microcontroller's HAL
+(possibly via Embassy or a compatible interface). These traits are optionally normalized to <a href="https://en.wikipedia.org/wiki/ACPI">ACPI</a> (Advanced Configuration and
+Power Interface) and ASL (ACPI Source Language) standards to align with common host-side expectations.</p>
+<p>From there, the system moves into a familiar abstraction pattern. The HAL exposes actions on those pins
+(such as read() or write()), and the service logic builds higher-level operations (like read_temperature() or set_fan_speed(x))
+using those primitives.</p>
+<pre class="mermaid">flowchart LR
+Controller(Controller) --&gt; PinTrait(Pin Traits) --&gt; ASL(ASL) --&gt; HAL(HAL interface) --&gt; Fun(Functional Interface) --&gt; Code(Code action)
+style Controller fill:#8C8
+style PinTrait fill:#8C8
+</pre>
+<p>In the case of a controller being switched out, assuming both controllers perform the same basic
+functionality (e.g. read temperature, set fan speed) only the pin traits specific to the controller
+likely need to be changed to implement with similar behavior.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="odp-repositories-and-bookshelves"><a class="header" href="#odp-repositories-and-bookshelves">ODP Repositories and bookshelves</a></h1>
+<p>There are currently more than a dozen separate repositories that make up the ODP offering.  This is deliberate - rather than having a single Mono-Repo that
+contains the full suite, individual repositories allows contributors focused on specific areas to only concern themselves with their repositories of interest rather than devote time and resources to managing a local copy of a large single repository.</p>
+<p>However, with separated repositories, a challenge arises when trying to introduce and document the whole of ODP in a consistent manner.  For that reason, documents are organized as separate books but "placed on different shelves" according to their scope and audience.</p>
+<h2 id="bookshelves"><a class="header" href="#bookshelves">Bookshelves</a></h2>
+<p>In the same way that a book shelf in the physical world is a holder of books, an ODP library bookshelf is a holder of web page content. This content may be generated Rust API documentation, or mdbook style contextual information, or in some cases other imported web-displayable content.</p>
+<p>The shelves are organized as follows:</p>
+<ul>
+<li>Shelf 1: Introduction and Concepts</li>
+<li>Shelf 2: Examples and Tutorials</li>
+<li>Shelf 3: Supporting crates and SDKs</li>
+<li>Shelf 4: Specifications and API references</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="odp-implementation-tracks"><a class="header" href="#odp-implementation-tracks">ODP Implementation tracks</a></h1>
+<p>The patterns, specifications, and reference code that comprise the Open Device Partnership offering covers the full gamut of system firmware creation, but typically boils down to one of three main scopes:</p>
+<div class="table-wrapper"><table><thead><tr><th>Boot Firmware (Patina)</th><th>Embedded Controllers</th><th>Embedded Controller Services</th></tr></thead><tbody>
+<tr><td><img src="concepts/./images/boot.png" alt="Boot Firmware" /></td><td><img src="concepts/./images/ec_mcu.png" alt="Embedded Controller" /></td><td><img src="concepts/./images/ec_services.png" alt="EC Services" /></td></tr>
+</tbody></table>
+</div>
+<p>These scopes may be implemented in a secure or a non-secure foundation
+and communicate over a variety of suitable data transports
+<img src="concepts/./images/odp_arch.png" alt="ODP Architecture" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="patina"><a class="header" href="#patina">Patina</a></h1>
+<h2 id="boot-firmware"><a class="header" href="#boot-firmware">(Boot Firmware)</a></h2>
+<p><em><strong>Patina</strong></em> is the name given to UEFI-compliant boot firmware developed using ODP patterns.</p>
+<p>It is based upon the venerable <strong>UEFI</strong> standard and doesn't seek to reinvent the process of this well-known
+framework, as it necessarily re-implements these familiar patterns in Rust instead of C.</p>
+<h3 id="a-review-of-uefi"><a class="header" href="#a-review-of-uefi">A review of UEFI</a></h3>
+<p><strong>UEFI</strong> stands for <em>Unified Extensible Firmware Interface</em> and can be described as broken into a series of layers, as this diagram shows:</p>
+<p><img src="concepts/./images/PI_Boot_Phases.jpg" alt="PI_Boot_phases" />
+<em>(diagram source: TianoCore, , illustrating the PI Boot Flow from SEC to RT phase)</em></p>
+<p>This boot-time firmware is executed by the platform main CPU on startup/reset and proceeds through the stages shown in the diagram.  As part of its initialization, it may communicate with the embedded system microcontrollers that are also under the control of ODP rust drivers to initiate and orchestrate them to a starting state.</p>
+<p>While the majority of ODP development focuses on the <strong>DXE</strong> phase, Patina also supports implementation in the <strong>PEI</strong>, <strong>SEC</strong> and other phases.</p>
+<p>Some aspects of UEFI, especially those that have already been deprecated, may not be supported under ODP.  These are legacy services, UI facilitators, and some Runtime Support components that either no longer serve a core purpose or can more effectively be implemented in other ways within ODP.</p>
+<h3 id="odp-resources-for-uefi"><a class="header" href="#odp-resources-for-uefi">ODP Resources for UEFI</a></h3>
+<p>For traditional UEFI development, an SDK called <strong>EDK II</strong> is often used to supply much of the common functionality.</p>
+<p>However, the <strong>EDK II</strong> presumes the use of C, and ODP is seeking to replace this potentially insecure code base with Rust for future devices.</p>
+<p>ODP features a subproject body of code that represents the elements one might traditionally find within the EDK II, but designed for Rust.</p>
+<p><a href="https://github.com/OpenDevicePartnership/uefi-sdk">UEFI-SDK Repository</a></p>
+<p><a href="https://github.com/OpenDevicePartnership/uefi-sdk/releases/doc/boot_services/index.html">Documentation</a></p>
+<p><em>(internal note to reviewers: link above is empty - TODO: Replace with link to a github release with an actual cargo doc rendering when ready)</em></p>
+<p>This SDK-like material covers</p>
+<ul>
+<li>Boot services</li>
+<li>Driver binding</li>
+<li>Runtime services</li>
+<li>TPL mutex (Task Priority Level critical sections)</li>
+<li>UEFI protocol</li>
+<li>Component Support
+<ul>
+<li>Component Template</li>
+<li>Parameters</li>
+<li>Hand-Off Block (HOB)</li>
+<li>Scheduler metadata</li>
+<li>Service interface</li>
+<li>Storage support</li>
+</ul>
+</li>
+<li>Serial logging support</li>
+<li>Serial UART support and std i/o</li>
+<li>Macros and helpers</li>
+</ul>
+<h3 id="how-this-compares-to-traditional-uefi-approaches"><a class="header" href="#how-this-compares-to-traditional-uefi-approaches">How this compares to traditional UEFI approaches</a></h3>
+<p>There are differences in the ODP approach here in a couple areas.  One significant departure is that in ODP there is no traditional SMM (System Management Mode).</p>
+<p>SMM is a special-purpose operating mode provided by x86 CPUs (and compatible architectures) for executing highly privileged system-level code, independently of the operating system.</p>
+<ul>
+<li>
+<p>It is triggered by a System Management Interrupt (SMI).</p>
+</li>
+<li>
+<p>Code running in SMM has full control over the system, including memory, I/O, and other hardware.</p>
+</li>
+<li>
+<p>It is isolated: the OS (and even hypervisors) cannot access or interfere with SMM execution or memory (SMRAM).</p>
+</li>
+</ul>
+<p>This may seem more than a little significant at first because SMM is used in key EDK II contexts, including:</p>
+<ul>
+<li>SmmCore</li>
+<li>SmmDriver</li>
+<li>SmmCommunication</li>
+<li>SmmVariable</li>
+</ul>
+<p>But there is good reason for this omission:</p>
+<p>Traditional SMM is not supported to prevent coupling between the DXE and MM environments. This exclusion extends to so-called 'combined' DXE modules also.
+These patterns are error-prone, increase DXE module complexity, and elevate the risk of security vulnerabilities.</p>
+<p>Standalone MM should be used instead. The combined drivers have not gained traction in actual implementations due to their lack of compatibility for most practical purposes and further increase the likelihood of coupling between core environments and user error when authoring those modules. The Rust DXE Core focuses on modern use cases and simplification of the overall DXE environment.</p>
+<p>For a technically detailed tour of how to implement UEFI-style boot code under Patina, see <a href="https://github.com/OpenDevicePartnership/uefi-dxe-core/docs/book/index.html">Introduction - Developing UEFI with Rust</a></p>
+<p><em>(internal note to reviewers: link above is empty - TODO: Replace with link to actual rendered book copy from the reference shelf)</em></p>
+<h3 id="whats-next"><a class="header" href="#whats-next">What's Next?</a></h3>
+<p>In following chapters we'll explore how Patina components interact within the DXE Core, how to define UEFI services in Rust, and how to develop real-world DXE drivers using ODP tools.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="embedded-controller"><a class="header" href="#embedded-controller">Embedded Controller</a></h1>
+<p><img src="concepts/./images/simplified_layers.png" alt="ODP Architecture" /></p>
+<p>An Embedded Controller is typically a single SOC (System on Chip) design capable of managing a number of low-level tasks.</p>
+<p>These individual tasked components of the SOC are represented by the gold boxes in the diagram. The ODP Support for Embedded Controller development is represented in the diagram in the green boxes, whereas third party support libraries are depicted in blue.</p>
+<h2 id="secure-vs-non-secure"><a class="header" href="#secure-vs-non-secure">Secure vs Non-Secure</a></h2>
+<p>The "owned interface" in this diagram represents the available data transport (UART, eSPI, IC2, IC3, shared memory) and
+can be considered to be either a "Secure" channel for data communication or a "Non-Secure" channel. An implementation may use more than one transport for different controller and controller service needs.</p>
+<p>A "Secure" transport is one that can validate and trust the data from the channel, using cryptographic signatures and hypervisor isolation to insure the integrity of the data exchanged.
+Not all such channels must necessarily be secure, and indeed in some cases depending upon the components used it may not even be possible to secure a channel.  The ODP approach is agnostic to these decisions, and can support either or both patterns of
+implementation.</p>
+<p>Two similar sounding, but different models become known here.  One is SMM, or "System Management Mode". SMM is a high-privilege CPU mode for x86 microcontrollers that EC services can utilize to gain access. To facilitate this, the SMM itself must be secured. This is done as part of the boot time validation and attestation of SMM access policies.  With this in place, EC Services may be accessed by employing a SMM interrupt.</p>
+<p>For A deeper dive into what SMM is, see <a href="https://www.microsoft.com/en-us/security/blog/2020/11/12/system-management-mode-deep-dive-how-smm-isolation-hardens-the-platform/?msockid=1c8509b122806f6b2c281c61233a6e3e">How SMM isolation hardens the platform</a></p>
+<p>Another term seen about will be "SMC", or "Secure Memory Control", which is a technology often found in ARM-based architectures. In this scheme, memory is divided into secure and non-secure areas that are mutally exclusive of each other,  as well as a narrow section known as "Non-Secure Callable" which is able to call into the "Secure" area from the "Non-Secure" side.</p>
+<p>Secure Memory Control concepts are discussed in detail with this document:
+<a href="https://developer.arm.com/documentation/100690/0201">TrustZone Technology for Armv8-M Architecture</a></p>
+<p>SMM or SMC adoption has design ramifications for EC Services exchanges, but also affects the decisions made around boot firmware, and we'll see these terms again when we look at ODP Patina implementations.</p>
+<h3 id="hypervisor-context-multiplexing"><a class="header" href="#hypervisor-context-multiplexing">Hypervisor context multiplexing</a></h3>
+<p>Another component of a Secure EC design is the use of a hypervisor to constrain the scope of any given component service to a walled-off virtualization context. One such discussion of such use is detailed <a href="https://www.microsoft.com/en-us/security/blog/2018/06/05/virtualization-based-security-vbs-memory-enclaves-data-protection-through-isolation/?msockid=1c8509b122806f6b2c281c61233a6e3e">in this article</a></p>
+<h3 id="the-open-device-partnership-defines"><a class="header" href="#the-open-device-partnership-defines">The Open Device Partnership defines:</a></h3>
+<ul>
+<li>An "owned interface" that communicates with the underlying hardware via the available data transport .</li>
+<li>We can think of this transport as being a channel that is considered either "Secure" or "Non-Secure".</li>
+<li>This interface supports business logic for operational abstractions and concrete implementations to manipulate or interrogate the connected hardware component.</li>
+<li>The business logic code may rely upon other crates to perform its functions. There are several excellent crates available in the Rust community that may be leveraged, such as <a href="https://embassy.dev/">Embassy</a>.</li>
+<li>Synchronous and asynchronous patterns are supported.</li>
+<li>No runtime or RTOS dependencies.</li>
+</ul>
+<p>An implementation may look a little like this:</p>
+<p><img src="concepts/./images/odp_arch.png" alt="ODP Arch" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ec-services"><a class="header" href="#ec-services">EC Services</a></h1>
+<p>Embedded controller services are available for the operating system to call for various higher-level purposes dictated by specification.
+The Windows Operating system defines some of these standard services for its platform.</p>
+<p>These service interfaces include those for:</p>
+<ul>
+<li>debug services</li>
+<li>firmware management services</li>
+<li>input management services</li>
+<li>oem services</li>
+<li>power services</li>
+<li>time services</li>
+</ul>
+<p>Services may be available for operating systems other than Windows.</p>
+<p>OEMs may wish to implement their own services as part of their product differentiation.</p>
+<h3 id="ec-service-communication-protocols"><a class="header" href="#ec-service-communication-protocols">EC Service communication protocols</a></h3>
+<p>With a communication channel protocol established between OS and EC, operating system agents and applications are able to monitor and operate peripheral controllers from application space.</p>
+<p>This scope comes with some obvious security ramifications that must be recognized.</p>
+<p>Implementations of ODP may be architected for both Secure and Non-Secure system firmware designs, as previously discussed.</p>
+<p><img src="concepts/./images/image1.png" alt="Secure Architecture" /></p>
+<p>In the diagram above, the dark blue sections are those elements that are part of normal (non-secure) memory space and may be called
+from a service interface directly.  As we can see on the Non-Secure side, the ACPI transport channel has access to the EC component implementations either directly or through the FF-A (Firmware Framework Memory Management Protocol).</p>
+<h3 id="ff-a"><a class="header" href="#ff-a">FF-A</a></h3>
+<p>The Firmware Framework Memory Management Protocol <a href="https://developer.arm.com/documentation/den0140/latest/">(Spec)</a>
+describes the relationship of a hypervisor controlling a set of secure memory partitions with configurable access and ownership attributes and the protocol for exchanging information between these virtualized contexts.</p>
+<p>FF-A is available for Arm devices only.  A common solution for x64 is still in development. For x64 implementations, use of SMM is employed to orchestrate hypervisor access using the [Hafnium] Rust product.</p>
+<p>In a Non-Secure implementation <em>without</em> a hyperviser, the ACPI connected components can potentially change the state within any accessible memory space.  An implementation with a hypervisor cannot.  It may still be considered a "Non-Secure" implementation, however, as the ACPI data itself is unable to be verified for trust.</p>
+<p>In a fully "Secure" implementation, controller code is validated at boot time to insure the trust of the data it provides. Additionally, for certain types of data, digital signing and/or encryption may be used on the data exchanged to provide an additional level of trust.</p>
+<h3 id="sample-implementation-links"><a class="header" href="#sample-implementation-links">Sample implementation links</a></h3>
+<p>See
+<a href="concepts/../../../2/embedded_services/index.html" target="_blank">Sample System Implementation ⧉</a>
+from "Shelf 2"</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tutorials"><a class="header" href="#tutorials">Tutorials</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="our-first-odp-style-handler-pair-with-faked-bus-semantics"><a class="header" href="#our-first-odp-style-handler-pair-with-faked-bus-semantics">Our first ODP-Style handler pair (with faked bus semantics)</a></h2>
+<p>The microcontrollers used for Embedded Controller purposes are not the same ones used
+in the example resources referenced by the Rust Book, but if you've started there then
+you may already have a STM32F3 microcontroller Discovery board and you may have even played with it to blink the LED lights or some other exercises.</p>
+<p>Let's build on what we already know from experimenting with the STM32F3 exercises from the Rust Book.</p>
+<p>We already know we can use the tooling setup we have to write code for the STM32F3 that will light one of its LED displays when the user button is pressed.<br />
+Code to do exactly that can be found in <a href="tutorial/stm32f3-discovers/examples/button.rs">stm32f3-discovers/examples/button.rs</a> of the development board resources.</p>
+<p>That code looks like this:</p>
+<pre><pre class="playground"><code class="language-rust">#![no_std]
+#![no_main]
+
+extern crate panic_itm;
+use cortex_m_rt::entry;
+
+use stm32f3_discovery::stm32f3xx_hal::delay::Delay;
+use stm32f3_discovery::stm32f3xx_hal::prelude::*;
+use stm32f3_discovery::stm32f3xx_hal::pac;
+
+use stm32f3_discovery::button::UserButton;
+use stm32f3_discovery::leds::Leds;
+use stm32f3_discovery::switch_hal::{InputSwitch, OutputSwitch};
+
+#[entry]
+fn main() -&gt; ! {
+    let device_periphs = pac::Peripherals::take().unwrap();
+    let mut reset_and_clock_control = device_periphs.RCC.constrain();
+
+    let core_periphs = cortex_m::Peripherals::take().unwrap();
+    let mut flash = device_periphs.FLASH.constrain();
+    let clocks = reset_and_clock_control.cfgr.freeze(&amp;mut flash.acr);
+    let mut delay = Delay::new(core_periphs.SYST, clocks);
+
+    // initialize user leds
+    let mut gpioe = device_periphs.GPIOE.split(&amp;mut reset_and_clock_control.ahb);
+    let leds = Leds::new(
+        gpioe.pe8,
+        gpioe.pe9,
+        gpioe.pe10,
+        gpioe.pe11,
+        gpioe.pe12,
+        gpioe.pe13,
+        gpioe.pe14,
+        gpioe.pe15,
+        &amp;mut gpioe.moder,
+        &amp;mut gpioe.otyper,
+    );
+    let mut status_led = leds.ld3;
+
+    // initialize user button
+    let mut gpioa = device_periphs.GPIOA.split(&amp;mut reset_and_clock_control.ahb);
+    let button = UserButton::new(gpioa.pa0, &amp;mut gpioa.moder, &amp;mut gpioa.pupdr);
+
+    loop {
+        delay.delay_ms(50u16);
+
+        match button.is_active() {
+            Ok(true) =&gt; {
+                status_led.on().ok();
+            }
+            Ok(false) =&gt; {
+                status_led.off().ok();
+            }
+            Err(_) =&gt; {
+                panic!("Failed to read button state");
+            }
+        }
+    }
+}</code></pre></pre>
+<p>Of course, the STM32F3 is <em>not</em> an EC and we certainly would have little use for flashing lights on one if it were, but the basic process and principles are the same, and since we already know how to flash the lights, we can use this as a good way to show how and why the ODP framework fits into the scheme.</p>
+<p>Let's first posit that the LED and the user button are two separate peripheral components.  As such, we probably want two separate ODP handlers to address these, and then some business logic to tie them together.  Let's start with the user button.</p>
+<div style="break-before: page; page-break-before: always;"></div><h3 id="addressing-the-user-button"><a class="header" href="#addressing-the-user-button">Addressing the user button</a></h3>
+<p>The user button of the STM32F3 will trigger an interrupt signal that can be intercepted
+by code to react to the button being pressed.</p>
+<p>In the environment of an EC attached to an ACPI (or other transport) bus, the controller would be listening to / contributing to signals on that bus.</p>
+<p>Recall our diagram of how EC components are attached to the bus through abstraction layers:</p>
+<pre class="mermaid">flowchart TB
+HW(Hardware) --&gt; ACPI(ACPI) --&gt; HAL(HAL) --&gt; Listener(Listener)
+</pre>
+<p>In this example, we’re not using an actual ACPI or I²C bus, but we can simulate the idea of signal propagation and component decoupling using shared memory and interrupts.</p>
+<p>We'll listen to the button interrupt and place a signal into a memory address that is accessible by both our button producer and our LED consumer.  This will take the place
+of the ACPI for us here.  In later excercises we'll explore the mappings to the ACPI and the ASL layers in a real Embedded Controller environment.</p>
+<p>So let's create that button producer code.  It will wait for the interrupt that signals the button action and it will set an
+AtomicBool at a location in memory named USER_BUTTON_PRESSED that we can interrogate at the listener side.</p>
+<h6 id="buttonhandlerrs"><a class="header" href="#buttonhandlerrs">ButtonHandler.rs</a></h6>
+<pre><pre class="playground"><code class="language-rust">#![no_std]
+#![no_main]
+
+extern crate panic_itm;
+
+use cortex_m_rt::entry;
+
+use stm32f3_discovery::stm32f3xx_hal::interrupt;
+use stm32f3_discovery::stm32f3xx_hal::prelude::*;
+use stm32f3_discovery::stm32f3xx_hal::pac;
+use stm32f3_discovery::wait_for_interrupt;
+
+use core::sync::atomic::{AtomicBool, Ordering};
+use stm32f3_discovery::button;
+use stm32f3_discovery::button::interrupt::TriggerMode;
+
+use stm32f3_discovery::leds::Leds;
+use stm32f3_discovery::switch_hal::ToggleableOutputSwitch;
+
+
+// this will be imported into the listener code for direct visibility rather than transmitting through a bus
+static USER_BUTTON_PRESSED: AtomicBool = AtomicBool::new(false);
+
+#[interrupt]
+fn EXTI0() {
+    //If we don't clear the interrupt to signal it's been serviced, it will continue to fire.
+    button::interrupt::clear();
+    // pa0 has a low pass filter on it, so no need to debounce in software
+    USER_BUTTON_PRESSED.store(true, Ordering::SeqCst);
+}
+
+fn main() -&gt; ! {
+
+    button::interrupt::enable(
+        &amp;device_periphs.EXTI,
+        &amp;device_periphs.SYSCFG,
+        TriggerMode::Rising,
+    );
+
+    loop {
+        wait_for_interrupt()
+    }
+}</code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h3 id="provide-an-api-for-controlling-the-lights"><a class="header" href="#provide-an-api-for-controlling-the-lights">Provide an API for controlling the lights</a></h3>
+<p>We now have a handler that will tell us when the user has pressed the button, but we still need a way to turn on the lights.
+Continuing the theme of ODP-style modularity, we will declare an API for light control here.</p>
+<h6 id="ledapirs"><a class="header" href="#ledapirs">LedApi.rs</a></h6>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span>
+#![no_std]
+#![no_main]
+
+<span class="boring">fn main() {
+</span>let mut status_led;
+
+fn lights_init() -&gt; ! {
+    let device_periphs = pac::Peripherals::take().unwrap();
+    let mut reset_and_clock_control = device_periphs.RCC.constrain();
+
+    // initialize user leds
+    let mut gpioe = device_periphs.GPIOE.split(&amp;mut reset_and_clock_control.ahb);
+    let leds = Leds::new(
+        gpioe.pe8,
+        gpioe.pe9,
+        gpioe.pe10,
+        gpioe.pe11,
+        gpioe.pe12,
+        gpioe.pe13,
+        gpioe.pe14,
+        gpioe.pe15,
+        &amp;mut gpioe.moder,
+        &amp;mut gpioe.otyper,
+    );
+
+    status_led = leds.ld3;
+
+}
+
+fn lights_on() {
+    status_led.on().ok();
+}
+
+fn lights_off() {
+    status_led.off().ok()
+}
+
+
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h3 id="tying-it-together"><a class="header" href="#tying-it-together">Tying it together</a></h3>
+<p>We now have integrated a handler that will signal us when the button is pressed, and an API for turning on/off the lights. Let's complete the obvious logic and turn on/off the lights in response to the button.</p>
+<h6 id="buttontoledservicers"><a class="header" href="#buttontoledservicers">ButtonToLedService.rs</a></h6>
+<pre><pre class="playground"><code class="language-rust">#![no_std]
+#![no_main]
+
+extern crate panic_itm;
+
+use cortex_m_rt::entry;
+
+use stm32f3_discovery::stm32f3xx_hal::prelude::*;
+use stm32f3_discovery::stm32f3xx_hal::pac;
+use stm32f3_discovery::wait_for_interrupt;
+use stm32f3_discovery::stm32f3xx_hal::delay::Delay;
+
+mod ButtonHandler; 
+mod LedApi;
+
+
+fn read_user_button() -&gt; bool {
+    USER_BUTTON_PRESSED.load(Ordering::SeqCst)
+}
+
+#[entry]
+fn main() -&gt; ! {
+
+    lights_init()
+
+    let mut delay = Delay::new(core_periphs.SYST, clocks);
+    
+    loop {
+        // give system some breathing room for the interrupt to occur
+        delay.delay_ms(50u16);
+
+        // synchronize the light to the button state
+        if read_user_button() {
+            lights_on()
+        } else {
+            lights_off()
+        }
+
+    }
+}</code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="beyond-the-introduction"><a class="header" href="#beyond-the-introduction">Beyond the introduction</a></h2>
+<p>You've learned about ODP and its role in modern firmware development.</p>
+<p>You've coded some examples in Rust and have become familiar with embedded programming practices.</p>
+<p>Our blinking light example gets things started and proves out the basic toolchain and coding practices.</p>
+<p>Now you are ready for real-world examples.</p>
+<p>Let's see about <a href="tbd">Building a modern Laptop</a></p>
+<p>You will find a collection of examples on
+Shelf 2 of the ODP documentation library that will help guide you as well.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="mermaid.min.js"></script>
+        <script src="mermaid-init.js"></script>
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

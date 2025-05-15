@@ -1,0 +1,373 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>QEMU Setup Guide</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">QEMU Setup Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="qemu-setup-guide"><a class="header" href="#qemu-setup-guide">QEMU Setup Guide</a></h1>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>This document provides details on how to setup QEMU, boot windows image and enable windbg.
+Next it covers details on how to compile a UEFI image for QEMU and modify ACPI content.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="qemu-setup"><a class="header" href="#qemu-setup">QEMU Setup</a></h1>
+<p>This section covers how to setup QEMU and boot windows image. We use QEMU as a reference for developing features that are not yet fully supported in hardware. This also gives us a HW agnostic platform that any SV or OEM can use for development.</p>
+<h2 id="downloading-and-building-qemu"><a class="header" href="#downloading-and-building-qemu">Downloading and building QEMU</a></h2>
+<p>The first step to setting up your system and validating you can boot to UEFI shell. The following has been validated with Ubuntu 22 under WSL. For full instructions see the following link:</p>
+<p><a href="https://github.com/tianocore/tianocore.github.io/wiki/How-to-Build-With-Stuart">Building QEMU with Stuart</a></p>
+<p>This also depends on rustup being installed</p>
+<p><a href="https://rustup.rs">Install Rustup</a></p>
+<h3 id="qemu-build-and-setup"><a class="header" href="#qemu-build-and-setup">QEMU build and setup</a></h3>
+<p>Note this uses Version 9.0.0 tip QEMU and other versions have varying issues. Building the emulator takes some time depending on your computer.</p>
+<pre><code>sudo apt-get install git libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build qemu-utils libudev-dev ncurseslib-dev
+wget https://download.qemu.org/qemu-9.0.0.tar.xz
+tar xf qemu-9.0.0.tar.xz
+cd qemu-9.0.0
+./configure --enable-vnc
+make
+sudo make install
+</code></pre>
+<h2 id="running-qemu-with-windows"><a class="header" href="#running-qemu-with-windows">Running QEMU with Windows</a></h2>
+<p>You can download the Validation OS ISO which is stripped down version of the OS and boots much faster in QEMU
+<a href="https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/validation-os-overview?view=windows-11_">Validation OS Windows 11</a></p>
+<p>When you mount the ISO you will have ValidationOS.vhdx and ValidationOs.wim files. Generally we work with virtual disk files (vhdx) in qemu. Copy the ValidationOS.vhdx file to your WSL file share and convert this to qcow2 image that is used by qemu.</p>
+<p><code>qemu-img convert -p -O qcow2 ValidationOS.vhdx winvos.qcow2</code></p>
+<p>You will need to modify Platforms/QemuSbsaPkg/Plugins/QemuRunner/QemuRunner.py to load your windows disk image.</p>
+<pre><code>       windows_image = env.GetValue("QEMU_WINDOWS_IMAGE")
+       if(windows_image != None):
+         logging.log(logging.INFO, "Mapping windows image to boot: " + windows_image)
+         args += " -hda " + windows_image
+</code></pre>
+<p>Now you can just port the environment variable to point to your windows image and it will load and boot windows rather than stopping at shell</p>
+<p><code>export QEMU_WINDOWS_IMAGE=/home/user/qemu/winvos.qcow2</code></p>
+<p>You should now be able to boot to windows and connect to the VNC session using your favorite VNC viewer at 127.0.0.1:5900</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="windbg-setup-for-qemu"><a class="header" href="#windbg-setup-for-qemu">Windbg Setup for QEMU</a></h1>
+<h2 id="enabling-windbg"><a class="header" href="#enabling-windbg">Enabling Windbg</a></h2>
+<p>If Windows doesn't boot properly on QEMU you are basically stuck wondering what is happening with no output after bootmgr starts there will be no further update in the serial port. To debug windows drivers and boot you will need to enable debugger in your image and redirect your serial port output.</p>
+<p>To enable KDCOM in your windows image you can mount your WinVOS.vhdx file but just double clicking on it in windows and it will mount the windows drive. It will not allow you to mount the EFIESP partition which has your BCD configuration so you will manually need to do this from administrator command prompt</p>
+<pre><code>mountvol list
+   \\?\Volume{6db5162d-2579-4177-a1a5-93ef900a229e}\
+        E:\
+
+    \\?\Volume{836aef00-39f3-4032-9859-edd5830c5bbf}\
+        *** NO MOUNT POINTS ***
+
+    \\?\Volume{c587fa46-aec7-40b5-ae44-610e51124aa2}\
+        *** NO MOUNT POINTS ***
+</code></pre>
+<p>Normally the EFIESP volume is the last one listed here, but if it fails to mount the one try the other one. It will be one of the volumes without a mount point. Make sure the location you try to mount it the folder must exist already.</p>
+<pre><code>mountvol d:\temp\mount \\?\Volume{c587fa46-aec7-40b5-ae44-610e51124aa2}\
+cd d:\temp\mount\EFI\Microsoft\Boot
+bcdedit /store BCD /enum all
+bcdedit /store BCD /set {default} debug on
+bcdedit /store BCD /dbgsettings serial debugport:1 baudrate:115200
+mountvol d:\temp\mount /d
+</code></pre>
+<p>Don't forget to eject or dismount the VHDX after you've unmounted the EFIESP partition.
+If you want to debug early boot process because it is not making it into NTOS you can enable bootdebug as well</p>
+<p><code>bcdedit /store BCD /set {globalsettings} bootdebug yes</code></p>
+<p>After modifying your vhdx be sure to convert to qcow2 format again using qemu-img and copy to the location that qemu is loading the image from.</p>
+<p>You will also need to change your serial output port as part of qemu command line, otherwise windbg can't connect with KDCOM through stdio. Update the -seral to use a localhost port which will get exposed outside of WSL
+<code>-serial tcp:127.0.0.1:5800,server,nowait</code></p>
+<p><b>Note:</b> Each time you restart the qemu the port will go away and you need to restart windbg after qemu has started otherwise it will not open the port properly after. To connect to your port with windbg you will need to run from the command line using the following:</p>
+<p><code>windbg -k com:ipport=5800,port=127.0.0.1 -v</code></p>
+<p>Now when Windows starts you will see it connect with Windbg and you can debug as you normally would.</p>
+<p><img src="media/windbg_qemu.png" alt="Windbg QEMU" /></p>
+<h2 id="debugging-qemu-with-gdb"><a class="header" href="#debugging-qemu-with-gdb">Debugging QEMU with GDB</a></h2>
+<p>When debugging in UEFI, secure world, or when system isn't responding you will often find yourself needing a GDB connection to the device.
+QEMU has built in support for GDB interface and makes it very easy to debug with GDB.</p>
+<p>From the qemu command line just add the following option
+<code>-gdb tcp::1234</code></p>
+<p>Now after your system starts or is in the state you want to connect you can use</p>
+<pre><code>gdb-multiarch
+(gdb) set debug aarch64
+(gdb) target extended-remote localhost:1234
+
+</code></pre>
+<p>For more details debugging with GDB or using Windbg with GDB you can read the following documents.
+<a href="https://github.com/microsoft/mu_tiano_platforms/blob/main/Platforms/Docs/Common/debugging.md">GDB Debugger</a></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="compiling-uefi-for-qemu"><a class="header" href="#compiling-uefi-for-qemu">Compiling UEFI for QEMU</a></h1>
+<h2 id="downloading-and-building-image"><a class="header" href="#downloading-and-building-image">Downloading and Building Image</a></h2>
+<p>The following steps will install required packages, setup and build UEFI image for QemuSbsaPkg which is ARM64 image.</p>
+<pre><code>git clone https://github.com/microsoft/mu_tiano_platforms.git
+cd mu_tiano_platforms
+git submodule update --init --recursive
+sudo apt-get install python3
+sudo apt-get install python3.10-venv
+python3 -vm venv .venv
+source .venv/bin/activate
+sudo apt-get install python-is-python3
+sudo apt-get install python3-pip
+pip install -r pip-requirements.txt --upgrade
+sudo apt-get install -y build-essential git nasm wget m4 bison flex uuid-dev unzip acpica-tools gcc-multilib
+sudo apt-get install gcc-aarch64-linux-gnu
+sudo apt-get install mono-complete
+sudo apt-get install mtools
+rustup override set nightly
+cargo install cargo-make
+cargo install cargo-binutils
+export GCC5_AARCH64_PREFIX=/usr/bin/aarch64-linux-gnu-
+stuart_setup -c Platforms/QemuSbsaPkg/PlatformBuild.py TOOL_CHAIN_TAG=GCC5
+stuart_update -c Platforms/QemuSbsaPkg/PlatformBuild.py TOOL_CHAIN_TAG=GCC5
+stuart_build -c Platforms/QemuSbsaPkg/PlatformBuild.py TOOL_CHAIN_TAG=GCC5
+</code></pre>
+<h2 id="running-qemu"><a class="header" href="#running-qemu">Running QEMU</a></h2>
+<p>After image has been built you can run the generated image using the following command. This assumes you already have qemu-system-aarch64 compiled and installed on your system.</p>
+<pre><code>stuart_build -c Platforms/QemuSbsaPkg/PlatformBuild.py TOOL_CHAIN_TAG=GCC5 --FlashOnly
+</code></pre>
+<p>This will run to UEFI Shell&gt; and your QEMU is working and running</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="acpi-customization"><a class="header" href="#acpi-customization">ACPI Customization</a></h1>
+<h2 id="adding-test-content-to-acpi"><a class="header" href="#adding-test-content-to-acpi">Adding Test Content to ACPI</a></h2>
+<p>ACPI is compiled as part of the MU_TIANOCORE image. To update ACPI you simply need to modify the tables found here in the UEFI build.</p>
+<p><code>mu_tiano_platforms/Platforms/QemuSbsaPkg/AcpiTables</code></p>
+<p>Update the dsdt.asl in this folder to include your ACPI content in this case test.asl</p>
+<pre><code>...
+    #include "test.asl"
+
+    //
+    // Legacy SOC bus
+    //
+    Device (SOCB) {
+      Name (_HID, "ACPI0004")
+      Name (_UID, 0x0)
+      Name (_CCA, 0x0)
+</code></pre>
+<p>Recompile mu UEFI and it will pick up these ACPI changes in the QEMU_EFI.fd image when you boot QEMU.</p>
+<p><b>Note: </b> ACPI is provided as part of the firmware image so change ACPI does not require you to change your windows image.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="modifying-windows-image"><a class="header" href="#modifying-windows-image">Modifying Windows Image</a></h1>
+<h2 id="injecting-drivers-into-vhdx-windows-image"><a class="header" href="#injecting-drivers-into-vhdx-windows-image">Injecting Drivers into Vhdx Windows Image</a></h2>
+<p>Injecting drivers and registry entries into your VHDX image is straight forward using DISM. You will need the driver binaries and inf file to install the driver.</p>
+<ol>
+<li>
+<p>Mount the VHDX by double clicking on it and noting the drive letter that is mounted</p>
+</li>
+<li>
+<p>Inject your driver using DISM</p>
+<p><code>dism /Image:e:\ /Add-Driver /Driver:d:\drivers\testdrv</code></p>
+</li>
+<li>
+<p>This will execute the installation steps in the INF including copying your driver into the mounted image and updating the registry. Make sure the operation completes successfully. If you have multiple drivers you can use the /Recurse option to install all inf files.</p>
+</li>
+<li>
+<p>Make sure to cleanly unmount your VHDX drive.</p>
+</li>
+<li>
+<p>Convert your VHDX to qcow2 image using qemu-img and run your new windows image with QEMU.</p>
+<p><code>qemu-img convert -p -O qcow2 ValidationOS.vhdx winvos.qcow2</code></p>
+</li>
+</ol>
+<h2 id="injecting-executables-and-autorun"><a class="header" href="#injecting-executables-and-autorun">Injecting Executables and Autorun</a></h2>
+<p>To inject executable content you can simply click on the VHDX file to mount it and make a folder and copy content to the device. If you are trying to overwrite existing system content you may need to make yourself the owener and allow overwrite permissions. Sfpcopy can also be used to accomplish secure copy.</p>
+<pre><code>takeown /f &lt;filename&gt;
+icacls &lt;filename&gt; /grant everyone:f
+copy &lt;localfile&gt; &lt;destfile&gt;
+</code></pre>
+<p>To automatically run an executable in WinVOS you can edit the registry in the VHDX.</p>
+<ol>
+<li>Mount the VHDX image by double clicking on it and noting the drive letter.</li>
+<li>Run regedit as administrator.</li>
+<li>Select the root of HKLM.</li>
+<li>File -&gt; Load Hive and browse to your mounted drive under e:\windows\system32\config\SOFTWARE</li>
+<li>Name the mount location "Offline"</li>
+<li>Browse to the following key <code>Computer\HKEY_LOCAL_MACHINE\offline\Microsoft\Windows NT\CurrentVersion\Winlogon</code></li>
+<li>Modify the "Shell" REG_SZ entry which just runs <code>cmd.exe</code> by default.</li>
+<li>After you've modified the key be sure to select the root of the offline folder and select File -&gt; Unload Hive</li>
+<li>Unmount your VDHX file to make sure it is saved</li>
+<li>Convert windows image to qcow2 and load in QEMU</li>
+</ol>
+<p><img src="media/shell.png" alt="Shell Registry" /></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

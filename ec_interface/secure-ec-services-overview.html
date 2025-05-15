@@ -1,0 +1,1001 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Secure EC Services Overview - EC Interface Specification</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">EC Interface Specification</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="secure-ec-services-overview"><a class="header" href="#secure-ec-services-overview">Secure EC Services Overview</a></h1>
+<p>In this section we review a system design where the EC communication is
+in the secure world running in a dedicated SP. In a system without
+secure world or where communication to EC is not desired to be secure
+all the ACPI functions can be mapped directly to data from the EC
+operation region.</p>
+<p>The following github projects provide sample implementations of this interface:</p>
+<p><a href="https://github.com/opendevicepartnership/ec-test-app">ACPI EC samples, Kernel mode test driver, User mode test driver</a><br>
+<a href="https://github.com/opendevicepartnership/haf-ec-service">Sample Secure Partition Service for EC services in RUST</a><br>
+<a href="https://github.com/opendevicepartnership/ffa">RUST crate for FFA implementation in secure partition</a><br></p>
+<p>The following GUID’s have been designed to represent each service
+operating in the secure partition for EC.</p>
+<table>
+<thead>
+<tr class="header">
+<th>EC Service Name</th>
+<th>Service GUID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<td>EC_SVC_MANAGEMENT</td>
+<td>330c1273-fde5-4757-9819-5b6539037502</td>
+<td>Used to query EC functionality, Board info, version, security state, FW update</td>
+</tr>
+<td>EC_SVC_POWER</td>
+<td>7157addf-2fbe-4c63-ae95-efac16e3b01c</td>
+<td>Handles general power related requests and OS Sx state transition state notification</td>
+</tr>
+<td>EC_SVC_BATTERY</td>
+<td>25cb5207-ac36-427d-aaef-3aa78877d27e</td>
+<td>Handles battery info, status, charging</td>
+</tr>
+<td>EC_SVC_THERMAL</td>
+<td>31f56da7-593c-4d72-a4b3-8fc7171ac073</td>
+<td>Handles thermal requests for skin and other thermal events</td>
+</tr>
+<td>EC_SVC_UCSI</td>
+<td>65467f50-827f-4e4f-8770-dbf4c3f77f45</td>
+<td>Handles PD notifications and calls to UCSI interface</td>
+</tr>
+<td>EC_SVC_INPUT</td>
+<td>e3168a99-4a57-4a2b-8c5e-11bcfec73406</td>
+<td>Handles wake events, power key, lid, input devices (HID separate instance)</td>
+</tr>
+<td>EC_SVC_TIME_ALARM</td>
+<td>23ea63ed-b593-46ea-b027-8924df88e92f</td>
+<td>Handles RTC and wake timers.</td>
+</tr>
+<td>EC_SVC_DEBUG</td>
+<td>0bd66c7c-a288-48a6-afc8-e2200c03eb62</td>
+<td>Used for telemetry, debug control, recovery modes, logs, etc</td>
+</tr>
+<td>EC_SVC_TEST</td>
+<td>6c44c879-d0bc-41d3-bef6-60432182dfe6</td>
+<td>Used to send commands for manufacturing/factory test</td>
+</tr>
+<td>EC_SVC_OEM1</td>
+<td>9a8a1e88-a880-447c-830d-6d764e9172bb</td>
+<td>Sample OEM custom service and example piping of events</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ffa-overview"><a class="header" href="#ffa-overview">FFA Overview</a></h2>
+<p>This section covers the components involved in sending a command to EC
+through the FFA flow in windows. This path is specific to ARM devices
+and a common solution with x64 is still being worked out. Those will
+continue through the non-secure OperationRegion in the near term.</p>
+<p><img src="media/image1.png" alt="A diagram of a computer security system Description automatically generated" /></p>
+<p>ARM has a standard for calling into the secure world through SMC’s and
+targeting a particular service running in secure world via a UUID. The
+full specification and details can be found here: <a href="https://developer.arm.com/Architectures/Firmware%20Framework%20for%20A-Profile">Firmware Framework
+for A-Profile</a></p>
+<p>The windows kernel provides native ability for ACPI to directly send and
+receive FFA commands. It also provides a driver ffadrv.sys to expose a
+DDI that allows other drivers to directly send/receive FFA commands
+without needing to go through ACPI.</p>
+<p>Hyper-V forwards the SMC’s through to EL3 to Hafnium which then uses the
+UUID to route the request to the correct SP and service. From the
+corresponding EC service it then calls into the eSPI or underlying
+transport layer to send and receive the request to the physical EC.</p>
+<h3 id="ffa-device-definition"><a class="header" href="#ffa-device-definition">FFA Device Definition</a></h3>
+<p>The FFA device is loaded from ACPI during boot and as such requires a
+Device entry in ACPI</p>
+<pre><code>  Name(_HID, "MSFT000C")
+
+  OperationRegion(AFFH, FFixedHw, 4, 144) 
+  Field(AFFH, BufferAcc, NoLock, Preserve) { AccessAs(BufferAcc, 0x1), FFAC, 1152 }     
+    
+
+  Name(_DSD, Package() {
+      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"), //Device Prop UUID
+      Package() {
+        Package(2) {
+          "arm-arml0002-ffa-ntf-bind",
+          Package() {
+              1, // Revision
+              2, // Count of following packages
+              Package () {
+                     ToUUID("330c1273-fde5-4757-9819-5b6539037502"), // Service1 UUID
+                     Package () {
+                          0x01,     //Cookie1 (UINT32)
+                          0x07,     //Cookie2
+                      }
+              },
+              Package () {
+                     ToUUID("b510b3a3-59f6-4054-ba7a-ff2eb1eac765"), // Service2 UUID
+                     Package () {
+                          0x01,     //Cookie1
+                          0x03,     //Cookie2
+                      }
+             }
+         }
+      }
+    }
+  }) // _DSD()
+
+  Method(_DSM, 0x4, NotSerialized)
+  {
+    // Arg0 - UUID
+    // Arg1 - Revision
+    // Arg2: Function Index
+    //         0 - Query
+    //         1 - Notify
+    //         2 - binding failure
+    //         3 - infra failure    
+    // Arg3 - Data
+  
+    //
+    // Device specific method used to query
+    // configuration data. See ACPI 5.0 specification
+    // for further details.
+    //
+    If(LEqual(Arg0, Buffer(0x10) {
+        //
+        // UUID: {7681541E-8827-4239-8D9D-36BE7FE12542}
+        //
+        0x1e, 0x54, 0x81, 0x76, 0x27, 0x88, 0x39, 0x42, 0x8d, 0x9d, 0x36, 0xbe, 0x7f, 0xe1, 0x25, 0x42
+      }))
+    {
+      // Query Function
+      If(LEqual(Arg2, Zero)) 
+      {
+        Return(Buffer(One) { 0x03 }) // Bitmask Query + Notify
+      }
+      
+      // Notify Function
+      If(LEqual(Arg2, One))
+      {
+        // Arg3 - Package {UUID, Cookie}
+        Store(Index(Arg3,1), \_SB.ECT0.NEVT )
+        Return(Zero) 
+      }
+    } Else {
+      Return(Buffer(One) { 0x00 })
+    }
+  }
+
+  Method(AVAL,0x0, Serialized)
+  {
+    Return(One)
+  }
+}
+</code></pre>
+<h4 id="hid-definition"><a class="header" href="#hid-definition">HID definition</a></h4>
+<p>The _HID “MSFT000C” is reserved for FFA devices. Defining this HID for
+your device will cause the FFA interface for the OS to be loaded on this
+device.</p>
+<h4 id="operation-region-definition"><a class="header" href="#operation-region-definition">Operation Region Definition</a></h4>
+<p>The operation region is marked as FFixedHw type 4 which lets the ACPI
+interpreter know that any read/write to this region requires special
+handling. The length is 144 bytes because this region operates on
+registers X0-X17 each of which are 8 bytes 18*8 = 144 bytes. This is
+mapped to FFAC is 1152 bits (144*8) and this field is where we act
+upon.</p>
+<pre><code>OperationRegion(AFFH, FFixedHw, 4, 144)
+Field(AFFH, BufferAcc, NoLock, Preserve) { AccessAs(BufferAcc, 0x1),FFAC, 1152 }
+</code></pre>
+<p>When reading and writing from this operation region the FFA driver does
+some underlying mapping for X0-X3</p>
+<pre><code>X0 = 0xc400008d // FFA_DIRECT_REQ2
+X1 = (Receiver Endpoint ID) | (Sender Endpoint ID \&lt;\&lt; 16)
+X2/X3 = UUID
+</code></pre>
+<p>The following is the format of the request and response packets that are
+sent via ACPI</p>
+<pre><code>FFA_REQ_PACKET
+{
+  uint8 status; // Not used just populated so commands are symmetric
+  uint8 length; // Number of bytes in rawdata
+  uint128 UUID;
+  uint8 reqdata[];
+}
+
+FFA_RSP_PACKET
+{
+  uint8 status; // Status from ACPI if FFA command was sent successfully
+  uint8 length;
+  uint128 UUID;
+  uint64 ffa_status; // Status returned from the service of the FFA command
+  uint8 rspdata[];
+}
+
+CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+CreateField(BUFF,16,128,UUID) // In/Out - UUID of service
+CreateDwordField(BUFF,18,FFST)// Out - FFA command status
+</code></pre>
+<h4 id="register-notification"><a class="header" href="#register-notification">Register Notification</a></h4>
+<p>During FFA driver initialization it calls into secure world to get a
+list of all available services for each secure partition. After this we
+send a NOTIFICATION_REGISTRATION request to each SP that has a service
+which registers for notification events</p>
+<pre><code>  Name(_DSD, Package() {
+      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"), //Device Prop UUID
+      Package() {
+        Package(2) {
+          "arm-arml0002-ffa-ntf-bind",
+          Package() {
+              1, // Revision
+              1, // Count of following packages
+              Package () {
+                     ToUUID("330c1273-fde5-4757-9819-5b6539037502"), // Service1 UUID
+                     Package () {
+                          0x01,     //Cookie1 (UINT32)
+                          0x07,     //Cookie2
+                      }
+              },
+         }
+      }
+    }
+  }) // _DSD()
+</code></pre>
+<p><img src="media/image2.png" alt="A diagram of a application Description automatically generated" /></p>
+<p>In the above example we indicate that the OS will handle 2 different
+notification events for UUID 330c1273-fde5-4757-9819-5b6539037502 which
+is our EC management UUID. FFA knows which secure partition this maps to
+based on the list of services for each SP it has retrieved. Rather than
+having to keep track of all the physical bits in the bitmask that are
+used the FFA driver keeps track of this and allows each service to
+create a list of virtual ID’s they need to handle. The FFA driver then
+maps this to one of the available bits in the hardware bitmask and
+passes this mapping down to the notification service running in a given
+SP.</p>
+<h3 id="input"><a class="header" href="#input">Input</a></h3>
+<table>
+<thead>
+<tr class="header">
+<th><strong>Parameter </strong></th>
+<th><strong>Register </strong></th>
+<th><strong>Value </strong></th>
+</tr>
+</thead>
+<tbody>
+<td>Function<strong> </strong></td>
+<td>X4 </td>
+<td>0x1 </td>
+</tr>
+<td>UUID Lo<strong> </strong></td>
+<td>X5 </td>
+<td>Bytes [0..7] for the service UUID. </td>
+</tr>
+<td>UUID Hi<strong> </strong></td>
+<td>X6 </td>
+<td>Bytes [8..16] for the service UUID. </td>
+</tr>
+<td>Mappings Count<strong> </strong></td>
+<td>X7 </td>
+<td>The number of notification mappings </td>
+</tr>
+<td>Notification Mapping1<strong> </strong></td>
+<td>X8 </td>
+<td><p>Bits [0..16] – Notification ID. --&gt; 0,1,2,3,... </p>
+<p> </p>
+<p>Bits [16..32] – Notification Bitmap bit number (0-383).  </p></td>
+</tr>
+<td>Notification Mapping2<strong> </strong></td>
+<td>X9 </td>
+<td><p>Bits [0..16] – Notification ID. --&gt; 0,1,2,3,... </p>
+<p> </p>
+<p>Bits [16..32] – Notification Bitmap bit number (0-383). </p>
+<p> </p></td>
+</tr>
+<td>...<strong> </strong></td>
+<td>... </td>
+<td>... </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<h3 id="output"><a class="header" href="#output">Output</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Parameter </th><th>Register </th><th>Value </th></tr></thead><tbody>
+<tr><td>Result</td><td>X4</td><td>0 on success. Otherwise, Failure</td></tr>
+</tbody></table>
+</div>
+<p> </p>
+<p>Note this NOTIFICATION_REGISTER request is sent to the
+Notification Service UUID in the SP. The UUID of the service that the
+notifications are for are stored in X5/X6 registers shown above.</p>
+<p>The UUID for notification service is
+{B510B3A3-59F6-4054-BA7A-FF2EB1EAC765} which is stored in X2/X3.</p>
+<h4 id="notification-events"><a class="header" href="#notification-events">Notification Events</a></h4>
+<p>All notification events sent from all secure partitions are passed back
+through the FFA driver. The notification calls the _DSM method. Function 0
+is always a bitmap of all the other functions supported. We must support at
+least a minium of the Query and Notify.
+The UUID is stored in Arg0 and the notification cookie is stored in Arg3 when Arg2 is 11.</p>
+<pre><code>  Method(_DSM, 0x4, NotSerialized)
+  {
+    // Arg0 - UUID
+    // Arg1 - Revision
+    // Arg2: Function Index
+    //         0 - Query
+    //         1 - Notify
+    //         2 - binding failure
+    //         3 - infra failure    
+    // Arg3 - Data
+  
+    //
+    // Device specific method used to query
+    // configuration data. See ACPI 5.0 specification
+    // for further details.
+    //
+    If(LEqual(Arg0, Buffer(0x10) {
+        //
+        // UUID: {7681541E-8827-4239-8D9D-36BE7FE12542}
+        //
+        0x1e, 0x54, 0x81, 0x76, 0x27, 0x88, 0x39, 0x42, 0x8d, 0x9d, 0x36, 0xbe, 0x7f, 0xe1, 0x25, 0x42
+      }))
+    {
+      // Query Function
+      If(LEqual(Arg2, Zero)) 
+      {
+        Return(Buffer(One) { 0x03 }) // Bitmask Query + Notify
+      }
+      
+      // Notify Function
+      If(LEqual(Arg2, One))
+      {
+        // Arg3 - Package {UUID, Cookie}
+        Store(Index(Arg3,1), \_SB.ECT0.NEVT )
+        Return(Zero) 
+      }
+    } Else {
+      Return(Buffer(One) { 0x00 })
+    }
+  }
+</code></pre>
+<p>The following is the call flow showing a secure interrupt arriving to
+the EC service which results in a notification back to ACPI. The
+notification payload can optionally be written to a shared buffer or
+ACPI can make another call back into EC service to retrieve the
+notification details.</p>
+<p>The _NFY only contains the ID of the notification and no other payload,
+so both ACPI and the EC service must be designed either with shared
+memory buffer or a further notify data packet.</p>
+<p><img src="media/image3.png" alt="A diagram of a service Description automatically generated" /></p>
+<h2 id="runtime-requests"><a class="header" href="#runtime-requests">Runtime Requests</a></h2>
+<p>During runtime the non-secure side uses FFA_MSG_SEND_DIRECT_REQ2
+requests to send requests to a given service within an SP. Any request
+that is expected to take longer than 500 uSec should yield control back
+to the OS by calling FFA_YIELD within the service. When FFA_YIELD is
+called it will return control back to the OS to continue executing but
+the corresponding ACPI thread will be blocked until the original FFA
+request completes with DIRECT_RSP2. Note this creates a polling type
+interface where the OS will resume the SP thread after the timeout
+specified. The following is sample call sequence.</p>
+<p><img src="media/image4.png" alt="A diagram of a company&#39;s process Description automatically generated" /></p>
+<h3 id="ffa-example-data-flow"><a class="header" href="#ffa-example-data-flow">FFA Example Data Flow</a></h3>
+<p>For an example let’s take the battery status request _BST and follow
+data through.</p>
+<p><img src="media/image5.png" alt="A screenshot of a computer Description automatically generated" /></p>
+<pre><code>FFA_REQ_PACKET req = {
+  0x0, // Initialize to no error
+  0x1, // Only 1 byte of data is sent after the header
+  {0x25,0xcb,0x52,0x07,0xac,0x36,0x42,0x7d,0xaa,0xef,0x3a,0xa7,0x88,0x77,0xd2,0x7e},
+  0x2 // EC_BAT_GET_BST
+}
+</code></pre>
+<p>The equivalent to write this data into a BUFF in ACPI is as follows</p>
+<pre><code>Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+CreateField(BUFF,16,128,UUID) // UUID of service
+CreateByteField(BUFF,18, CMDD) // In – First byte of command
+CreateField(BUFF,144,128,BSTD) // Out – Raw data response 4 DWords
+Store(20,LENG)
+Store(0x2, CMDD)
+Store(ToUUID ("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID)
+Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+</code></pre>
+<p>The ACPI interpreter when walking through this code creates a buffer and
+populates the data into buffer. The last line indicates to send this
+buffer over FFA interface.</p>
+<p>ACPI calls into the FFA interface to send the data over to the secure
+world EC Service</p>
+<pre><code>typedef struct _FFA_INTERFACE {
+    ULONG Version;
+    PFFA_MSG_SEND_DIRECT_REQ2 SendDirectReq2;
+} FFA_INTERFACE, \*PFFA_INTERFACE;
+</code></pre>
+<h3 id="ffa-parsing"><a class="header" href="#ffa-parsing">FFA Parsing</a></h3>
+<p>FFA is in charge of sending the SMC over to the secure world and routing
+to the correct service based on UUID.</p>
+<p><img src="media/image6.png" alt="A diagram of a computer Description automatically generated" /></p>
+<pre><code>X0 = SEND_DIRECT_REQ2 SMC command ID
+X1 = Source ID and Destination ID
+X2 = UUID Low
+X3 = UUID High
+X4-X17 = rawdata
+</code></pre>
+<p><strong>Note:</strong> The status and length are not passed through to the secure
+world they are consumed only be ACPI.</p>
+<p>HyperV and Monitor have a chance to filter or deny the request, but in
+general just pass the SMC request through to Hafnium</p>
+<p>Hafnium extracts the data from the registers into an sp_msg structure
+which is directly mapping contents from x0-x17 into these fields.</p>
+<pre><code>pub struct FfaParams {
+    pub x0: u64,
+    pub x1: u64,
+    pub x2: u64,
+    pub x3: u64,
+    pub x4: u64,
+    pub x5: u64,
+    pub x6: u64,
+    pub x7: u64,
+    pub x8: u64,
+    pub x9: u64,
+    pub x10: u64,
+    pub x11: u64,
+    pub x12: u64,
+    pub x13: u64,
+    pub x14: u64,
+    pub x15: u64,
+    pub x16: u64,
+    pub x17: u64,
+}
+</code></pre>
+<p>In our SP we receive the raw FfaParams structure and we convert this to
+an FfaMsg using our translator. This pulls out the function_id,
+source_id, destination_id and uuid.</p>
+<pre><code>fn from(params: FfaParams) -&gt; FfaMsg {
+  FfaMsg {
+    function_id: params.x0,              // Function id is in lower 32 bits of x0
+    source_id: (params.x1 &gt;&gt; 16) as u16, // Source in upper 16 bits
+    destination_id: params.x1 as u16,    // Destination in lower 16 bits
+    uuid: u64_to_uuid(params.x2, params.x3),
+    args64: [
+      params.x4, params.x5, params.x6, params.x7, params.x8, params.x9, params.x10,
+      params.x11, params.x12, params.x13, params.x14, params.x15, params.x16, params.x17,
+            ],
+  }
+}
+</code></pre>
+<p>The destination_id is used to route the message to the correct SP, this
+is based on the ID field in the DTS description file. Eg: id =
+&lt;0x8001&gt;;</p>
+<h3 id="ec-service-parsing"><a class="header" href="#ec-service-parsing">EC Service Parsing</a></h3>
+<p>Within the EC partition there are several services that run, the routing
+of the FF-A request to the correct services is done by the main message
+handling loop for the secure partition. After receiving a message we
+call into ffa_msg_handler and based on the UUID send it to the
+corresponding service to handle the message.</p>
+<pre><code>let mut next_msg = ffa.msg_wait();
+loop {
+  match next_msg {
+    Ok(ffamsg) =&gt; match ffa_msg_handler(&amp;ffamsg) {
+      Ok(msg) =&gt; next_msg = ffa.msg_resp(\&amp;msg),
+      Err(_e) =&gt; panic!("Failed to handle FFA msg"),
+    },
+    Err(_e) =&gt; {
+      panic!("Error executing msg_wait");
+    }
+   }
+}
+</code></pre>
+<p>The main message loop gets the response back from ffa_msg_handler and
+returns to non-secure world so the next incoming message after the
+response is a new message to handle.</p>
+<pre><code>fn ffa_msg_handler(msg: &amp;FfaMsg) -&gt; Result&lt;FfaMsg&gt; {
+    println!(
+        "Successfully received ffa msg:
+        function_id = {:08x}
+               uuid = {}",
+        msg.function_id, msg.uuid
+    );
+
+    match msg.uuid {
+        UUID_EC_SVC_MANAGEMENT =&gt; {
+            let fwmgmt = fw_mgmt::FwMgmt::new();
+            fwmgmt.exec(msg)
+        }
+
+        UUID_EC_SVC_NOTIFY =&gt; {
+            let ntfy = notify::Notify::new();
+            ntfy.exec(msg)
+        }
+
+        UUID_EC_SVC_POWER =&gt; {
+            let pwr = power::Power::new();
+            pwr.exec(msg)
+        }
+
+        UUID_EC_SVC_BATTERY =&gt; {
+            let batt = battery::Battery::new();
+            batt.exec(msg)
+        }
+
+        UUID_EC_SVC_THERMAL =&gt; {
+            let thm = thermal::ThmMgmt::new();
+            thm.exec(msg)
+        }
+
+        UUID_EC_SVC_UCSI =&gt; {
+            let ucsi = ucsi::UCSI::new();
+            ucsi.exec(msg)
+        }
+
+        UUID_EC_SVC_TIME_ALARM =&gt; {
+            let alrm = alarm::Alarm::new();
+            alrm.exec(msg)
+        }
+
+        UUID_EC_SVC_DEBUG =&gt; {
+            let dbg = debug::Debug::new();
+            dbg.exec(msg)
+        }
+
+        UUID_EC_SVC_OEM =&gt; {
+            let oem = oem::OEM::new();
+            oem.exec(msg)
+        }
+
+        _ =&gt; panic!("Unknown UUID"),
+    }
+}
+</code></pre>
+<h3 id="large-data-transfers"><a class="header" href="#large-data-transfers">Large Data Transfers</a></h3>
+<p>When making an FFA_MSG_SEND_DIRECT_REQ2 call the data is stored in
+registers X0-X17. X0-X3 are reserved to store the Function Id, Source
+Id, Destination Id and UUID. This leaves X4-X17 or 112 bytes. For larger
+messages they either need to be broken into multiple pieces or make use
+of a shared buffer between the OS and Secure Partition.</p>
+<h4 id="shared-buffer-definitions"><a class="header" href="#shared-buffer-definitions">Shared Buffer Definitions</a></h4>
+<p>To create a shared buffer you need to modify the dts file for the secure
+partition to include mapping to your buffer.</p>
+<pre><code>ns_comm_buffer {
+  description = "ns-comm";
+  base-address = &lt;0x00000100 0x60000000&gt;;
+  pages-count = &lt;0x8&gt;;
+  attributes = &lt;NON_SECURE_RW&gt;;
+};
+</code></pre>
+<p>During UEFI Platform initialization you will need to do the following
+steps, see the FFA specification for more details on these commands</p>
+<ul>
+<li>FFA_MAP_RXTX_BUFFER</li>
+<li>FFA_MEM_SHARE</li>
+<li>FFA_MSG_SEND_DIRECT_REQ2 (EC_CAP_MEM_SHARE)</li>
+<li>FFA_UNMAP_RXTX_BUFFER</li>
+</ul>
+<p>The RXTX buffer is used during larger packet transfers but can be
+overridden and updated by the framework. The MEM_SHARE command uses the
+RXTX buffer so we first map that buffer then populate our memory
+descriptor requests to the TX_BUFFER and send to Hafnium. After sending
+the MEM_SHARE request we need to instruct our SP to retrieve this
+memory mapping request. This is done through our customer
+EC_CAP_MEM_SHARE request where we describe the shared memory region
+that UEFI has donated. From there we call FFA_MEM_RETRIEVE_REQ to map
+the shared memory that was described to Hafnium. After we are done with
+the RXTX buffers we must unmap them as the OS will re-map new RXTX
+buffers. From this point on both Non-secure and Secure side will have
+access to this shared memory buffer that was allocated.</p>
+<h3 id="async-transfers"><a class="header" href="#async-transfers">Async Transfers</a></h3>
+<p>All services are single threaded by default. Even when doing FFA_YIELD
+it does not allow any new content to be executed within the service. If
+you need your service to be truly asynchronous you must have commands
+with delayed responses.</p>
+<p>There is no packet identifier by default and tracking of requests and
+completion by FFA, so the sample solution given here is based on shared
+buffers defined in previous section and existing ACPI and FFA
+functionality.</p>
+<p><img src="media/image7.png" alt="A diagram of a service Description automatically generated" /></p>
+<p>Inside of our FFA functions rather than copying our data payload into
+the direct registers we define a queue in shared memory and populate the
+actual data into this queue entry. In the FFA_MSG_SEND_DIRECT_REQ2
+we populate an ASYNC command ID (0x0) along with the seq #. The seq #
+is then used by the service to locate the request in the TX queue. We
+define a separate queue for RX and TX so we don’t need to synchronize
+between OS and secure partition.</p>
+<p><img src="media/image8.png" alt="" /></p>
+<h3 id="acpi-structures-and-methods-for-asynchronous"><a class="header" href="#acpi-structures-and-methods-for-asynchronous">ACPI Structures and Methods for Asynchronous</a></h3>
+<p>The SMTX is shared memory TX region definition</p>
+<pre><code>// Shared memory regions and ASYNC implementation
+OperationRegion (SMTX, SystemMemory, 0x10060000000, 0x1000)
+
+// Store our actual request to shared memory TX buffer
+Field (SMTX, AnyAcc, NoLock, Preserve)
+{
+  TVER, 16,
+  TCNT, 16,
+  TRS0, 32,
+  TB0, 64,
+  TB1, 64,
+  TB2, 64,
+  TB3, 64,
+  TB4, 64,
+  TB5, 64,
+  TB6, 64,
+  TB7, 64,
+  Offset(0x100), // First Entry starts at 256 byte offset each entry is 256 bytes
+  TE0, 2048,
+  TE1, 2048,
+  TE2, 2048,
+  TE3, 2048,
+  TE4, 2048,
+  TE5, 2048,
+  TE6, 2048,
+  TE7, 2048,
+}
+</code></pre>
+<p>The QTXB method copies data into first available entry in the TX queue
+and returns sequence number used.</p>
+<pre><code>// Arg0 is buffer pointer
+// Arg1 is length of Data
+// Return Seq \#
+Method(QTXB, 0x2, Serialized) {
+  Name(TBX, 0x0)
+  Store(Add(ShiftLeft(1,32),Add(ShiftLeft(Arg1,16),SEQN)),TBX)
+  Increment(SEQN)
+  // Loop until we find a free entry to populate
+  While(One) {
+    If(LEqual(And(TB0,0xFFFF),0x0)) {
+      Store(TBX,TB0); Store(Arg0,TE0); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB1,0xFFFF),0x0)) {
+      Store(TBX,TB1); Store(Arg0,TE1); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB2,0xFFFF),0x0)) {
+      Store(TBX,TB2); Store(Arg0,TE2); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB3,0xFFFF),0x0)) {
+      Store(TBX,TB3); Store(Arg0,TE3); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB4,0xFFFF),0x0)) {
+      Store(TBX,TB4); Store(Arg0,TE4); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB5,0xFFFF),0x0)) {
+      Store(TBX,TB5); Store(Arg0,TE5); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB6,0xFFFF),0x0)) {
+      Store(TBX,TB6); Store(Arg0,TE6); Return( And(TBX,0xFFFF) )
+    }
+
+    If(LEqual(And(TB7,0xFFFF),0x0)) {
+      Store(TBX,TB7); Store(Arg0,TE7); Return( And(TBX,0xFFFF) )
+    }
+
+    Sleep(5)
+  }
+}
+</code></pre>
+<p>The SMRX is shared memory region for RX queues</p>
+<pre><code>// Shared memory region
+OperationRegion (SMRX, SystemMemory, 0x10060001000, 0x1000)
+
+// Store our actual request to shared memory TX buffer
+Field (SMRX, AnyAcc, NoLock, Preserve)
+{
+  RVER, 16,
+  RCNT, 16,
+  RRS0, 32,
+  RB0, 64,
+  RB1, 64,
+  RB2, 64,
+  RB3, 64,
+  RB4, 64,
+  RB5, 64,
+  RB6, 64,
+  RB7, 64,
+  Offset(0x100), // First Entry starts at 256 byte offset each entry is 256 bytes
+  RE0, 2048,
+  RE1, 2048,
+  RE2, 2048,
+  RE3, 2048,
+  RE4, 2048,
+  RE5, 2048,
+  RE6, 2048,
+  RE7, 2048,
+}
+</code></pre>
+<p>The RXDB function takes sequence number as input and will keep looping
+through all the entries until we see packet has completed. Sleeps for
+5ms between each iteration to allow the OS to do other things and other
+ACPI threads can run.</p>
+<pre><code>// Allow multiple threads to wait for their SEQ packet at once
+// If supporting packet \&gt; 256 bytes need to modify to stitch together packet
+Method(RXDB, 0x1, Serialized) {
+  Name(BUFF, Buffer(256){})
+  // Loop forever until we find our seq
+  While (One) {
+    If(LEqual(And(RB0,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB0,16),0xFFFF),8), XB0)
+      Store(RE0,BUFF); Store(0,RB0); Return( XB0 )
+    }
+
+    If(LEqual(And(RB1,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB1,16),0xFFFF),8), XB1)
+      Store(RE1,BUFF); Store(0,RB1); Return( XB1 )
+    }
+
+    If(LEqual(And(RB2,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB2,16),0xFFFF),8), XB2)
+      Store(RE2,BUFF); Store(0,RB2); Return( XB2 )
+    }
+
+    If(LEqual(And(RB3,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB3,16),0xFFFF),8), XB3)
+      Store(RE3,BUFF); Store(0,RB3); Return( XB3 )
+    }
+
+    If(LEqual(And(RB4,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB4,16),0xFFFF),8), XB4)
+      Store(RE4,BUFF); Store(0,RB4); Return( XB4 )
+    }
+
+    If(LEqual(And(RB5,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB5,16),0xFFFF),8), XB5)
+      Store(RE5,BUFF); Store(0,RB5); Return( XB5 )
+    }
+
+    If(LEqual(And(RB6,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB6,16),0xFFFF),8), XB6)
+      Store(RE6,BUFF); Store(0,RB6); Return( XB6 )
+    }
+
+    If(LEqual(And(RB7,0xFFFF),Arg0)) {
+      CreateField(BUFF, 0, Multiply(And(ShiftRight(RB7,16),0xFFFF),8), XB7)
+      Store(RE7,BUFF); Store(0,RB7); Return( XB7 )
+    }
+
+    Sleep(5)
+  }
+
+  // If we get here didn't find a matching sequence number
+  Return (Ones)
+}
+</code></pre>
+<p>The following is sample code to transmit a ASYNC request and wait for
+the data in the RX buffer.</p>
+<pre><code>Method(ASYC, 0x0, Serialized) {
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+  Name(BUFF, Buffer(30){})
+  CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+  CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+  CreateField(BUFF,16,128,UUID) // UUID of service
+  CreateByteField(BUFF,18,CMDD) // Command register
+  CreateWordField(BUFF,19,BSQN) // Sequence Number
+
+  // x0 -\&gt; STAT
+  Store(20, LENG)
+  Store(0x0, CMDD) // EC_ASYNC command
+  Local0 = QTXB(BUFF,20) // Copy data to our queue entry and get back SEQN
+  Store(Local0,BSQN) // Sequence packet to read from shared memory
+  Store(ToUUID("330c1273-fde5-4757-9819-5b6539037502"), UUID)
+  Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+  If(LEqual(STAT,0x0) ) // Check FF-A successful?
+  {
+    Return (RXDB(Local0)) // Loop through our RX queue till packet completes
+  }
+}
+</code></pre>
+<h2 id="recovery-and-errors"><a class="header" href="#recovery-and-errors">Recovery and Errors</a></h2>
+<p>The eSPI or bus driver is expected to detect if the EC is not responding
+and retry. The FFA driver will report back in the status byte if it
+cannot successfully talk to the secure world. If there are other
+failures generally they should be returned back up through ACPI with a
+value of (Ones) to indicate failure condition. This may cause some
+features to work incorrectly.</p>
+<p>It is also expected that the EC has a watchdog if something on the EC is
+hung it should reset and reload on its own. The EC is also responsible
+for monitoring that the system is running within safe parameters. The
+thermal requests and queries are meant to be advisory in nature and EC
+should be able to run independently and safely without any intervention
+from the OS.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="legacy-ec-interface.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ec-firmware-management.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="legacy-ec-interface.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ec-firmware-management.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

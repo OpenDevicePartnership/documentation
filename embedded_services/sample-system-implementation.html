@@ -1,0 +1,697 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Sample System Implementation - Embedded Controller Services</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Embedded Controller Services</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="sample-system-implementation"><a class="header" href="#sample-system-implementation">Sample System Implementation</a></h1>
+<p>This is short sample implementing a thermal control service interface.
+This sample assumes one thermal sensor and one thermal control device accessible via ACPI.
+For an ARM implementation, FF-A and Hafnium is assumed.  For x86/x64, an eSPI transport is assumed and direct (Non-Secure) access is made from there.</p>
+<h3 id="ffa-device-definition"><a class="header" href="#ffa-device-definition">FFA Device Definition</a></h3>
+<pre><code>Device(\\_SB_.FFA0) {
+  Name(_HID, "MSFT000C")
+  OperationRegion(AFFH, FFixedHw, 4, 144)
+  Field(AFFH, BufferAcc, NoLock, Preserve) { AccessAs(BufferAcc, 0x1), FFAC, 1152 }
+
+  // Other components check this to make sure FFA is available
+  Method(AVAL, 0, Serialized) {
+    Return(One)
+  }
+
+  // Register notification events from FFA
+  Method(_RNY, 0, Serialized) {
+    Return( Package() {
+      Package(0x2) { // Events for Management Service
+        ToUUID("330c1273-fde5-4757-9819-5b6539037502"),
+        Buffer() {0x1,0x0} // Register event 0x1
+      },
+      Package(0x2) { // Events for Thermal service
+        ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"),
+        Buffer() {0x1,0x0,0x2,0x0,0x3,0x0} // Register events 0x1, 0x2, 0x3
+      },
+      Package(0x2) { // Events for input device
+        ToUUID("e3168a99-4a57-4a2b-8c5e-11bcfec73406"),
+        Buffer() {0x1,0x0} // Register event 0x1 for LID
+      }
+    } )
+  }
+
+  Method(_NFY, 2, Serialized) {
+    // Arg0 == UUID
+    // Arg1 == Notify ID
+    // Management Service Events
+
+    If(LEqual(ToUUID("330c1273-fde5-4757-9819-5b6539037502"),Arg0)) {
+      Switch(Arg1) {
+        Case(1) { // Test Notification Event
+          Notify(\\_SB.ECT0,0x20)
+        }
+      }
+    }
+
+    // Thermal service events
+    If(LEqual(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"),Arg0)) {
+      Switch(Arg1) {
+        Case(1) { // Temp crossed low threshold
+          Notify(\\_SB.SKIN,0x80)
+        }
+        Case(2) { // Temp crossed high threshold
+          Notify(\\_SB.SKIN,0x81)
+        }
+        Case(3) { // Critical temperature event
+          Notify(\\_SB.SKIN,0x82)
+        }
+      }
+    }
+
+    // Input Device Events
+    If(LEqual(ToUUID("e3168a99-4a57-4a2b-8c5e-11bcfec73406"),Arg0)) {
+      Switch(Arg1) {
+        Case(1) { // LID event
+          Notify(\\_SB._LID,0x80)
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="memory-mapped-interface-via-ffa-for-ucsi"><a class="header" href="#memory-mapped-interface-via-ffa-for-ucsi">Memory Mapped Interface via FFA for UCSI</a></h3>
+<p>Note for this implementation of memory mapped interface to work the
+memory must be marked as reserved by UEFI and not used by the OS and
+direct access also given to the corresponding service in secure world.</p>
+<pre><code>Device(USBC) {
+  Name(_HID,EISAID(“USBC000”))
+  Name(_CID,EISAID(“PNP0CA0”))
+  Name(_UID,1)
+  Name(_DDN, “USB Type-C”)
+  Name(_ADR,0x0)
+  OperationRegion(USBC, SystemMemory, UCSI_PHYS_MEM, 0x30)
+  Field(USBC,AnyAcc,Lock,Preserve)
+  {
+    // USB C Mailbox Interface
+    VERS,16, // PPM-\&gt;OPM Version
+    RES, 16, // Reservied
+    CCI, 32, // PPM-\&gt;OPM CCI Indicator
+    CTRL,64, // OPM-\&gt;PPM Control Messages
+    MSGI,128, // OPM-\&gt;PPM Message In
+    MSGO,128, // PPM-\&gt;OPM Message Out
+  }
+
+  Method(_DSM,4,Serialized,0,UnknownObj, {BuffObj, IntObj,IntObj,PkgObj})
+  {
+
+    // Compare passed in UUID to Supported UUID
+    If(LEqual(Arg0,ToUUID(“6f8398c2-7ca4-11e4-ad36-631042b5008f”)))
+    {
+      // Use FFA to send Notification event down to copy data to EC
+      If(LEqual(\\_SB.FFA0.AVAL,One)) {
+        Name(BUFF, Buffer(144){}) // Create buffer for send/recv data
+        CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+        CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+        CreateField(BUFF,16,128,UUID) // UUID of service
+        CreateByteField(BUFF,18, CMDD) // In – First byte of command
+        CreateField(BUFF,144,1024,FIFD) // Out – Msg data
+
+        // Create Doorbell Event
+        Store(20, LENG)
+        Store(0x0, CMDD) // UCSI set doorbell
+        Store(ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"), UUID)
+        Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+      } // End AVAL
+    } // End UUID
+  } // End DSM
+}
+</code></pre>
+<h3 id="thermal-acpi-interface-for-ffa"><a class="header" href="#thermal-acpi-interface-for-ffa">Thermal ACPI Interface for FFA</a></h3>
+<p>This sample code shows one Microsoft Thermal zone for SKIN and then a
+thermal device THRM for implementing customized IO.</p>
+<pre><code>// Sample Definition of FAN ACPI
+Device(SKIN) {
+  Name(_HID, "MSFT000A")
+
+  Method(_TMP, 0x0, Serialized) {
+    If(LEqual(\\_SB.FFA0.AVAL,One)) {
+      Name(BUFF, Buffer(30){})
+      CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+      CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+      CreateField(BUFF,16,128,UUID) // UUID of service
+      CreateByteField(BUFF,18,CMDD) // Command register
+      CreateByteField(BUFF,19,TZID) // Temp Sensor ID
+      CreateDWordField(BUFF,26,RTMP) // Output Data
+
+      Store(20, LENG)
+      Store(0x1, CMDD) // EC_THM_GET_TMP
+      Store(0x2, TZID) // Temp zone ID for SKIIN
+      Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID)
+      Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+      If(LEqual(STAT,0x0) ) // Check FF-A successful?
+      {
+        Return (RTMP)
+      }
+    }
+    Return (Ones)
+  }
+
+  // Arg0 Temp sensor ID
+  // Arg1 Package with Low and High set points
+  Method(THRS,0x2, Serialized) {
+    If(LEqual(\\_SB.FFA0.AVAL,One)) {
+      Name(BUFF, Buffer(32){})
+      CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+      CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+      CreateField(BUFF,16,128,UUID) // UUID of service
+      CreateByteField(BUFF,18,CMDD) // Command register
+      CreateByteField(BUFF,19,TZID) // Temp Sensor ID
+      CreateDwordField(BUFF,20,VTIM) // Timeout
+      CreateDwordField(BUFF,24,VLO) // Low Threshold
+      CreateDwordField(BUFF,28,VHI) // High Threshold
+      CreateDWordField(BUFF,18,TSTS) // Output Data
+
+      Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID)
+      Store(32, LENG)
+      Store(0x2, CMDD) // EC_THM_SET_THRS
+      Store(Arg0, TZID)
+      Store(DeRefOf(Index(Arg1,0)),VTIM)
+      Store(DeRefOf(Index(Arg1,1)),VLO)
+      Store(DeRefOf(Index(Arg1,2)),VHI)
+      Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+      If(LEqual(STAT,0x0) ) // Check FF-A successful?
+      {
+        Return (TSTS)
+      }
+    }
+    Return (0x3) // Hardware failure
+  }
+
+  // Arg0 GUID 1f0849fc-a845-4fcf-865c-4101bf8e8d79
+  // Arg1 Revision
+  // Arg2 Function Index
+  // Arg3 Function dependent
+  Method(_DSM, 0x4, Serialized) {
+    If(LEqual(ToUuid("1f0849fc-a845-4fcf-865c-4101bf8e8d79"),Arg0)) {
+      Switch(Arg2) {
+        Case (0) {
+          Return(0x3) // Support Function 0 and Function 1
+        }
+        Case (1) {
+          Return( THRS(0x2, Arg3) ) // Call to function to set threshold
+        }
+      }
+    }
+    Return(0x3)
+  }
+}
+
+Device(THRM) {
+  Name(_HID, "MSFT000B")
+
+  // Arg0 Instance ID
+  // Arg1 UUID of variable
+  // Return (Status,Value)
+  Method(GVAR,2,Serialized) {
+    If(LEqual(\\_SB.FFA0.AVAL,One)) {
+      Name(BUFF, Buffer(38){})
+      CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+      CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+      CreateField(BUFF,16,128,UUID) // UUID of service
+      CreateByteField(BUFF,18,CMDD) // Command register
+      CreateByteField(BUFF,19,INST) // Instance ID
+      CreateWordField(BUFF,20,VLEN) // 16-bit variable length
+      CreateField(BUFF,176,128,VUID) // UUID of variable to read
+      CreateField(BUFF,208,64,RVAL) // Output Data
+
+      Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID)
+      Store(38, LENG)
+      Store(0x5, CMDD) // EC_THM_GET_VAR
+      Store(Arg0,INST) // Save instance ID
+      Store(4,VLEN) // Variable is always DWORD here
+      Store(Arg1, VUID)
+      Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+      If(LEqual(STAT,0x0) ) // Check FF-A successful?
+      {
+        Return (RVAL)
+      }
+    }
+    Return (0x3)
+  }
+
+  // Arg0 Instance ID
+  // Arg1 UUID of variable
+  // Return (Status,Value)
+  Method(SVAR,3,Serialized) {
+    If(LEqual(\\_SB.FFA0.AVAL,One)) {
+      Name(BUFF, Buffer(42){})
+      CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+      CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+      CreateField(BUFF,16,128,UUID) // UUID of service
+      CreateByteField(BUFF,18,CMDD) // Command register
+      CreateByteField(BUFF,19,INST) // Instance ID
+      CreateWordField(BUFF,20,VLEN) // 16-bit variable length
+      CreateField(BUFF,176,128,VUID) // UUID of variable to read
+      CreateDwordField(BUFF,38,DVAL) // Data value
+      CreateField(BUFF,208,32,RVAL) // Ouput Data
+
+      Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID)
+      Store(42, LENG)
+      Store(0x6, CMDD) // EC_THM_SET_VAR
+      Store(Arg0,INST) // Save instance ID
+      Store(4,VLEN) // Variable is always DWORD here
+      Store(Arg1, VUID)
+      Store(Arg2,DVAL)
+      Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+      If(LEqual(STAT,0x0) ) // Check FF-A successful?
+      {
+      Return (RVAL)
+      }
+    }
+    Return (0x3)
+  }
+
+  // Arg0 GUID
+  // 07ff6382-e29a-47c9-ac87-e79dad71dd82 - Input
+  // d9b9b7f3-2a3e-4064-8841-cb13d317669e - Output
+  // Arg1 Revision
+  // Arg2 Function Index
+  // Arg3 Function dependent
+  Method(_DSM, 0x4, Serialized) {
+    // Input Variable
+    If(LEqual(ToUuid("07ff6382-e29a-47c9-ac87-e79dad71dd82"),Arg0)) {
+      Switch(Arg2) {
+        Case(0) {
+          // We support function 0-3
+          Return(0xf)
+        }
+        Case(1) {
+          Return(GVAR(1,ToUuid("ba17b567-c368-48d5-bc6f-a312a41583c1"))) // OnTemp
+        }
+        Case(2) {
+          Return(GVAR(1,ToUuid("3a62688c-d95b-4d2d-bacc-90d7a5816bcd"))) // RampTemp
+        }
+        Case(3) {
+          Return(GVAR(1,ToUuid("dcb758b1-f0fd-4ec7-b2c0-ef1e2a547b76"))) // MaxTemp
+        }
+      }
+      Return(0x1)
+    }
+
+    // Output Variable
+    If(LEqual(ToUuid("d9b9b7f3-2a3e-4064-8841-cb13d317669e"),Arg0)) {
+      Switch(Arg2) {
+        Case(0) {
+          // We support function 0-3
+          Return(0xf)
+        }
+        Case(1) {
+          Return(SVAR(1,ToUuid("ba17b567-c368-48d5-bc6f-a312a41583c1"),Arg3)) // OnTemp
+        }
+        Case(2) {
+          Return(SVAR(1,ToUuid("3a62688c-d95b-4d2d-bacc-90d7a5816bcd"),Arg3)) // RampTemp
+        }
+        Case(3) {
+          Return(SVAR(1,ToUuid("dcb758b1-f0fd-4ec7-b2c0-ef1e2a547b76"),Arg3)) // MaxTemp
+        }
+      }
+    }
+    Return (0x1)
+  }
+}
+</code></pre>
+<h2 id="call-flows-for-secure-and-non-secure-implementation"><a class="header" href="#call-flows-for-secure-and-non-secure-implementation">Call Flows for secure and non-secure Implementation</a></h2>
+<p>Depending on system requirements the ACPI calls may go directly to the
+EC or through secure world then through to EC.</p>
+<p>When using non-secure interface the ACPI functions must define protocol
+level which is the Embedded controller for eSPI. For I2C/I3C or SPI
+interfaces the corresponding ACPI device must define the bus dependency
+and build the packet directly that is sent to the EC.</p>
+<p>For secure communication all data is sent to the secure world via FF-A
+commands described in this document and the actual bus protocol and data
+sent to the EC is defined in the secure world in Hafnium. All support
+for FF-A is inboxed in the OS by default so EC communication will always
+work in any environment. However, FF-A is not supported in x86/x64
+platforms so direct EC communication must be used on these platforms.</p>
+<h3 id="non-secure-espi-access"><a class="header" href="#non-secure-espi-access">Non-Secure eSPI Access</a></h3>
+<p>This call flow assumes using Embedded controller definition with
+independent ACPI functions for MPTF support</p>
+<h4 id="non-secure-espi-read"><a class="header" href="#non-secure-espi-read">Non-Secure eSPI READ</a></h4>
+<pre><code>Device(EC0) {
+  Name(_HID, EISAID("PNP0C09")) // ID for this EC
+
+  // current resource description for this EC
+  Name(_CRS, ResourceTemplate() {
+    Memory32Fixed (ReadWrite, 0x100000, 0x10) // Used for simulated port access
+    Memory32Fixed (ReadWrite, 0x100010, 0x10)
+    // Interrupt defined for eSPI event signalling
+    GpioInt(Edge, ActiveHigh, ExclusiveAndWake,PullUp 0,"\\_SB.GPI2"){43} 
+  })
+
+  Name(_GPE, 0) // GPE index for this EC
+
+  // create EC's region and field for thermal support
+  OperationRegion(EC0, EmbeddedControl, 0, 0xFF)
+  Field(EC0, ByteAcc, Lock, Preserve) {
+    MODE, 1, // thermal policy (quiet/perform)
+    FAN, 1, // fan power (on/off)
+    , 6, // reserved
+    TMP, 16, // current temp
+    AC0, 16, // active cooling temp (fan high)
+    , 16, // reserved
+    PSV, 16, // passive cooling temp
+    HOT 16, // critical S4 temp
+    CRT, 16 // critical temp
+    BST1, 32, // Battery State
+    BST2, 32, // Battery Present Rate
+    BST3, 32, // Battery Remaining capacity
+    BST4, 32, // Battery Present Voltage
+  }
+
+  Method (_BST) {
+    Name (BSTD, Package (0x4)
+    {
+      \\_SB.PCI0.ISA0.EC0.BST1, // Battery State
+      \\_SB.PCI0.ISA0.EC0.BST2, // Battery Present Rate
+      \\_SB.PCI0.ISA0.EC0.BST3, // Battery Remaining Capacity
+      \\_SB.PCI0.ISA0.EC0.BST4, // Battery Present Voltage
+    })
+    Return(BSTD)
+  }
+}
+</code></pre>
+<pre class="mermaid">sequenceDiagram
+  OSPM-&gt;&gt;ACPI: call _BST method
+  ACPI-&gt;&gt;ACPI: Map to EC0 fields in EC operation Region
+  ACPI-&gt;&gt;ACPI: EC0 accesses change to eSPI Peripheral accesses
+  ACPI-&gt;&gt;eSPI: Each field acccess changed to peripheral read/write
+  ACPI-&gt;&gt;ACPI: ACI handles SCI, port IO, MMIO, serialized
+  ACPI-&gt;&gt;ACPI: eSPI read/writes complete
+  ACPI-&gt;&gt;ACPI: Data is reorganized to _BST structure
+  ACPI-&gt;&gt;OSPM: Return _BST structure with status
+</pre>
+<h4 id="non-secure-espi-notifications"><a class="header" href="#non-secure-espi-notifications">Non-Secure eSPI Notifications</a></h4>
+<p>All interrupts are handled by the ACPI driver. When EC needs to send a
+notification event the GPIO is asserted and traps into IRQ. ACPI driver
+reads the EC_SC status register to determine if an SCI is pending. DPC
+callback calls and reads the EC_DATA port to determine the _Qxx event
+that is pending. Based on the event that is determined by ACPI the
+corresponding _Qxx event function is called.</p>
+<pre><code>Method (_Q07) {
+  // Take action for event 7
+  Notify(\\_SB._LID, 0x80)
+}
+</code></pre>
+<pre class="mermaid">sequenceDiagram
+  EC-&gt;&gt;SCI ISR: EC asserts alert (IRQ)
+  SCI ISR-&gt;&gt;SCI DPC: Schedule DPC if EC_SC indicates SCI
+  SCI DPC-&gt;&gt;EC: Read EC_DATA to determine event
+  EC-&gt;&gt;SCI DPC: Send Qxx event
+  SCI DPC-&gt;&gt;ACPI: Call _Qxx function in EC0
+</pre>
+<h3 id="secure-espi-access"><a class="header" href="#secure-espi-access">Secure eSPI Access</a></h3>
+<p>The following flow assumes ARM platform using FF-A for secure calls.
+Note if you want to use the same EC firmware on both platforms with
+secure and non-secure access the EC_BAT_GET_BST in this case should
+be convert to a peripheral access with the same IO port and offset as
+non-secure definition.</p>
+<h4 id="secure-espi-read"><a class="header" href="#secure-espi-read">Secure eSPI READ</a></h4>
+<pre><code>Method (_BST) {
+  // Check to make sure FFA is available and not unloaded
+  If(LEqual(\\_SB.FFA0.AVAL,One)) {
+    Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+    CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+    CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+    CreateField(BUFF,16,128,UUID) // UUID of service
+    CreateByteField(BUFF,18, CMDD) // In – First byte of command
+    CreateDwordField(BUFF,19, BMA1) // In – Averaging Interval
+    CreateField(BUFF,144,128,BSTD) // Out – 4 DWord BST data
+
+    Store(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"), UUID) // Battery
+    Store(42, LENG)
+    Store(0x6, CMDD) // EC_BAT_GET_BST
+    Store(Store(BUFF, \\_SB_.FFA0.FFAC), BUFF)
+
+    If(LEqual(STAT,0x0) ) // Check FF-A successful?
+    {
+    Return (BMAD)
+    } 
+  } 
+  Return(Zero)
+}
+</code></pre>
+<pre class="mermaid">sequenceDiagram
+ OSPM-&gt;&gt;ACPI: call_BST method
+ ACPI-&gt;&gt;FFA: Send EC_BAT_GET_BST_request
+ FFA-&gt;&gt;EC Service: Forward EC_BAT_GET_BST_request
+ EC Service-&gt;&gt;EC Service: Convert to eSPI peripheral read/write
+ EC Service-&gt;&gt;eSPI: send peripheral read/write access
+ EC Service-&gt;&gt;FFA: FFA_YIELD (as needed)
+ FFA-&gt;&gt;EC Service: FFA_RESUME (check for complete)
+ eSPI-&gt;&gt;EC Service: Return peripheral read data
+ EC Service-&gt;&gt;EC Service: Convert to EC_BAT_GET_BST response
+ EC Service-&gt;&gt;FFA: FFA response to original request
+ FFA-&gt;&gt;ACPI: return FFA status and _BST response
+ ACPI-&gt;OSPM: return _BST structure
+
+</pre>
+<h4 id="secure-espi-notification"><a class="header" href="#secure-espi-notification">Secure eSPI Notification</a></h4>
+<p>When EC communication is done through Secure world we assert FIQ which
+is handled as eSPI interrupt. eSPI driver reads EC_SC and EC_DATA to
+retrieve the notification event details. On Non-secure implementation
+ACPI converts this to Qxx callback. On secure platform this is converted
+to a virtual ID and sent back to the OS via _NFY callback and a virtual
+ID.</p>
+<pre><code>Method(_NFY, 2, Serialized) {
+  // Arg0 == UUID
+  // Arg1 == Notify ID
+  If(LEqual(ToUUID("25cb5207-ac36-427d-aaef-3aa78877d27e"),Arg0)) {
+    If(LEqual(0x2,Arg1)) {
+      Store(Arg1, \\_SB.ECT0.NEVT)
+      Notify(\\_SB._LID, 0x80)
+    }
+  }
+}
+</code></pre>
+<pre class="mermaid">sequenceDiagram
+   EC-&gt;&gt;eSPI: EC asserts Alert (FIQ)
+   eSPI-&gt;&gt;EC: Read EC_SC to check for SCI
+   eSPI-&gt;&gt;EC: Read EC_DATA for SCI event
+   EC-&gt;&gt;eSPI: SCI Qxx event
+   
+   eSPI-&gt;&gt;EC Service: Notification callback Qxx
+   EC Service-&gt;&gt;EC Service: Convert qxx to Virtual ID
+   EC Service-&gt;&gt;EC Nfy Service: Notify Virtual ID
+   EC Nfy Service-&gt;&gt;FFA:Send Physical ID
+   FFA-&gt;&gt;ACPI:Call_NFY with Virtual ID
+   ACPI-&gt;&gt;ACPI: Read SMEM notify details
+   ACPI--)EC Service: Clear event (optional)
+
+   
+</pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="legacy_ec_interface.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="legacy_ec_interface.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="mermaid.min.js"></script>
+        <script src="mermaid-init.js"></script>
+
+
+    </div>
+    </body>
+</html>

@@ -16,4 +16,5 @@ Cargo.lock
 # Ignore book output
 book
 
-.temp/
+# Ignore local site build 
+.temp/site

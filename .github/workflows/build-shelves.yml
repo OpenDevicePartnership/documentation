@@ -23,33 +23,41 @@ jobs:
           override: true
 
       - name: Install mdBook
-        run: cargo install mdbook --version 0.4.36
+        run: cargo install mdbook
 
-      - name: Build cargo docs
-        run: cargo doc --no-deps --release
+      - name: Install mermaid
+        run: cargo install mdbook-mermaid
 
       - name: Build Shelf 1
         run: |
           cd bookshelf
-          cd ".\Shelf 1 Getting Started\"
+          cd ./Shelf\ 1\ Getting\ Started/
           cd overview
           mdbook build
-          cd ..\uefi 
+          cd ../uefi 
           mdbook build
 
       - name: Build Shelf 2
         run: |
-          cd "..\..\Shelf 2 Examples\"
+          cd bookshelf
+          cd "Shelf 2 Examples"
           cd qemu
           mdbook build
-          cd "..\Embedded Services\"
+          cd ../Embedded\ Services/
           mdbook build
-          cd "..\How To Build a Modern Laptop\"
+          cd ../How\ To\ Build\ a\ Modern\ Laptop
+          mdbook build
+
+      - name: Build Shelf 3
+        run: |
+          cd bookshelf
+          cd "Shelf 3 Support"
           mdbook build
 
       - name: Build Shelf 4
         run: |
-          cd "..\..\Shelf 4 Specifications\"
+          cd bookshelf          
+          cd "Shelf 4 Specifications"
           cd "EC Interface"
           mdbook build
 
@@ -61,8 +69,9 @@ jobs:
           cp -r bookshelf/Shelf\ 2\ Examples/qemu/book site/qemu
           cp -r bookshelf/Shelf\ 2\ Examples/Embedded\ Services/book site/embedded_services 
           cp -r bookshelf/Shelf\ 2\ Examples/How\ To\ Build\ a\ Modern\ Laptop/book site/how_to_build_a_modern_laptop    
+          cp -r bookshelf/Shelf\ 3\ Support/book site/support
           cp -r bookshelf/Shelf\ 4\ Specifications/EC\ Interface/book site/ec_interface      
-          cp index.html site/index.html
+          cp library.html site/library.html
 
       - name: Upload site as artifact
         uses: actions/upload-artifact@v4
@@ -73,7 +82,7 @@ jobs:
       - name: Create zip archives for release
         run: |
           mkdir dist
-          zip -r dist/bookshelves.zip book
+          zip -r dist/bookshelves.zip site
 
       - name: Set release tag env var
         run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
@@ -84,6 +93,7 @@ jobs:
           sudo apt-get install -y gh
   
       - name: Create GitHub Release if not exists
+        if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -93,6 +103,7 @@ jobs:
           fi
 
       - name: Upload zip files to GitHub Release using gh CLI
+        if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

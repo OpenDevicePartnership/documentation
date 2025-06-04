@@ -40,3 +40,5 @@ To automatically run an executable in WinVOS you can edit the registry in the VH
 
 ![Shell Registry](media/shell.png)
 
+
+[Return to Library](../../library.html)

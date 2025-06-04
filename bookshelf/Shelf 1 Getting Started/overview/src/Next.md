@@ -8,10 +8,12 @@ Our blinking light example gets things started and proves out the basic toolchai
 
 Now you are ready for real-world examples.
 
-Let's see about [Building a modern Laptop](tbd)
-
 You will find a collection of examples on 
-Shelf 2 of the ODP documentation library that will help guide you as well.
+Shelf 2 of the [ODP documentation library](../../library.html) that will help guide you as well.
+
+Also check out [How To Build a Modern Laptop](../../2/how_to_build_a_modern_laptop/index.html) for how all of this is used to build a working virtual laptop.
+
+
 
 
 

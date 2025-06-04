@@ -911,3 +911,4 @@ thermal requests and queries are meant to be advisory in nature and EC
 should be able to run independently and safely without any intervention
 from the OS.
 
+[Return to Library](../../library.html)

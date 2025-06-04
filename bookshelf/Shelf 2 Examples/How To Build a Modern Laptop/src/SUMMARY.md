@@ -1,1 +1,23 @@
 [How To Build a Modern Laptop](./how-to-build-laptop.md)
+- [Overview](./overview.md)
+- [Setting up Development](./setting_up.md)
+- [Embedded Controller](./ec/embedded_controller.md)
+    - [Battery](./ec/battery.md)
+    - [Charger](./ec/charger.md)
+    - [Thermal](./ec/thermal.md)
+    - [Connectivity](./ec/connectivity.md)
+        - [USB](./ec/usb.md)
+        - [WiFi](./ec/wifi.md)
+        - [Bluetooth](./ec/bluetooth.md)
+- [Patina](./patina/patina.md)
+    - [Security](./patina/security.md)
+    - [DXE](./patina/dxe.md)
+    - [Runtime](./patina/runtime.md)
+    - [Booting into Windows](./patina/windows.md)
+- [Using your Virtual Laptop](./using.md)
+    - [First Checks](first_checks.md)
+    - [Running an application](./application.md)
+- [Summary and Takeaways](./conclusions.md)
+
+
+

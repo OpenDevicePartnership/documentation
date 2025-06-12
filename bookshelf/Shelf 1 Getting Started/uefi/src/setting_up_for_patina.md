@@ -3,6 +3,11 @@
 Patina is based upon the foundations of UEFI, and as such, much of the tooling used to build boot firmware
 continues to leverage the existing proven tools from Tianocore, such as the `stuart_build` set of commands, and many other parts familiar within the EDK II framework.
 
+The primary tooling repository -- containing the Rust ODP Patina component -- is [Patina](https://github.com/OpenDevicePartnership/patina).  Conceptual and Best Practices documentation for Patina can be found as part of the [Patina Repository Documentation}(https://sturdy-adventure-nv32gqw.pages.github.io/driver/interface.html).  This content can also be generated locally as an `mdbook` from the Patina repository source.
+
+However, when targeting a build, the artifacts of the Patina repository are generally used by inclusion and reference.  For example, 
+to build as we will be doing in these instructions for the QEMU emulator, there is the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu) repository.
+
 The steps to setting up the tooling can be found documented in the Readme of the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu) repository, but what is not immediately clear from that discussion is the role that different repositories play.  This is a bit of a marathon, so we'll walk through it here.
 
 ### The repositories involved
@@ -78,14 +83,11 @@ stuart_setup -c .pytool/CISettings.py
 
 ## Patina-qemu
 Now we are equipped to build from the patina-qemu repository.
-Start by cloning the patina-quemu repository to your workspace.  
-
-```
-git clone git@github.com:OpenDevicePartnership/patina-qemu.git
-```
 
 ### Shorten the path
 On Windows, the build commands reference pathnames that when combined can exceed the maximum allowed path length, so to prevent issues here, we will redirect where we work so that our paths are shorter.
+
+This may not be necessary on later releases of Windows 11 or above, or if you have specifically enabled long path support for a previous version. However, following these steps may simplify the process regardless.
 
 Do this from within the patina-quemu repository root directory:
 
@@ -138,6 +140,8 @@ building will take several minutes.  At the end of this you should see a QEMU wi
 You will also see a long train of runtime debug output to the console window.  This will exceed the scroll-back buffer of the window so you won't be able to see the first portion of it.  The tail end of this runtime log will likely contain a number of TRACE level warnings at this stage.  We can ignore this output at this time.
 
 To build without running on QEMU, leave off the `--FlashRom` flag.
+
+To launch again into QEMU _without_ building, you can use `--FlashOnly` instead.  
 
 ### What did we just build?
 The Patina DXE Core was successfully installed into your QEMU emulator!  But the actual Rust code for that is contained within a prebuilt .efi binary.  Next we will look at the steps you will need to take to update that .efi binary so that _your_ firmware development can be set into place.

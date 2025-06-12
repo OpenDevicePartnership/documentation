@@ -30,11 +30,13 @@ It starts by importing (the `use` statements at the top) the logging support we 
 
 The function signature for this implementation forms the basis for the dependency injection we will register in the next step.
 
+To understand the `Config` parameter structure and the dependency injection and Monolithically Compiled Components a little better, consult the [Component Interface](https://sturdy-adventure-nv32gqw.pages.github.io/driver/interface.html) discussion of the Patina Repository Documentation.
+
 ### Registering the component
 
 The file `bin/q35_dxe_core.rs` is the main binding and execution point for the manifest of components that will make up the image.
 
-If we look at this file we will see a Core:default() function is called with a number of `with_config()` and `with_component()` calls, along with a few others, chained together. This sets up the components that will be included.
+If we look at this file we will see a `Core:default()` function is called with a number of `with_config()` and `with_component()` calls, along with a few others, chained together. This sets up the components that will be included.
 The chain concludes with `.start().unwrap()`.  We can add our component just prior to this, by inserting the lines
 ```
 .with_component(test_component::run_test_component)

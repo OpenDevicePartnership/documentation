@@ -1,0 +1,58 @@
+
+TODO Reminders:
+----------------------
+
+Later in the battery project, change the panic in fuel gauge registration
+to 
+if let Err(e) = reg {
+    error!("Fuel gauge registration failed: {:?}", e);
+    return;
+}
+so it can handle (e.g.) a removable battery
+
+-----------------------
+
+GADSE notes:
+The GADSE template is a format for how to frame each component project.
+It is flexible in that each page could expand into a section or merge and collapse into a previous page, but
+the overall structure of concept communication should be kept the same for each component implementation deep-dive
+
+-------------------
+Final integration:
+In the end there will need to be a significant section on the final integration of all the pieces into the 'virtual laptop',
+but that is not currently represented in the existing guide layout. It will need to be added.
+
+--------------------
+No longer possible?
+
+### Redirecting log output
+You may recall that when we did our first test run using the default `.efi` location that the runtime debug log output was output to the console and was too lengthy to see the top portion of. We can redirect the output to go to a file instead, which will allow us to see everything as well as keeping it in a place we can review after each run.
+
+Edit the file `Platforms\QemuQ35Pkg\Plugins\QemuRunner.py` and look for a line that says  `args = "-debugcon stdio"` (about line 66) and change this to read `args = "-debugcon file:debug.log"`.  This will redirect log output to a file "debug.log" in your Z:\ location when run.
+
+Now, still at the Z:\ prompt (activated), type
+```
+stuart_build -c Platforms\QemuQ35Pkg/PlatformBuild.py --FlashRom
+```
+Again, this will take several minutes and cover a few phases with lots of console output.
+Finally, the QEMU window will appear, display it's splash graphic, identifying text, and shell prompt.  
+
+You will find your Z:\debug.log file now populated and containing the run output.
+
+Verify this is from your local build by checking this log.
+You should see the log line 
+```
+INFO - DXE Core Platform Binary v0.3.2
+```
+around about line 900 - 910 or so
+_note version number may be different_
+
+This log line is emitted from the `bin/q35_dxe_core.rs` file of the patina-dxe-core-qemu sources, which is the launch point for the components.
+
+We will create and install our own component in the next exercise.
+
+
+
+
+
+

@@ -15,7 +15,7 @@ One such difference is there is no traditional EFI Dispatcher.  Instead, the DXE
 Read more about the construction and differences of the Patina code base in the [Patina Documentation](https://sturdy-adventure-nv32gqw.pages.github.io/)
 
 ## How does this come together?
-Within the patina-dxe-core-qemu repository there is a primary file at `bin\q35_dxe_core.rs` that controls the monolithic construction of the core and its various components. Inpecting this file, we see a key function, `Core::defualt()` that is the launching point for a number of `.with_component()` and `.with_config()` calls chained together to construct the complement of our firmware image.
+Within the patina-dxe-core-qemu repository there is a primary file at `bin\q35_dxe_core.rs` that controls the monolithic construction of the core and its various components. Inpecting this file, we see a key function, `Core::default()` that is the launching point for a number of `.with_component()` and `.with_config()` calls chained together to construct the complement of our firmware image.
 
 Patina uses a Dependency-Injection scheme to map components and their configurations into the dispatch mechanism, and this is where the registration comes together.
 
@@ -28,7 +28,7 @@ Before we start constructing our own component, let's take a moment to be sure w
 ### Finalizing setup
 For the binding in step 2 to work, we need to tell the patina-qemu tools where the `.efi` target file is, so that it can load it into the emulator.  Let's find out where this is.  
 
-from your local patina-dxe-core-qemu root, type `cargo make q35` this should produce a build with no errors.  Now look in the location `target\x86_64-unknown-uefi\debug\` and you should see a `qemu_q35_dxe_core.efi` file created there. 
+From your local patina-dxe-core-qemu root, type `cargo make q35`. This should produce a build with no errors.  Now look in the location `target\x86_64-unknown-uefi\debug\` and you should see a `qemu_q35_dxe_core.efi` file created there. 
 Note the full path to this file, i.e. `<your-path-to-repository-root>\target\x86_64-unknown-uefi\debug\qemu_q35_dxe_core.efi`
 
 Go to your patina-qemu local directory and edit the file `Platforms\QemuQ35Pkg\QemuQ35Pkg.fdf`.  Around about line 644 you will see a section that looks like this:
@@ -66,16 +66,18 @@ Now, still at the Z:\ prompt (activated), type
 stuart_build -c Platforms\QemuQ35Pkg/PlatformBuild.py --FlashRom
 ```
 Again, this will take several minutes and cover a few phases with lots of console output.
-Finally, the QEMU window will appear, display it's splash graphic, identifying text, and shell prompt.  
+Finally, the QEMU window will appear, display its splash graphic, identifying text, and shell prompt.  
 
 You will find your Z:\debug.log file now populated and containing the run output.
 
 Verify this is from your local build by checking this log.
+
+Search the log for "DXE Core Platform Binary".
+
 You should see the log line 
 ```
 INFO - DXE Core Platform Binary v0.3.2
 ```
-around about line 900 - 910 or so
 _note version number may be different_
 
 This log line is emitted from the `bin/q35_dxe_core.rs` file of the patina-dxe-core-qemu sources, which is the launch point for the components.

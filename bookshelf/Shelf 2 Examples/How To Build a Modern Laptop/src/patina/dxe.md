@@ -1,3 +1,0 @@
-# DXE
-This will take the practical examples that follow on after the `test_component` work that was done in the samples and frame them in terms of implementation, including orchestration with the startup and readiness of the Embedded Controller.
-These will include, but are not necessarily limited to, the examples currently underway or planned, such as Battery, Charger, Thermal. Human Interface Device (HID) components such as a keyboard implementation may be included as well.

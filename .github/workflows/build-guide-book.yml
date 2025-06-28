@@ -1,0 +1,99 @@
+name: Generate and Publish Guide Book
+description: |
+  This workflow builds the guide book for the project and publishes it to the `gh-pages` branch.
+  It is triggered on pushes to tags that start with 'v' or manually via workflow dispatch.  
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install mdBook
+        run: cargo install mdbook
+
+      - name: Install mermaid
+        run: cargo install mdbook-mermaid
+
+      - name: Build the guide book
+        run: |
+          cd guide_book
+          mdbook build
+
+      - name: copy to publish root
+        run: |
+          mkdir -p guide
+          cp -r guide_book/book guide
+
+      - name: Upload site as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: guide
+          path: guide
+
+      - name: Create zip archives for release
+        run: |
+          mkdir dist
+          zip -r dist/guide.zip guide
+
+      - name: Set release tag env var
+        run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+  
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+  
+      - name: Create GitHub Release if not exists
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view "$TAG_NAME" --repo "$GITHUB_REPOSITORY" &>/dev/null; then
+            gh release create "$TAG_NAME" --repo "$GITHUB_REPOSITORY" \
+              -t "$TAG_NAME" -n "Documentation release for $TAG_NAME"
+          fi
+
+      - name: Upload zip files to GitHub Release using gh CLI
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+         gh release upload "$TAG_NAME" dist/*.zip --clobber --repo "$GITHUB_REPOSITORY"
+   
+  deploy-pages:
+    needs: build-docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: guide
+          path: guide
+
+      - name: Debug guide folder contents
+        run: |
+          echo "Contents of guide:"
+          find guide
+
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./guide/book

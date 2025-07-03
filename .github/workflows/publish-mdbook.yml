@@ -1,0 +1,68 @@
+name: Publish Documentation
+
+on:
+  # Trigger this workflow manually if necessary
+  workflow_dispatch:
+
+  # Triggers this workflow if a commit is pushed to main in which a file in
+  # bookshelf/** has been updated
+  push:
+    branches:
+      - main
+    paths:
+      - bookshelf/**
+
+jobs:
+  build:
+    name: Build All Books in Bookshelf
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install mdBook
+        run: cargo install mdbook
+      
+      - name: Install mermaid
+        run: cargo install mdbook-mermaid
+
+      - name: Build All Books
+        run: |
+          mkdir -p site
+          find bookshelf -name book.toml | while read bookfile; do
+            bookdir=$(dirname "$bookfile")
+            mdbook build "$bookdir"
+            relpath=${bookdir#bookshelf/}
+            outdir="$bookdir/book"
+            if [ -d "$outdir" ]; then
+              mkdir -p "site/$relpath"
+              cp -r "$outdir"/* "site/$relpath/"
+            fi
+          done
+
+      - name: Upload Github Pages Site Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: site/
+
+  publish:
+    name: Publish Documentation
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+      pages: write
+
+    steps:
+      - name: Deploy Github Page
+        uses: actions/deploy-pages@v4
+        with:
+          token: ${{ github.token }}
+          artifact_name: github-pages

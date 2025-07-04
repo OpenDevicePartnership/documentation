@@ -6,7 +6,7 @@ Let's get started on building our battery implementation
 
 In our example, we will build the full functionality of our component in a standard local-computer development environment.
 
-This allows us to begin development without worrying about hardware complications while still implementing nearly all of the system’s behavior. In the end, we will have a fully functional—albeit artificial—battery subsystem.
+This allows us to begin development without worrying about hardware complications while still implementing nearly all of the system’s behavior. In the end, we will have a fully functional — albeit artificial — battery subsystem.
 
 Once complete, our battery implementation is ready to be flashed and tested on the target embedded hardware, where it should behave identically.  
 

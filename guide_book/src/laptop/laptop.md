@@ -6,6 +6,7 @@ These exercises will:
 - build components for the embedded controller
     - battery, charger and power policy
     - thermal and sensors
+- discuss further EC Component creation    
     - connectivity
     - security architectures
 - build components for the DXE Core

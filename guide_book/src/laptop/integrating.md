@@ -2,10 +2,6 @@
 
 _TODO_
 This section will take the components created in the previous exercises and apply them in an integration that
-covers
+covers how we might construct a virtual laptop from the exercises we have walked through to this point.
 
-- setting up QEMU as a host
-- communicate with the EC we have constructed in exercises
-
-- run some tests
 

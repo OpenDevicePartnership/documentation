@@ -79,7 +79,7 @@ Note for this implementation of memory mapped interface to work the
 memory must be marked as reserved by UEFI and not used by the OS and
 direct access also given to the corresponding service in secure world.
 
-```
+```rust
 Device(USBC) {
   Name(_HID,EISAID(“USBC000”))
   Name(_CID,EISAID(“PNP0CA0”))
@@ -130,7 +130,7 @@ Device(USBC) {
 This sample code shows one Microsoft Thermal zone for SKIN and then a
 thermal device THRM for implementing customized IO.
 
-```
+```rust
 // Sample Definition of FAN ACPI
 Device(SKIN) {
   Name(_HID, "MSFT000A")
@@ -339,7 +339,7 @@ independent ACPI functions for MPTF support
 
 #### Non-Secure eSPI READ
 
-```
+```rust
 Device(EC0) {
   Name(_HID, EISAID("PNP0C09")) // ID for this EC
 
@@ -396,7 +396,7 @@ callback calls and reads the EC_DATA port to determine the _Qxx event
 that is pending. Based on the event that is determined by ACPI the
 corresponding _Qxx event function is called.
 
-```
+```rust
 Method (_Q07) {
   // Take action for event 7
   Notify(\_SB._LID, 0x80)

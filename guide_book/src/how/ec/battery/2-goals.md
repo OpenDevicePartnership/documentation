@@ -1,6 +1,6 @@
 # Goals of the Battery Component Example
 
-In this example we will be constructing a fucntioning battery component.
+In this example we will be constructing a functioning battery component.
 
 The battery itself will be a virtual battery - no hardware required - and the behavioral aspects of it will be simulated.
 We will, however, discuss what one would do to implement actual battery hardware control in a HAL layer, which is the only 

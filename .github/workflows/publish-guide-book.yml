@@ -85,10 +85,7 @@ jobs:
             cd tracks/$TRACK
             mdbook clean
             mdbook build
-            echo "debug >>"
-            pwd
-            ls ../../.temp/
-            echo "<< end debug"
+            md -p ../../.temp/tracks/$TRACK/
             cp -r book/* ../../.temp/tracks/$TRACK/
             cd ../..
           done

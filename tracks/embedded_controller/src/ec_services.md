@@ -7,7 +7,7 @@ Conceptually, any number of services could be exposed to the Operating System in
 
 These Windows services are discussed in the [Embedded Controller Interface Specification](../../guide/specs/ec_interface/ec_interface.md)
 
-Windows-specific management features such as the [Microsoft aPower Thermal Framework (MPTF)](../../guide/how/ec/thermal/mptf/mptf.md) implementation notes are relevant to this discussion also.
+Windows-specific management features such as the [Microsoft Power Thermal Framework (MPTF)](../../guide/how/ec/thermal/mptf/mptf.md) implementation notes are relevant to this discussion also.
 
 
 

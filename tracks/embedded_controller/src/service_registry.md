@@ -8,22 +8,46 @@ This registration model allows each **policy domain** (e.g. power, thermal, char
 
 ## Registration Pattern
 
-The `embedded_services` crate defines the services and their policy managers. A typical registration pattern looks like this:
+> **Pseudocode (concept only)**  
+> The registration flow is: construct → init services → register.
+>
+> ```rust,ignore
+> let battery = BatteryDevice::new(DeviceId(1));
+> // ...
+> // in an async task function
+> embedded_services::init().await;
+> embedded_services::power::policy::register_device(&battery).await.unwrap();
+> ```
+>
+> This omits static allocation (`StaticCell`), executor wiring for async tasks, and controller setup, for clarity.
+
+### Realistic skeleton (matches the sample projects)
+
+Refer to the [Battery implementation example](../../guide/how/ec/battery/10-service_registry.html) or the [examples in the embedded-services repository](https://github.com/OpenDevicePartnership/embedded-services/blob/main/examples/std/src/bin/battery.rs#L474) for more concrete examples.
 
 ```rust
-let battery = BATTERY.init(BatteryDevice::new(...));
-let controller = BatteryController::new(battery.clone());
+// statically allocate single ownership
+static BATTERY: StaticCell<MockBatteryDevice> = StaticCell::new();
 
-SERVICE_REGISTRY.register(controller);
+// Construct a device handle
+let battery = BATTERY.init(MockBatteryDevice::new(DeviceId(1)));
+
+// In an async context, initialize services once, then register the device
+embedded_services::init().await;
+embedded_services::power::policy::register_device(&battery).await.unwrap();
+
+// Controller setup is covered in the next section.
 ```
+_Semantics note_: In ODP, “Device” types are __handles__ to a single underlying component; the service runtime serializes access. Introducing the controller simply gives policy logic a dedicated handle to act on; it does not create a second owner of the hardware.
 
-- `BATTERY` is a `StaticCell` (or similar allocation) initialized at startup.
+### Bringing in the Controller
 
-- `BatteryDevice` wraps the actual component (e.g., a `MockBattery`) and implements required traits.
-
-- `BatteryController` implements the `Service` trait and delegates operations to the device.
-
-- `SERVICE_REGISTRY` stores the controller and makes it accessible to both the async executor and message routing infrastructure.
+``` rust
+let controller = CONTROLLER.init(
+    MockBatteryController::<&'static mut MockBattery>::new(battery.inner_battery())
+);
+```
+The controller is given a handle to the inner `MockBattery` (`inner_battery()`), not a second owner of the hardware. All access is serialized through the service runtime.
 
 ### What Registration Enables
 | Feature | Enabled by Registration |
@@ -50,12 +74,15 @@ flowchart TD
 Once a controller is registered, the service registry allows the comms system to route incoming events to the correct service based on:
 - The __device ID__
 - The __message type__
-- The controller's implementation of the `handle()` function (_as defined by Service_)
+- The controller's implementation of the `handle()` function (_as defined by ServiceTraits_)
 
 When a message is emitted (e.g. `BatteryEvent::UpdateStatus`), the comms channel looks up the appropriate service and dispatches the message.
 
+Where `ServiceTraits` represent the service traits that define a Controller action,
+implementation may look something like this (in this case, `ServiceTraits` defines a function
+named `handle`, and it calls upon a local function defined in the device implementation):
 ```rust
-impl Service for BatteryController {
+impl ServiceTraits for BatteryController {
     async fn handle(&mut self, msg: Message) -> Result<()> {
         match msg {
             Message::Battery(BatteryEvent::UpdateStatus) => {

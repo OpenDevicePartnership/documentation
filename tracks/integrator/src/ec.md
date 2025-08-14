@@ -5,7 +5,7 @@ EC integration, like Patina, is performed statically at build time. Subsystems, 
 ## Embedded Controller Integration Goals
 
 - Build and wire up __runtime subsystems__ (e.g., Battery, Charger, Thermal)
-- Inject real or simulated __hardware access layers (HALs)__
+- Inject real or simulated __hardware abstraction layers (HALs)__
 - Ensure __Service trait__ implementations are registered and running
 - Test full EC behavior with `cargo test`, using mock HALs
 

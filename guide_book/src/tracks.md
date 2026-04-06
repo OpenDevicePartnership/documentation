@@ -15,7 +15,7 @@ ODP does not usurp this development paradigm but rather empowers it further thro
 
 This book is geared to a couple of different distinct audiences.  If you are concerned primarily with any one of the particular 'tracks' of ODP and are interested in a guide to which ODP repositories are relevant for that track, continue with [What is in ODP?](./what/what.md)
 
-If you are a __Firmware Engineer__ you likely will want to continue following ahead into the hands-on projects for building Embedded Controller components and services, ultimately resulting in the project for building a virtual laptop with Patina firmware. To continue on this track, simply continue to the next article.
+If you are a __Firmware Engineer__ you likely will want to continue following ahead into the hands-on projects for building Embedded Controller components and services, and integrating these into an EC simulation and test application. To continue on this track, simply continue to the next article.
 
 Depending on your interest or role, we offer guided tracks through the documentation:
 

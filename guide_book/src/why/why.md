@@ -1,8 +1,8 @@
 # Why ODP?
 
-Modern computing devices are ubiquitous in our lives.  They are integral to multiple aspects of our lives, from our workplace, to our finances, our creative endeavors, and our personal lifestyles.
+Modern computing devices are ubiquitous in our current time.  They are integral to multiple aspects of our lives, from our workplace, to our finances, our creative endeavors, and our personal lifestyles.
 
-Computer technology seemingly lept from its cradle a half century ago and never slowed its pace. It is easy to take much of it for granted.
+Computer technology seemingly leapt from its cradle a half century ago and never slowed its pace. It is easy to take much of it for granted.
 
 We marvel as the new applications show us increasingly amazing opportunities.  We also recognize and guard against the threats these applications pose to ourselves and society.  
 

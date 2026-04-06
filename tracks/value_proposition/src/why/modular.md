@@ -21,7 +21,7 @@ graph LR
   PowerPolicy --> BatteryService
   PowerPolicy --> ChargerService
   PowerPolicy --> ThermalService
-  BatteryService --> MockBattery
+  BatteryService --> BatteryController
   ChargerService --> SMbusDriver
  ``` 
 Because Rust enforces its memory and safety management guarantees at compile time, tooling such as that found in ODP Patina for example will build a DXE Core monolithically, without the need for an RTOS, and supports a composed modularity paradigm by design, streamlining certification and troubleshooting.

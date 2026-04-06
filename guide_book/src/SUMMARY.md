@@ -118,13 +118,6 @@
                 - [Charger Attach](./how/ec/integration/20-charger_attachment.md)
                 - [Affecting Change](./how/ec/integration/21-affecting_change.md)
                 - [Summary Thoughts](./how/ec/integration/22-summary_thoughts.md)                
-            - [Embedded Targeting](./how/ec/embedded_target/embedded_targeting.md)
-                - [Project Board](./how/ec/embedded_target/project_board.md)
-                - [Dependencies](./how/ec/embedded_target/embedded_dependencies.md)
-                - [Code Changes](./how/ec/embedded_target/embedded_code_changes.md)
-                - [Logging](./how/ec/embedded_target/embedded_logging.md)
-                - [Flashing](./how/ec/embedded_target/embedded_flashing.md)
-                - [Testing](./how/ec/embedded_target/embedded_testing.md)
     - [Integrating the Virtual Laptop](./laptop/integrating.md)
 - [Summary and Takeaways](./conclusions.md)
 

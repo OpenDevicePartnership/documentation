@@ -1,2 +1,0 @@
-# Logging
-_TODO: This section will discuss how to implement logging in the embedded controller components, including best practices for logging in embedded systems and how to integrate logging into the existing codebase._

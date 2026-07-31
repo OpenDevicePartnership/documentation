@@ -91,7 +91,7 @@ Device(USBC) {
 
         // Create USCI Doorbell Event
         Store(0x0, CMDD) // UCSI set doorbell
-        Store(ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"), UUID) // UCSI
+        Store(ToUUID("65467f50-827f-4e4f-8770-dbf4c3f77f45"), UUID) // EC_SVC_UCSI
         Store(USBC, FIFD) // Copy output data
         Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
 
@@ -106,4 +106,33 @@ Device(USBC) {
 }
 
 ```
+
+The UCSI service is routed over FF-A using the `EC_SVC_UCSI` service UUID
+`65467f50-827f-4e4f-8770-dbf4c3f77f45`. This is distinct from the UCSI `_DSM`
+selector `6f8398c2-7ca4-11e4-ad36-631042b5008f`, which is the OS-standard
+argument the `_DSM` method matches on.
+
+### QEMU Test-Stub FF-A Transport
+
+The normative interface above uses a statically carved-out, 4K-aligned
+shared-memory mailbox reachable from secure world. For deterministic
+integration testing under QEMU there is a simplified FF-A transport that
+carries the mailbox inline in the FF-A `DIRECT_REQ2` register payload instead
+of a shared-memory region. **This test transport is for the QEMU test stub only
+and does not replace the normative shared-memory ACPI interface described
+above.**
+
+Framing (routed to `EC_SVC_UCSI`, `65467f50-827f-4e4f-8770-dbf4c3f77f45`):
+
+- Request payload:
+  - byte 0 = doorbell/command tag `0x00` (UCSI set doorbell).
+  - bytes 1..49 = the full 48-byte mailbox (VERSION..MESSAGE OUT) copied inline.
+  - remaining bytes = zero padding.
+- Response payload:
+  - bytes 0..48 = the updated 48-byte mailbox returned by the stub (VERSION,
+    CCI, unchanged CONTROL, and populated MESSAGE IN).
+
+Because the FF-A register payload comfortably holds the 49-byte request, no
+shared-memory carve-out or memory-retrieve mapping is required for the test
+stub.
 

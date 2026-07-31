@@ -67,6 +67,12 @@ operating in the secure partition for EC.
 </tbody>
 </table>
 
+> Note: `EC_SVC_UCSI` (`65467f50-827f-4e4f-8770-dbf4c3f77f45`) is the FF-A
+> routing UUID that selects the UCSI service in secure world. It is distinct
+> from the UCSI `_DSM` selector `6f8398c2-7ca4-11e4-ad36-631042b5008f`, which is
+> the OS-standard argument the `_DSM` method matches on. The two must not be
+> confused.
+
 ## FFA Overview
 
 This section covers the components involved in sending a command to EC

@@ -116,7 +116,7 @@ Device(USBC) {
 
         // Create Doorbell Event
         Store(0x0, CMDD) // UCSI set doorbell
-        Store(ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"), UUID)
+        Store(ToUUID("65467f50-827f-4e4f-8770-dbf4c3f77f45"), UUID) // EC_SVC_UCSI
         Store(USBC,FIFD)
         Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
       } // End AVAL

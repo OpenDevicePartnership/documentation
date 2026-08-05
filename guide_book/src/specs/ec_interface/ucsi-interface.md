@@ -89,7 +89,7 @@ Device(USBC) {
         CreateByteField(BUFF,32, CMDD) // In – First byte of command
         CreateField(BUFF,288,384,FIFD) // Out – Msg data
 
-        // Create USCI Doorbell Event
+        // Create UCSI Doorbell Event
         Store(0x0, CMDD) // UCSI set doorbell
         Store(ToUUID("65467f50-827f-4e4f-8770-dbf4c3f77f45"), UUID) // EC_SVC_UCSI
         Store(USBC, FIFD) // Copy output data
@@ -126,13 +126,13 @@ Framing (routed to `EC_SVC_UCSI`, `65467f50-827f-4e4f-8770-dbf4c3f77f45`):
 
 - Request payload:
   - byte 0 = doorbell/command tag `0x00` (UCSI set doorbell).
-  - bytes 1..49 = the full 48-byte mailbox (VERSION..MESSAGE OUT) copied inline.
+  - byte offsets 1 through 48 inclusive = the full 48-byte mailbox
+    (VERSION..MESSAGE OUT) copied inline.
   - remaining bytes = zero padding.
 - Response payload:
-  - bytes 0..48 = the updated 48-byte mailbox returned by the stub (VERSION,
-    CCI, unchanged CONTROL, and populated MESSAGE IN).
+  - byte offsets 0 through 47 inclusive = the updated 48-byte mailbox returned
+    by the stub (VERSION, CCI, unchanged CONTROL, and populated MESSAGE IN).
 
 Because the FF-A register payload comfortably holds the 49-byte request, no
 shared-memory carve-out or memory-retrieve mapping is required for the test
 stub.
-

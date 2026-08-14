@@ -36,12 +36,6 @@
 - [What is in ODP?](./what/what.md)
 - [Building a virtual laptop](./laptop/laptop.md)
     - [Setting up Development](./how/setting_up.md)
-        [Introduction](./how/qemu/qemu_setup_guide.md)
-            - [Setting up QEMU](./how/qemu/qemu-setup.md)
-                - [Windbg Setup for QEMU](./how/qemu/qemu-windbg.md)
-            - [Compiling UEFI for QEMU](./how/qemu/mu-tianocore-build.md)
-                - [ACPI Customization](./how/qemu/qemu-acpi.md)
-            - [Modifying Windows Image](./how/qemu/qemu-windows.md)
 
     - [Embedded Controller](./how/ec/embedded_controller.md)
         - [Battery](./how/ec/battery/0-overview.md)

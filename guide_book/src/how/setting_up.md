@@ -5,9 +5,8 @@ build each of the exercises to construct a component in a non-embedded (std) env
 
 However, if you are planning on building for the virtual laptop project, you will need to set up QEMU as the host for the Patina boot firmware, and for EC Components, you will need a development board where you will target your embedded code to run on as a makeshift Embedded Controller.
 
-[QEMU Setup Guide](./qemu/qemu_setup_guide.md)
+[QEMU Setup Guide](https://github.com/OpenDevicePartnership/odp-platform-qemu-arm-virt/blob/main/docs/src/qemu/index.md)
 
 [Embedded Setup Guide](...)
-
 
 

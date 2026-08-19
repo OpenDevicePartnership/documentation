@@ -29,7 +29,6 @@ Once you've familiarized yourself with the fundamentals of Rust and the concepts
 
 #### From here:
 - Continue onto the next page to learn the __concepts and basic building blocks of ODP__
-- Go directly to the __[Embedded Controller track](../embedded_controller/track_overview.md) to learn how to build firmware components for the EC__
 - Explore the other __[ODP Tracks](../tracks.md) to find a path that suits your interests and expertise__
 
 

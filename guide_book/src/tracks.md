@@ -26,9 +26,6 @@ Depending on your interest or role, we offer guided tracks through the documenta
 - 🛫 [**Patina Boot Firmware**](../tracks/patina/track_overview.md)  
   Learn to build UEFI firmware with Rust using the Patina framework.
 
-- 🔋 [**Embedded Controller and Services**](../tracks/embedded_controller/track_overview.md)
-  Dive into EC subsystems like battery, charger, and thermal control with real component walkthroughs.
-
 - 🔐 [**Security Architecture**](../tracks/security/track_overview.md)  
   Explore trusted boot, firmware identity, and the DICE model.
 

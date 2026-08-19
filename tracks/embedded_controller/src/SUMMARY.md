@@ -1,4 +1,3 @@
-- [General](./general.md)
 - [EC Services](./ec_services.md)
 - [Secure EC Services](./secure_ec_services.md)
 - [Secure EC Example](./secure_ec_example.md)

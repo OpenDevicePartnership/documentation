@@ -68,6 +68,7 @@ jobs:
           mkdir -p tracks/embedded_controller/src/images
           cp -r guide_book/src/intro/concepts/images/simplified_layers.png tracks/embedded_controller/src/images/
           cp -r guide_book/src/intro/concepts/images/odp_arch.png tracks/embedded_controller/src/images/
+          cp -r guide_book/src/intro/concepts/images/image1.png tracks/embedded_controller/src/images/
 
           cp -r guide_book/src/why/secure_trust.md tracks/security/src/secure_trust.md
           cp -r guide_book/src/architecture/security_architecture.md tracks/security/src/security_architecture.md

@@ -1,2 +1,0 @@
-# ODP Embedded Controller Track Overview
-The Embedded Controller (EC) track is designed for individuals who are interested in developing and integrating embedded controller systems within the Open Device Partnership (ODP) framework. This track focuses on the design, implementation, and testing of embedded controllers, which are essential components in modern computing devices. Readers will learn how ODP supports creating robust EC solutions that enhance device functionality, improve power management, and ensure system reliability.

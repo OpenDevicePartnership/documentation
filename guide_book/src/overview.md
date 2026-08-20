@@ -10,7 +10,7 @@ Then the different 'tracks' of ODP will be explained.  Here, you may find you ar
 
 Then, what is inside ODP and where to find it is detailed further - this is a good resource for those simply wishing to navigate the maze of contributed repositories that are available and which ones fit together for a given task.
 
-Patina (boot firmware) documentation is covered conceptually in this guide.  Developers wishing to dig into code examples for this aspect of ODP should follow the resources outlined in the [**Patina Track**](../tracks/patina/track_overview.md).
+Patina (boot firmware) documentation is covered conceptually in this guide.  Developers wishing to dig into code examples for this aspect of ODP should follow the [**Patina Book**](https://opendevicepartnership.github.io/patina/) and the [**Patina source repository**](https://github.com/opendevicepartnership/patina).
 
 Finally, for developers wishing to know more about how all of this comes together for an Embedded Controller, a series of example implementation exercises are detailed. 
 These exercises can be explored per-component, or as a series that culminates in a working integration with a simulation application and test.

@@ -54,7 +54,7 @@ jobs:
       - name: Prepare and Build Track Books
         run: |
           # Reusable copy function for TOML and mermaid files
-          for TRACK in contributor embedded_controller integrator patina security value_proposition; do
+          for TRACK in contributor embedded_controller integrator security value_proposition; do
             cp -r guide_book/book.toml tracks/$TRACK/
             cp -r guide_book/mermaid* tracks/$TRACK/
           done
@@ -62,8 +62,6 @@ jobs:
           # Shared content for specific tracks
           mkdir -p tracks/value_proposition/src/why
           cp -r guide_book/src/why/* tracks/value_proposition/src/why/
-
-          cp -r guide_book/src/intro/concepts/patina.md tracks/patina/src/patina_concepts.md
 
           mkdir -p tracks/embedded_controller/src/images
           cp -r guide_book/src/intro/concepts/images/simplified_layers.png tracks/embedded_controller/src/images/
@@ -76,7 +74,7 @@ jobs:
           cp -r guide_book/src/architecture/secure_ec_services.md tracks/security/src/secure_ec_services.md
 
           # Build each track
-          for TRACK in contributor embedded_controller integrator patina security value_proposition; do
+          for TRACK in contributor embedded_controller integrator security value_proposition; do
             cd tracks/$TRACK
             mdbook clean
             mdbook build

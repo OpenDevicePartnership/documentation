@@ -1,2 +1,0 @@
-# ODP Patina Track Overview
-The Patina track is designed for individuals who are interested in developing and maintaining the Patina framework within the Open Device Partnership (ODP). This track focuses on the design, implementation, and testing of Patina solutions, which are essential for creating efficient and scalable applications. Readers will learn how to leverage the Patina framework to build robust applications that enhance user experience, improve performance, and ensure system reliability.

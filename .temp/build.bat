@@ -15,8 +15,6 @@ copy ".\book.toml" "..\tracks\embedded_controller\" /Y
 copy ".\mermaid*" "..\tracks\embedded_controller\" /Y
 copy ".\book.toml" "..\tracks\integrator\" /Y
 copy ".\mermaid*" "..\tracks\integrator\" /Y
-copy ".\book.toml" "..\tracks\patina\" /Y 
-copy ".\mermaid*" "..\tracks\patina\" /Y
 copy ".\book.toml" "..\tracks\security\" /Y
 copy ".\mermaid*" "..\tracks\security\" /Y
 copy ".\book.toml" "..\tracks\value_proposition\" /Y
@@ -24,7 +22,6 @@ copy ".\mermaid*" "..\tracks\value_proposition\" /Y
 
 REM copy content shared across tracks
 xcopy ".\src\why\*" "..\tracks\value_proposition\src\why" /E /I /Y
-xcopy ".\src\intro\concepts\patina.md" "..\tracks\patina\src\patina_concepts.md" /E /I /Y
 
 copy ".\src\intro\concepts\Embedded_controller.md" "..\tracks\embedded_controller\src\general.md" /Y
 copy ".\src\architecture\embedded_controller.md" "..\tracks\embedded_controller\src\architecture.md" /Y
@@ -55,10 +52,6 @@ cd ..\integrator
 mdbook clean        
 mdbook build
 xcopy "book\*" "..\..\.temp\tracks\integrator" /E /I /Y
-cd ..\patina
-mdbook clean
-mdbook build
-xcopy "book\*" "..\..\.temp\tracks\patina" /E /I /Y
 cd ..\security
 mdbook clean    
 mdbook build

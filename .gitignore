@@ -41,9 +41,6 @@ tracks/engineer/mermaid.min.js
 tracks/integrator/book.toml
 tracks/integrator/mermaid-init.js
 tracks/integrator/mermaid.min.js
-tracks/patina/book.toml
-tracks/patina/mermaid-init.js       
-tracks/patina/mermaid.min.js
 tracks/security/book.toml
 tracks/security/mermaid-init.js
 tracks/security/mermaid.min.js
@@ -65,7 +62,6 @@ tracks/security/src/secure_ec_services.md
 
 # Ignore files duplicated for 'tracks'
 tracks\value_proposition\src\why
-tracks\patina\src\patina_concepts.md
 
 tracks\embedded_controller\src\general.md
 tracks\embedded_controller\src\architecture.md

@@ -23,8 +23,8 @@ Depending on your interest or role, we offer guided tracks through the documenta
 - 🏅 [**Value Proposition**](../tracks/value_proposition/track_overview.md)
   Understand the core benefits of ODP, including security, modularity, and cross-domain coherence.
 
-- 🛫 [**Patina Boot Firmware**](../tracks/patina/track_overview.md)  
-  Learn to build UEFI firmware with Rust using the Patina framework.
+- 🛫 [**Patina Boot Firmware**](https://opendevicepartnership.github.io/patina/)  
+  Learn to build UEFI firmware with Rust using the Patina framework. See also the [Patina source repository](https://github.com/opendevicepartnership/patina).
 
 - 🔐 [**Security Architecture**](../tracks/security/track_overview.md)  
   Explore trusted boot, firmware identity, and the DICE model.

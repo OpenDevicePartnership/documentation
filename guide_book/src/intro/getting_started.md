@@ -28,7 +28,7 @@ In the [Tracks of ODP](../tracks.md), you will find curated content organized in
 | __Integrator__        | Read through the Architectural Overview and Integration sections, then follow the [Integrator Track](../../tracks/integrator/track_overview.md) for platform-specific setup and bundling guidance. |
 | __Contributor__       | Review the mainline Value Proposition and Architecture Overview, then head to the [Contributor Track](../../tracks/contributor/track_overview.md) for community, contribution standards, and roadmap content. |
 | __Security Reviewer__ | Jump to the [Security Track](../../tracks/security/track_overview.md). It includes collected topics around trusted boot, isolation, and other security concerns, with cross-links to affected design areas. |
-| __Patina SDK (UEFI) Developer__ | Refer to external Patina resources with context provided in the [Patina Track](../../tracks/patina/track_overview.md). You’ll find links to upstream Patina crates, code examples, and implementation notes. |  
+| __Patina SDK (UEFI) Developer__ | Refer to external Patina resources: the [Patina Book](https://opendevicepartnership.github.io/patina/) for guides and concepts, and the [Patina source repository](https://github.com/opendevicepartnership/patina) for crates, code examples, and implementation notes. |  
 
 
 ---

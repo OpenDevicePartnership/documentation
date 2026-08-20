@@ -3,4 +3,3 @@
 - [Secure Architecture](./security_architecture.md)
 - [Secure Boot](./secure_boot.md)
 - [Secure Firmware Updates](./secure_firmware_updates.md)
-- [Secure EC Services](./secure_ec_services.md)

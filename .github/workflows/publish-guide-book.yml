@@ -74,7 +74,6 @@ jobs:
           cp -r guide_book/src/architecture/security_architecture.md tracks/security/src/security_architecture.md
           cp -r guide_book/src/architecture/secure_boot.md tracks/security/src/secure_boot.md
           cp -r guide_book/src/architecture/secure_firmware_updates.md tracks/security/src/secure_firmware_updates.md
-          cp -r guide_book/src/architecture/secure_ec_services.md tracks/security/src/secure_ec_services.md
 
           # Build each track
           for TRACK in contributor embedded_controller integrator patina security value_proposition; do
@@ -115,4 +114,3 @@ jobs:
         with:
           token: ${{ github.token }}
           artifact_name: github-pages
-

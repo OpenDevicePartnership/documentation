@@ -23,7 +23,6 @@
     - [Security Model](./architecture/security_architecture.md)
         - [Secure Boot](./architecture/secure_boot.md)
         - [Firmware Updates](./architecture/secure_firmware_updates.md)
-        - [Secure EC Services](./architecture/secure_ec_services.md)
 - [Tracks of ODP](./tracks.md)
 - [What is in ODP?](./what/what.md)
 - [Building a virtual laptop](./laptop/laptop.md)

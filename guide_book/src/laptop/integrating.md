@@ -45,7 +45,7 @@ This is where the line between “virtual” and “real” blurs: the host does
 ## Step 5: Add a Patina Boot Layer
 Next, layer in the host firmware:
 
-- Follow the [Patina](../architecture/patina_framework.md) resources online to build a Patina DXE Core image 
+- Follow the [Patina](https://opendevicepartnership.github.io/patina/) resources online to build a Patina DXE Core image 
 - Add only the minimal DXE components needed to initialize ACPI and speak to the EC.
 
 This gives your virtual laptop a complete boot firmware stage.

@@ -14,8 +14,6 @@
         - [Legacy EC Interface](./intro/concepts/ec_services_example/legacy_ec_interface.md)
         - [Secure EC Services](./intro/concepts/ec_services_example/secure-ec-services-overview.md)
 - [Architecture](./architecture/architecture.md)
-    - [Patina Framework](./architecture/patina_framework.md)
-        - [Component Model](./architecture/patina_components.md)
     - [Embedded Controller](./architecture/embedded_controller.md)
         - [Component Model](./architecture/ec_components.md)
     - [EC Services](./architecture/ec_services.md)

@@ -10,7 +10,6 @@
     - [Welcome Developer](./intro/welcome.md)
     - [Concepts](./intro/concepts/Concepts.md)
         - [A Quick Look at Rust](./intro/concepts/rust_quick_look.md)
-        - [Patina](./intro/concepts/patina.md)
         - [Sample System Implementation](./intro/concepts/ec_services_example/sample-system-implementation.md)
         - [Legacy EC Interface](./intro/concepts/ec_services_example/legacy_ec_interface.md)
         - [Secure EC Services](./intro/concepts/ec_services_example/secure-ec-services-overview.md)

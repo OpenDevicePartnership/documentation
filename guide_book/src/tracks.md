@@ -39,10 +39,9 @@ Depending on your interest or role, we offer guided tracks through the documenta
 - 🧑‍🤝‍🧑 [**Contributor**](../tracks/contributor/track_overview.md)
     Get involved in the ODP community by contributing code, documentation, or reporting issues.
 
-Technical readers may also be interested in the [Specifications](./specs/specifications.md) section, which provides detailed technical specifications for ODP components and services.
+Technical readers may also be interested in the [ODP Embedded Controller specifications](https://github.com/OpenDevicePartnership/odp-embedded-controller/tree/main/docs/src/specs), which provide detailed technical specifications for EC components and services.
 
 ---
-
 
 
 

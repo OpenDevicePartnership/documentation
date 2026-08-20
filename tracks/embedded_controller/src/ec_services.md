@@ -5,10 +5,9 @@ These services often need to be exposed to the Operating System and Application 
 
 Conceptually, any number of services could be exposed to the Operating System in this way.  The Windows Operating System specifies a particular set of EC Services that it requires.
 
-These Windows services are discussed in the [Embedded Controller Interface Specification](../../guide/specs/ec_interface/ec_interface.md)
+These Windows services are discussed in the [Embedded Controller Interface Specification](https://github.com/OpenDevicePartnership/odp-embedded-controller/blob/main/docs/src/specs/ec_interface/ec_interface.md).
 
 Windows-specific management features such as the [Microsoft Power Thermal Framework (MPTF)](../../guide/how/ec/thermal/mptf/mptf.md) implementation notes are relevant to this discussion also.
-
 
 
 

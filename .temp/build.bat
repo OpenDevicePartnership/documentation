@@ -37,7 +37,6 @@ copy ".\src\intro\concepts\EC_Services.md" "..\tracks\embedded_controller\src\se
 
 copy ".\src\why\secure_trust.md" "..\tracks\security\src\secure_trust.md" /Y
 copy ".\src\architecture\security_architecture.md" "..\tracks\security\src\security_architecture.md" /Y
-copy ".\src\architecture\secure_boot.md" "..\tracks\security\src\secure_boot.md" /Y
 copy ".\src\architecture\secure_firmware_updates.md" "..\tracks\security\src\secure_firmware_updates.md" /Y
 copy ".\src\architecture\secure_ec_services.md" "..\tracks\security\src\secure_ec_services.md" /Y
 

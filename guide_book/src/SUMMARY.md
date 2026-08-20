@@ -21,7 +21,6 @@
         - [Component Model](./architecture/ec_components.md)
     - [EC Services](./architecture/ec_services.md)
     - [Security Model](./architecture/security_architecture.md)
-        - [Secure Boot](./architecture/secure_boot.md)
         - [Firmware Updates](./architecture/secure_firmware_updates.md)
         - [Secure EC Services](./architecture/secure_ec_services.md)
 - [Tracks of ODP](./tracks.md)

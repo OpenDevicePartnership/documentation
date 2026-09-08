@@ -11,6 +11,6 @@ Thank you for following along with our exploration of the Open Device Partnershi
 
 ## Broader Lessons
 - **Interfaces matter**: Whether ACPI, ESPI, or custom channels, the boundary between EC and host is as important as the internal logic.
-Security is non-optional: Real devices must layer in secure boot, signed updates, and privilege boundaries (e.g., Hafnium).
+- **Security is non-optional**: Real devices must layer in secure boot, signed updates, and privilege boundaries (e.g., Hafnium).
 - **Emulation is a bridge**: Virtual components in QEMU or std environments aren’t just toys; they give you a fast turnaround loop and a safe test bed.
-- **Community accelerates adoptio**n: Patterns only become standards when shared; contributing back to ODP closes the loop.
+- **Community accelerates adoption**: Patterns only become standards when shared; contributing back to ODP closes the loop.

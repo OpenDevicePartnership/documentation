@@ -19,6 +19,6 @@ Patina (boot firmware) provides a UEFI compatible firmware interface written in 
 Secure Embedded Controller (EC) provides modern EC firmware written in Rust. Designed for safety and composability, it serves as a foundational layer for secure device management. Secure EC documentation is
 covered in the [**Secure Embedded Controller Book**](https://opendevicepartnership.github.io/odp-embedded-controller/secure-ec-overview.html).
 
-Unifed Embedded Contoller Services provides modern EC services firmware written in Rust. Designed for safety and composability, it serves as a foundational layer for secure EC services on Windows platforms.
-EC services documentation is covered in the [**Embedded Contoller Services section**](https://opendevicepartnership.github.io/odp-embedded-controller/specs/ec_interface/ec_interface.html) of the Secure EC Book.
+Unified Embedded Controller Services provides modern EC services firmware written in Rust. Designed for safety and composability, it serves as a foundational layer for secure EC services on Windows platforms.
+EC services documentation is covered in the [**Embedded Controller Services section**](https://opendevicepartnership.github.io/odp-embedded-controller/specs/ec_interface/ec_interface.html) of the Secure EC Book.
 

@@ -1,2 +1,0 @@
-# ODP Value Proposition Overview
-The Value Proposition track is designed to help you understand the core benefits of the Open Device Partnership (ODP). This track covers the key advantages of using ODP, including security, modularity, cross-domain coherence, and more. Whether you're a decision-maker, a developer, or just curious about ODP, this track will provide you with a solid foundation in why ODP is a compelling choice for modern firmware development.

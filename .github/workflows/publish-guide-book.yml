@@ -7,9 +7,6 @@ on:
       - main
     paths:
       - guide_book/**
-      - tracks/**
-      - .github/workflows/publish-guide-book.yml
-      - tracks/**
       - .github/workflows/publish-guide-book.yml
 
 jobs:
@@ -32,55 +29,13 @@ jobs:
       - name: Prepare Output Folders
         run: |
           mkdir -p .temp/guide
-          mkdir -p .temp/tracks
-      - name: Install mdBook and Plugins
-        run: |
-          cargo install mdbook
-          cargo install mdbook-mermaid
-
-      - name: Prepare Output Folders
-        run: |
-          mkdir -p .temp/guide
-          mkdir -p .temp/tracks
 
       - name: Build Main Guide Book
         run: |
           cd guide_book
           mdbook clean
-          mdbook clean
           mdbook build
           cp -r book/* ../.temp/guide/
-
-      - name: Prepare and Build Track Books
-        run: |
-          # Reusable copy function for TOML and mermaid files
-          for TRACK in contributor embedded_controller integrator security value_proposition; do
-            cp -r guide_book/book.toml tracks/$TRACK/
-            cp -r guide_book/mermaid* tracks/$TRACK/
-          done
-
-          # Shared content for specific tracks
-          mkdir -p tracks/value_proposition/src/why
-          cp -r guide_book/src/why/* tracks/value_proposition/src/why/
-
-          mkdir -p tracks/embedded_controller/src/images
-          cp -r guide_book/src/intro/concepts/images/simplified_layers.png tracks/embedded_controller/src/images/
-          cp -r guide_book/src/intro/concepts/images/odp_arch.png tracks/embedded_controller/src/images/
-          cp -r guide_book/src/intro/concepts/images/image1.png tracks/embedded_controller/src/images/
-
-          cp -r guide_book/src/why/secure_trust.md tracks/security/src/secure_trust.md
-          cp -r guide_book/src/architecture/security_architecture.md tracks/security/src/security_architecture.md
-          cp -r guide_book/src/architecture/secure_firmware_updates.md tracks/security/src/secure_firmware_updates.md
-
-          # Build each track
-          for TRACK in contributor embedded_controller integrator security value_proposition; do
-            cd tracks/$TRACK
-            mdbook clean
-            mdbook build
-            mkdir -p ../../.temp/tracks/$TRACK/
-            cp -r book/* ../../.temp/tracks/$TRACK/
-            cd ../..
-          done
 
       - name: Create Root Redirect to Guide Book
         run: |

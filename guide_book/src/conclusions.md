@@ -11,29 +11,6 @@ Thank you for following along with our exploration of the Open Device Partnershi
 
 ## Broader Lessons
 - **Interfaces matter**: Whether ACPI, ESPI, or custom channels, the boundary between EC and host is as important as the internal logic.
-Security is non-optional: Real devices must layer in secure boot, signed updates, and privilege boundaries (e.g., Hafnium).
+- **Security is non-optional**: Real devices must layer in secure boot, signed updates, and privilege boundaries (e.g., Hafnium).
 - **Emulation is a bridge**: Virtual components in QEMU or std environments aren’t just toys; they give you a fast turnaround loop and a safe test bed.
-- **Community accelerates adoptio**n: Patterns only become standards when shared; contributing back to ODP closes the loop.
-
-## The Bigger Horizon
-At this point, you’ve seen how ODP can model a working EC, build policies, and test integration. With those skills, the possibilities expand:
-
-- Create your own __virtual laptop__, combining EC, Patina firmware, and OS boot flows.
-- Port subsystems to a __real dev board__, exercising policies against physical sensors.
-- Extend the framework with __new domains__ (networking, storage, graphics).
-- Integrate into __enterprise workflows__, using ODP’s open approach to collaborate across OEMs.
-
-
-> ---
-> ### The sky's the limit
-> _Whether you are simulating, prototyping, or shipping firmware, ODP provides the scaffolding to build modern systems in a modular, transparent way._
->
-> ---
-
-### Continue reading, or read again
-
-Return to the [ODP Documentation Home](../index.md) to explore more about the Open Device Partnership, or dive deeper into specific subsystems and components that interest you.
-
-Return to the [Tracks of ODP](../tracks.md) to revisit the various guided paths through the documentation and find the next topic that aligns with your interests or role.
-
-View the [ODP Embedded Controller specifications](https://github.com/OpenDevicePartnership/odp-embedded-controller/tree/main/docs/src/specs) to understand the standards and protocols that underpin the ODP framework.
+- **Community accelerates adoption**: Patterns only become standards when shared; contributing back to ODP closes the loop.

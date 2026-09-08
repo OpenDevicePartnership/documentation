@@ -2,7 +2,7 @@
 authors = []
 language = "en"
 src = "src"
-title = "ODP Documentation Guide"
+title = "ODP Documentation"
 
 [preprocessor]
 

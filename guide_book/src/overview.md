@@ -1,20 +1,24 @@
-# Open Device Partnership documentation guide
-
-The purpose of this document is to guide you through an understanding of ODP regardless of where you are starting from or where your interest may lie.
-
-The overall ODP umbrella is quite large and encompassing, and can be tricky to navigate through, so we will try to simplify that journey a little as well as giving direction on which path along the journey might best fit your interest or involvement.
+# Open Device Partnership (ODP) documentation
 
 This document will briefly review the value proposition of ODP and why it is the right technology for the future of firmware development, at the right time.
 
-Then the different 'tracks' of ODP will be explained.  Here, you may find you are interested in only one of these tracks, or you may find you want to learn more about all of them.
+## Welcome to ODP!
 
-Then, what is inside ODP and where to find it is detailed further - this is a good resource for those simply wishing to navigate the maze of contributed repositories that are available and which ones fit together for a given task.
+ODP is a community-driven framework for building **secure**, **modular**, and **reusable** firmware components across a range of systems. Whether you’re interested in low-level boot firmware, embedded controller services, or integrating a complete firmware stack, ODP has something for you.
 
-Patina (boot firmware) documentation is covered in the [**Patina Book**](https://opendevicepartnership.github.io/patina/).  Developers wishing to dig into code or examples should refer to the [**Patina source repository**](https://github.com/opendevicepartnership/patina).
+## What is ODP?
 
-Finally, for developers wishing to know more about how all of this comes together for an Embedded Controller, a series of example implementation exercises are detailed. 
-These exercises can be explored per-component, or as a series that culminates in a working integration with a simulation application and test.
+ODP brings modern software engineering practices—like memory safety and dependency injection—to the world of firmware. It leverages Rust to improve confidence, maintainability, and modularity across diverse hardware and system designs.
 
-You are in control of how you navigate through this guide, whether you proceed through it all one step at a time, or jump into the paths you find most compelling to your interest is entirely up to you.
+It also embraces existing standards like UEFI, DICE, ACPI, and EC protocols—but makes them more accessible and safer to implement.
 
+## ODP projects
+
+Patina (boot firmware) provides a UEFI compatible firmware interface written in the Rust language with a focus on memory safety and composition. Compatible with current UEFI device drivers and loaders but with a focus on the future. Patina documentation is covered in the [**Patina Book**](https://opendevicepartnership.github.io/patina/).
+
+Secure Embedded Controller (EC) provides modern EC firmware written in Rust. Designed for safety and composability, it serves as a foundational layer for secure device management. Secure EC documentation is
+covered in the [**Secure Embedded Controller Book**](https://opendevicepartnership.github.io/odp-embedded-controller/secure-ec-overview.html).
+
+Unified Embedded Controller Services provides modern EC services firmware written in Rust. Designed for safety and composability, it serves as a foundational layer for secure EC services on Windows platforms.
+EC services documentation is covered in the [**Embedded Controller Services section**](https://opendevicepartnership.github.io/odp-embedded-controller/specs/ec_interface/ec_interface.html) of the Secure EC Book.
 

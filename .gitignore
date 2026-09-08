@@ -21,58 +21,6 @@ book
 
 # Ignore local site build 
 .temp/guide
-.temp/tracks
-
-# Ignore common copied files
-# These are copied from the guide book to the tracks
-# and are not needed in the repository
-tracks/advisor/book.toml
-tracks/advisor/mermaid-init.js
-tracks/advisor/mermaid.min.js  
-tracks/contributor/book.toml
-tracks/contributor/mermaid-init.js
-tracks/contributor/mermaid.min.js  
-tracks/embedded_controller/book.toml
-tracks/embedded_controller/mermaid-init.js     
-tracks/embedded_controller/mermaid.min.js
-tracks/engineer/book.toml
-tracks/engineer/mermaid-init.js         
-tracks/engineer/mermaid.min.js
-tracks/integrator/book.toml
-tracks/integrator/mermaid-init.js
-tracks/integrator/mermaid.min.js
-tracks/security/book.toml
-tracks/security/mermaid-init.js
-tracks/security/mermaid.min.js
-tracks/value_proposition/book.toml  
-tracks/value_proposition/mermaid-init.js
-tracks/value_proposition/mermaid.min.js
-
-tracks/embedded_controller/src/general.md
-tracks/embedded_controller/src/architecture.md
-tracks/embedded_controller/src/component_arch.md
-tracks/embedded_controller/src/ec_services_arch.md
-tracks/embedded_controller/src/images/
-tracks/embedded_controller/src/secure_ec_services.md
-
-tracks/security/src/secure_trust.md
-tracks/security/src/security_architecture.md
-tracks/security/src/secure_firmware_updates.md
-tracks/security/src/secure_ec_services.md
-
-# Ignore files duplicated for 'tracks'
-tracks\value_proposition\src\why
-
-tracks\embedded_controller\src\general.md
-tracks\embedded_controller\src\architecture.md
-tracks\embedded_controller\src\component_arch.md
-tracks\embedded_controller\src\ec_services_arch.md
-tracks\embedded_controller\src\images
-
-tracks\security\src\secure_trust.md
-tracks\security\src\security_architecture.md
-tracks\security\src\secure_firmware_updates.md
-tracks\security\src\secure_ec_services.md
 
 
 # Ignore local notes

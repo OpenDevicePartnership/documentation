@@ -1,4 +1,0 @@
-- [Overview](./track_overview.md)
-- [Secure Foundations](./secure_trust.md)
-- [Secure Architecture](./security_architecture.md)
-- [Secure Firmware Updates](./secure_firmware_updates.md)

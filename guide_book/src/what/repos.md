@@ -10,7 +10,7 @@ Other repositories represented here define tools and tests that are useful in de
 
 | Repository | Description | Tag |
 |------------|-------------|-----|
-| [Developing UEFI with Rust](https://sturdy-adventure-nv32gqw.pages.github.io/) | _(Document)_ Overview of ODP Patina and Rust, contribution guide, and build setup. | Patina |
+| [Developing UEFI with Rust](https://opendevicepartnership.github.io/patina/) | _(Document)_ Overview of ODP Patina and Rust, contribution guide, and build setup. | Patina |
 | [patina](https://github.com/OpenDevicePartnership/patina) | Library of crates implementing Patina UEFI code. | Patina |
 | [patina-dxe-core-qemu](https://github.com/OpenDevicePartnership/patina-dxe-core-qemu) | Builds `.efi` image from Patina libraries and local components for QEMU. | Patina |
 | [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu) | QEMU platform firmware integrating `.efi` Patina binaries. | Patina |
